@@ -1,0 +1,21 @@
+package eir.world.unit.cannons;
+
+import eir.resources.AnimationHandle;
+import eir.resources.TextureHandle;
+import eir.resources.levels.UnitDef;
+import eir.world.unit.weapon.WeaponDef;
+
+public class CannonDef extends UnitDef
+{
+	private WeaponDef weaponDef;
+
+	public CannonDef(final String type, final int faction, final float size,
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final WeaponDef weaponDef, final boolean isPickable)
+	{
+		super( type, faction, size, unitSprite, deathAnimation, isPickable, 0 );
+
+		this.weaponDef = weaponDef;
+	}
+
+	public WeaponDef getWeaponDef() { return weaponDef; }
+}
