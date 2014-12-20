@@ -3,15 +3,14 @@
  */
 package eir.world.unit;
 
-import yarangi.numbers.RandomUtil;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
 import eir.rendering.IRenderer;
+import eir.rendering.IUnitRenderer;
 import eir.rendering.LevelRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.IUnitDef;
@@ -55,7 +54,10 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 */
 	public Anchor anchor;
 
-
+	/**
+	 * Units anchored to this one
+	 */
+	public List <IUnit> anchoredUnits;
 	///////////////////////////////////////////
 
 	/**
@@ -124,14 +126,13 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 */
 	private TIntArrayList hoverOverlays;
 
+	
+	private IUnitRenderer renderer;
+	
 	/**
-	 * States whether this unit is currenly has cursor over it
+	 * States whether this unit is currently has cursor over it
 	 */
-	private boolean isHovered = false;
-
-	private Animation deathAnimation;
-
-	private Sprite unitSprite;
+	Vector2 hoverVector;
 
 	public Unit( )
 	{
@@ -144,6 +145,10 @@ public abstract class Unit implements ISpatialObject, IUnit
 		this.hoverOverlays = new TIntArrayList ();
 
 		this.hashcode = hashCode();
+		
+		this.hoverVector = new Vector2(Float.NaN, Float.NaN);
+		
+		this.anchoredUnits = new ArrayList <IUnit> ();
 	}
 
 	/**
@@ -153,8 +158,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * Override this method to reset subclass's custom properties
 	 * @param level
 	 */
-	protected void reset( final ResourceFactory factory, final Level level)
+	protected void reset( final Level level)
 	{
+		ResourceFactory factory = level.getResourceFactory();
 		this.isAlive = true;
 		this.id = Environment.createObjectId();
 
@@ -165,19 +171,20 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		this.target = null;
 
-		if(def.getUnitSprite() == null)
+		if(def.getUnitRenderer() == null)
 		{
-			Debug.log( "Unit " + this + " has no sprite!" );
+			Debug.log( "Unit " + this + " has no renderer!" );
 		} 
 		else
 		{
-			this.unitSprite = factory.createSprite( def.getUnitSprite() );
+			this.renderer = def.getUnitRenderer();
+			
+			this.renderer.init( factory );
 		}
 
-		this.deathAnimation = def.getDeathAnimation() == null ? null :
-			factory.getAnimation( def.getDeathAnimation() );
-
 		this.velocity.set( 0,0 );
+		
+		this.hoverVector.set(Float.NaN, Float.NaN);
 
 		registerOverlays();
 	}
@@ -199,11 +206,18 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * @param anchor
 	 * @param faction
 	 */
-	public void init( final ResourceFactory factory, final Level level, final IUnitDef def, final Anchor anchor )
+	public void init(final Level level, final IUnitDef def, final Anchor anchor )
 	{
 		this.anchor = anchor;
+		
+		anchor.getParent().addAnchoredUnit( this );
+		
+		init(level, def, anchor.getPoint().x, anchor.getPoint().y, anchor.getAngle());
+	}
 
-		init(factory, level, def, anchor.getPoint().x, anchor.getPoint().y, anchor.getAngle());
+	protected void addAnchoredUnit(Unit unit)
+	{
+		anchoredUnits.add( unit );
 	}
 
 	/**
@@ -213,21 +227,24 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * @param anchor
 	 * @param faction
 	 */
-	public void init(final ResourceFactory factory, final Level level, final IUnitDef def, final float x, final float y, final float angle)
+	public void init(final Level level, final IUnitDef def, final float x, final float y, final float angle)
 	{
 		this.def = def;
 
 		this.faction = level.getFaction( def.getFactionId() );
 
-		this.body.update( x, y, getSize()/2, getSize()/2);
+		this.body.update( x, y,size()/2, size()/2);
 
 		this.angle = angle;
 
-		reset( factory, level );
+		reset( level );
 	}
 
+	@Override
 	public void dispose()
 	{
+		if(anchor != null)
+			anchor.getParent().anchoredUnits.remove( this );
 	}
 
 	public AABB getBody() { return body; }
@@ -235,6 +252,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public Faction getFaction() { return faction; }
 
+	@Override
 	public String getType() { return def.getType(); }
 
 
@@ -252,6 +270,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public String toString() { 	return getName() + " (" + getId() + ")"; }
 
+	@Override
 	public void update(final float delta)
 	{
 
@@ -266,19 +285,10 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	}
 
-	public void draw( final IRenderer renderer )
+	@Override
+	public void draw( final IRenderer levelRenderer )
 	{
-		if(unitSprite == null)
-			return;
-		final SpriteBatch batch = renderer.getSpriteBatch();
-		Vector2 position = getBody().getAnchor();
-		Sprite sprite = getUnitSprite();
-		batch.draw( sprite,
-				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
-				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
-				sprite.getRegionWidth(), sprite.getRegionHeight(),
-				getSize()/sprite.getRegionWidth(),
-				getSize()/sprite.getRegionWidth(), angle);
+		renderer.render( this , levelRenderer );
 	}
 
 
@@ -286,17 +296,39 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public boolean isAlive() { return isAlive; }
 
-	public void setDead() { this.isAlive = false; }
+	@Override
+	public void setDead() { 
+		this.isAlive = false;
 
+		if(anchor != null)
+			anchor.getParent().removeAnchoredUnit( this );
+		
+		for(IUnit unit : anchoredUnits)
+		{
+			((Unit)unit)._setDead();
+		}	
+	}
+	
+	public void _setDead() {
+		this.isAlive = false;
+		
+	}
+
+
+	protected void removeAnchoredUnit(Unit unit)
+	{
+		this.anchoredUnits.remove( unit );
+	}
 
 	/**
 	 * @param damageReduction
 	 * @param damage
 	 */
+	@Override
 	public float hit(final Damage source, final IDamager damager, final float damageCoef)
 	{
 		float damage = damage( damager.getDamage(), damageCoef );
-		faction.getController().yellUnitHit( this, damager );
+		faction.getController().yellUnitHit( this, damage, damager );
 
 		return damage;
 	}
@@ -305,7 +337,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	{
 		if(hull == null) // TODO: stub, in future hulless units should not respond to damage
 		{
-			setDead();
+			// setDead();
 			return 0;
 		}
 
@@ -318,25 +350,21 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		return damage;
 	}
-	/**
-	 * @return
-	 */
-	public Effect getDeathEffect()
-	{
-		if(deathAnimation != null)
-			return Effect.getEffect( deathAnimation, 10, getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 1 );
-		return null;
-	}
+	
 
-	protected Sprite getUnitSprite() { return unitSprite; }
+
+	@Override @Deprecated
+	public float getSize() { return this.def.getSize(); }
+	@Override
+	public float size() { return this.def.getSize(); }
+	public float radius() { return this.def.getSize()/2; }
+
+
 
 	@Override
-	public float getSize() { return this.def.getSize(); }
-
-
-
 	public Anchor getAnchor() { return anchor; }
 
+	@Override
 	public boolean dealsFriendlyDamage() { return false; }
 
 	@Override
@@ -346,6 +374,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public float getLifetime() { return lifetime; }
 	public Vector2 getVelocity() { return velocity; }
 
+	@Override
 	public void toggleOverlay(final int oid)
 	{
 		if(overlays.contains( oid ))
@@ -361,7 +390,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public Hull getHull() { return hull; }
 
+	@Override
 	public TIntArrayList getActiveOverlays() { return overlays; }
+	@Override
 	public TIntArrayList getHoverOverlays() { return hoverOverlays; }
 
 	public float cx() { return body.getAnchor().x; }
@@ -369,10 +400,42 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	public Weapon getWeapon() { return null; }
 
-	public void setIsHovered(final boolean isHovered)	{ this.isHovered = isHovered; }
-	public boolean isHovered() { return isHovered; }
+	@Override
+	public void setIsHovered( float x, float y ) 
+	{ 
+		this.hoverVector.set(x,y); 
+		for(int idx = 0; idx < anchoredUnits.size(); idx ++)
+			anchoredUnits.get(idx).setIsHovered(x, y);
+	}
+	
+	@Override
+	public boolean isHovered() { return !Float.isNaN(hoverVector.x); }
+	public Vector2 hoverVector() { return hoverVector; }
 
 	@Override public int hashCode() {	return hashcode; }
 
-	public IUnitDef getDef() { return def; }
+	public <E extends IUnitDef> E getDef() { return (E)def; }
+	@Override
+	public <E extends IUnitRenderer> E getRenderer() { return (E)renderer; }
+
+	public float getLifeTime() { return lifetime; }
+	
+	@Override
+	public void setFaction(Faction newFaction)
+	{
+		this.faction = newFaction;
+	}
+
+	@Override
+	public Effect createDeathEffect()
+	{
+		Effect effect =  renderer.getDeathEffect( this );
+		if(effect == null)
+			return null;
+		
+		return effect;
+	}
+	
+	@Override
+	public int z() { return 0; }
 }

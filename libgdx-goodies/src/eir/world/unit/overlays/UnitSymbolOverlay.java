@@ -1,7 +1,6 @@
 package eir.world.unit.overlays;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -20,12 +19,6 @@ import eir.world.unit.IUnit;
  */
 public class UnitSymbolOverlay <U extends IUnit> implements IOverlay <U>
 {
-
-	@Override
-	public void draw( final U unit, final SpriteBatch batch )
-	{
-		// NOOP TODO: not supported yet
-	}
 
 	@Override
 	public void draw( final U unit, final IRenderer renderer )

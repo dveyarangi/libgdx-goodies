@@ -1,5 +1,7 @@
 package eir.rendering;
 
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -14,8 +16,10 @@ public interface IRenderer
 
 	SpriteBatch getSpriteBatch();
 
-	void addEffect( Effect effect );
-
 	public Animation getAnimation( final AnimationHandle handle );
+
+	void addEffect(Effect effect/*EffectDef effectDef/*, Vector2 position, Vector2 velocity, float angle*/);
+
+	RayHandler getRayHandler();
 
 }

@@ -7,7 +7,6 @@ import yarangi.math.Angles;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
@@ -41,8 +40,6 @@ public class Weapon extends Unit
 
 	private boolean isOriented = false;
 
-	private ResourceFactory gameFactory;
-
 	private Level level;
 
 	WeaponDef weaponDef;
@@ -61,14 +58,14 @@ public class Weapon extends Unit
 	}
 
 	@Override
-	public void reset(final ResourceFactory gameFactory, final Level level)
+	public void reset( final Level level )
 	{
-		super.reset( gameFactory, level );
-		this.gameFactory = gameFactory;
+		super.reset( level );
+
 		this.level = level;
 		weaponDef = (WeaponDef)def;
 
-		weaponDef.init(gameFactory);
+		weaponDef.init( level.getResourceFactory() );
 
 		targetOrientation = weaponDir.cpy();
 	}
@@ -95,7 +92,7 @@ public class Weapon extends Unit
 		tDirection.setAngle( angle );
 
 		float speed = weaponDef.createSpeed();
-		Bullet bullet = unitFactory.getUnit(gameFactory, level, weaponDef.getBulletDef(), weaponPos.x, weaponPos.y, angle);
+		Bullet bullet = unitFactory.getUnit( level, weaponDef.getBulletDef(), weaponPos.x, weaponPos.y, angle);
 
 
 		bullet.weapon = this;
@@ -180,5 +177,6 @@ public class Weapon extends Unit
 
 	@Override
 	public float getMaxSpeed() { return 0; }
+
 
 }

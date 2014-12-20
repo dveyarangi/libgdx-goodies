@@ -13,11 +13,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import eir.resources.ResourceFactory;
 import eir.resources.levels.FactionDef;
 import eir.resources.levels.UnitDef;
 import eir.world.Level;
-import eir.world.controllers.ControllerFactory;
 import eir.world.controllers.IController;
 import eir.world.environment.Anchor;
 import eir.world.environment.Environment;
@@ -48,10 +46,9 @@ public class Faction
 
 	public Level level;
 
-	private ResourceFactory gameFactory;
 
-	public Set <Unit> units;
-	public Multimap <String, Unit> unitsByTypes;
+	public Set <IUnit> units;
+	public Multimap <String, IUnit> unitsByTypes;
 
 	private IController controller;
 
@@ -76,19 +73,17 @@ public class Faction
 	public Faction()
 	{
 
-		this.units = new HashSet <Unit> ();
+		this.units = new HashSet <IUnit> ();
 		this.unitsByTypes = HashMultimap.create ();
 	}
 
-	public void init(final ResourceFactory gameFactory, final Level level, final FactionDef def)
+	public void init(final Level level, final FactionDef def)
 	{
-		this.gameFactory = gameFactory;
+
 		this.def = def;
 		this.level = level;
 
-		this.controller = ControllerFactory.createController( def.getControllerType() );
-		controller.init( this );
-		this.controller.init( this );
+		this.controller = level.getController( def.getOwnerId() );
 		scheduler = new Scheduler( level.getUnitsFactory() );
 
 
@@ -96,29 +91,27 @@ public class Faction
 
 	public int getOwnerId()	{ return def.getOwnerId(); }
 
-	public void addUnit( final Unit unit )
+	public void addUnit( final IUnit unit )
 	{
 		units.add( unit );
 		unitsByTypes.put( unit.getType(), unit );
 		controller.unitAdded( unit );
 	}
 
-	public void removeUnit( final Unit unit )
+	public void removeUnit( final IUnit unit )
 	{
 		units.remove( unit );
 		unitsByTypes.remove( unit.getType(), unit );
 	}
 
-	public Collection <Unit> getUnitsByType( final String unitType )
+	public Collection <IUnit> getUnitsByType( final String unitType )
 	{
 		return unitsByTypes.get( unitType );
 	}
 
 	public void update( final float delta )
 	{
-		controller.update( delta );
 	}
-
 
 	/**
 	 * @return
@@ -131,11 +124,9 @@ public class Faction
 
 	public Scheduler getScheduler() { return scheduler; }
 
-	public IController getController() {
-		return controller;
-	}
+	public IController getController() { return controller; }
 
-	public Set <Unit> getUnits() {
+	public Set <IUnit> getUnits() {
 		return units;
 	}
 
@@ -148,7 +139,7 @@ public class Faction
 
 	public Unit createUnit( final UnitDef def, final Anchor anchor )
 	{
-		Unit unit = level.getUnitsFactory().getUnit( gameFactory, level, def, anchor );
+		Unit unit = level.getUnitsFactory().getUnit( level, def, anchor );
 		getLevel().addUnit( unit );
 
 		return unit;
@@ -156,12 +147,15 @@ public class Faction
 
 	public boolean isEnemy( final Unit unit )
 	{
-		return this != unit.getFaction();
+		return this.def.getEnemies().contains( unit.getFaction().getId() );
 	}
 
 	public ISensingFilter getEnemyFilter() { return enemyFilter; }
 
 	public Color getColor() { return def.getColor(); }
 
+	public int getId() { return def.getOwnerId(); }
+
+	public FactionDef getDef() { return def;  }
 
 }

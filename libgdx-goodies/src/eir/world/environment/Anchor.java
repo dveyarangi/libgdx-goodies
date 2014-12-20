@@ -2,6 +2,8 @@ package eir.world.environment;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.unit.Unit;
+
 /**
  * Generic anchor for units that require one.
  *
@@ -17,6 +19,6 @@ public interface Anchor
 
 	float getAngle();
 
-	Object getParent();
+	Unit getParent();
 
 }

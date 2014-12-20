@@ -10,10 +10,7 @@ import eir.game.LevelSetup;
 import eir.input.GameInputProcessor;
 import eir.rendering.LevelRenderer;
 import eir.resources.ResourceFactory;
-import eir.resources.levels.LevelBuilder;
-import eir.resources.levels.LevelDef;
 import eir.world.Level;
-import eir.world.unit.UnitsFactory;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -27,7 +24,7 @@ public class GameScreen extends AbstractScreen
 	private ResourceFactory gameFactory;
 	private GameInputProcessor inputController;
 	
-	private GameUI ui;
+	private IGameUI ui;
 	private LevelRenderer renderer;
 	private Level level;
 	
@@ -38,14 +35,17 @@ public class GameScreen extends AbstractScreen
 		super( game );
 
 		gameFactory = levelSetup.getGameFactory();
-		UnitsFactory unitsFactory = levelSetup.getUnitsFactory();
-		LevelDef levelDef = levelSetup.getLevelDef();
 
-	    ui = new GameUI( stage );
 		// creating level from level definitions:
-		level = new LevelBuilder( gameFactory, unitsFactory ).build( levelDef );
+		level = levelSetup.createLevel();
 
-		inputController = levelSetup.getInputController( level );
+
+	    ui = levelSetup.getUI( stage ); 
+	    
+	    inputController = levelSetup.getInputController( level, ui );
+		
+		
+		Gdx.input.setInputProcessor( stage );
 
 		level.getBackground().init( gameFactory, inputController );
 
@@ -53,7 +53,8 @@ public class GameScreen extends AbstractScreen
 
 		this.renderer = new LevelRenderer( gameFactory, inputController, level );
 		
-		ui.initUI();
+		if( ui != null)
+			ui.init();
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class GameScreen extends AbstractScreen
         // clear the screen with the given RGB color (black)
         Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
         Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-        
+
 		inputController.update( delta );
 		
 		stage.act(Gdx.graphics.getDeltaTime());
@@ -81,11 +82,12 @@ public class GameScreen extends AbstractScreen
 
 		level.getBackground().update( modifiedTime );
 
-		renderer.render( modifiedTime );
-		
-		ui.render( renderer );
+		renderer.render( delta );
 		
 		super.render( delta );
+		
+		if( ui != null)
+			ui.update( renderer );
 	}
 
 	@Override
@@ -95,6 +97,11 @@ public class GameScreen extends AbstractScreen
 		inputController.resize( width, height );
 
 		level.getBackground().resize( width, height );
+		
+		if( ui != null)
+			ui.resize( width, height);
+		
+		
 	}
 
 	@Override

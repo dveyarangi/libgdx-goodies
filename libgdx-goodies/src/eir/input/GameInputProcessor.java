@@ -1,5 +1,6 @@
 package eir.input;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -10,13 +11,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import eir.debug.Debug;
+import eir.game.screens.IGameUI;
 import eir.rendering.IRenderer;
-import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -33,7 +34,7 @@ public class GameInputProcessor implements InputProcessor
 
 	protected final Level level;
 
-	private int lastx, lasty;
+	private int prevx, prevy, currx, curry;
 	private final Vector3 pointerPosition3 = new Vector3();
 	private final Vector2 pointerPosition2 = new Vector2();
 
@@ -41,16 +42,29 @@ public class GameInputProcessor implements InputProcessor
 
 	private float lifeTime = 0;
 
-	private final IControlMode [] controlModes;
+	private final List <IControlMode> controlModes;
 	private int controlModeIdx;
+	private IControlMode currControlMode;
 
 	private ISpatialObject pickedObject;
+	
+	private ISpatialObject touchedObject;
 
 	private TimeController timeController;
 
 	private UIInputProcessor uiProcessor;
+	
+	private boolean debugPick = false;
+	
+	protected float BASE_PICK_RADIUS = 10;
+	protected float pickRadius = BASE_PICK_RADIUS;
+	
 
-	public GameInputProcessor(final ResourceFactory factory, final Level level)
+	protected IGameUI ui;
+	private boolean pointerChanged = true;
+
+
+	public GameInputProcessor(final Level level, final IGameUI ui)
 	{
 
 
@@ -64,10 +78,9 @@ public class GameInputProcessor implements InputProcessor
 
 		inputMultiplexer = new InputMultiplexer();
 
-
 		this.uiProcessor = new UIInputProcessor();
-
-		Debug.registerDebugActions( uiProcessor );
+		
+		this.ui = ui;
 
 		this.timeController = new TimeController();
 
@@ -86,8 +99,9 @@ public class GameInputProcessor implements InputProcessor
 			}
 		});
 
-
-		controlModes = createControlModes( factory );
+		controlModes = new ArrayList <IControlMode> ();
+		createControlModes( controlModes, level );
+		currControlMode = controlModes.get(0);
 
 		controlModeIdx = 0;
 
@@ -97,17 +111,15 @@ public class GameInputProcessor implements InputProcessor
 
 		this.level = level;
 
-		lastx = (int) camController.getCamera().viewportWidth/2;
-		lasty = (int) camController.getCamera().viewportHeight/2;
+		prevx = -1;
+		prevy = -1;
 
 	}
 
-	protected IControlMode[] createControlModes(ResourceFactory factory)
+	protected void createControlModes( List <IControlMode> modes, Level level)
 	{
-		return new IControlMode [] {
-				new DebugControlMode( factory, level ),
-		};
-	};
+		modes.add( new DebugControlMode( level ) );
+	}
 
 	@Override
 	public boolean keyDown(final int keycode)
@@ -116,9 +128,9 @@ public class GameInputProcessor implements InputProcessor
 		{
 
 		case Input.Keys.M:
-			controlModeIdx = (controlModeIdx + 1) % controlModes.length;
-			controlModes[controlModeIdx].reset();
-
+			controlModeIdx = (controlModeIdx + 1) % controlModes.size();
+			currControlMode = controlModes.get(controlModeIdx);
+			currControlMode.reset();
 
 			break;
 
@@ -135,7 +147,7 @@ public class GameInputProcessor implements InputProcessor
 			break;*/
 		default:
 
-			controlModes[controlModeIdx].keyDown( keycode );
+			currControlMode.keyDown( keycode );
 			return false;
 		}
 
@@ -148,43 +160,55 @@ public class GameInputProcessor implements InputProcessor
 		switch(keycode)
 		{
 		default:
+			currControlMode.keyUp( keycode );
 			return false;
 		}
 //		return false;
 	}
 
 	@Override
-	public boolean keyTyped(final char character)
+	public boolean keyTyped(final char keycode)
 	{
-		return false;
+		switch(keycode)
+		{
+		default:
+			currControlMode.keyTyped( keycode );
+			return false;
+		}	
 	}
 
 	@Override
 	public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button)
 	{
+		registerPointerChange( screenX, screenY, getCamera().zoom ); 
 		if( button==Input.Buttons.RIGHT )
 		{
-			lastx = screenX;
-			lasty = screenY;
+
 			camController.setUnderUserControl(true);
 			dragging = true;
 
 		}
 		if( pickedObject != null )
 		{
-			controlModes[controlModeIdx].touchUnit( pickedObject, button );
+			if(touchedObject == null)
+			{
+				touchedObject = pickedObject;
+			}
+			currControlMode.touchUnit( pointerPosition2.x, pointerPosition2.y, getCamera().zoom, pickedObject, button );
 		}
-
 		return true;
 	}
 
 	@Override
 	public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button)
 	{
-		if(button == Input.Buttons.RIGHT)
+		registerPointerChange( screenX, screenY, getCamera().zoom ); 
+//		if(button == Input.Buttons.RIGHT)
 		{
 			dragging = false;
 			camController.setUnderUserControl(false);
+				touchedObject = null;
+				currControlMode.untouch();
 		}
 		return true;
 	}
@@ -192,12 +216,10 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean touchDragged(final int screenX, final int screenY, final int pointer)
 	{
-		if(dragging)
-		{
-//			camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
-		}
-		lastx = screenX;
-		lasty = screenY;
+		registerPointerChange( screenX, screenY, getCamera().zoom ); 
+
+		if(touchedObject != null)
+			currControlMode.dragUnit(pointerPosition2.x, pointerPosition2.y, getCamera().zoom, pointer, pickedObject);
 
 		return true;
 	}
@@ -205,16 +227,15 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean mouseMoved(final int screenX, final int screenY)
 	{
-		lastx = screenX;
-		lasty = screenY;
 
+		registerPointerChange( screenX, screenY, getCamera().zoom ); 
 		return true;
 	}
 
 	@Override
 	public boolean scrolled(final int amount)
 	{
-		camController.zoomTo( lastx, lasty, amount*1.2f );
+		camController.zoomTo( currx, curry, amount*1.2f );
 		return true;
 	}
 
@@ -223,7 +244,7 @@ public class GameInputProcessor implements InputProcessor
 	/**
 	 *
 	 */
-	 public void show()
+	public void show()
 	{
 		Gdx.input.setInputProcessor( inputMultiplexer );
 	}
@@ -233,50 +254,89 @@ public class GameInputProcessor implements InputProcessor
 	  */
 	 public void update(final float delta)
 	 {
-		 pointerPosition3.x = lastx;
-		 pointerPosition3.y = lasty;
+		 lifeTime += delta;
+		 
+		 camController.update( delta );
+		 
+
+		 registerPointerChange( currx, curry, getCamera().zoom );
+		 
+		 timeController.update( delta );
+		 
+		 currControlMode.update(delta);
+	 }
+	 
+	private void registerPointerChange(int screenX, int screenY, float zoom)
+	{
+		if(screenX == currx && screenY == curry)
+		{
+			pointerChanged  = false;
+			return;
+		}
+		
+		currx = screenX;
+		curry = screenY;
+		
+		 pickRadius = BASE_PICK_RADIUS * camController.getCamera().zoom;
+		 pointerPosition3.x = currx;
+		 pointerPosition3.y = curry;
 		 camController.getCamera().unproject( pointerPosition3 );
 		 pointerPosition2.x = pointerPosition3.x;
 
 		 pointerPosition2.y = pointerPosition3.y;
-		 camController.update( delta );
-		 lifeTime += delta;
 
-		 IControlMode mode = controlModes[controlModeIdx];
-		 PickingSensor sensor = mode.getPickingSensor();
+		 currControlMode.setWorldPointer( pointerPosition2, camController.getCamera().zoom);
+
+		 PickingSensor sensor = currControlMode.getPickingSensor();
 		 sensor.setCursor(pointerPosition2);
 		 sensor.clear();
 		 level.getEnvironment().getIndex().queryAABB( sensor,
 				 pointerPosition2.x,
-				 pointerPosition2.y, 3, 3 );
+				 pointerPosition2.y, pickRadius, pickRadius);
 
 
 		 List <ISpatialObject> pickedObjects = sensor.getPickedObjects();
 		 ISpatialObject newPickedObject = null;
 		 if(pickedObjects != null)
 		 {
-			 newPickedObject = mode.objectPicked( pickedObjects );
+			 newPickedObject = currControlMode.objectPicked( pointerPosition2.x, pointerPosition2.y, pickedObjects );
+			 
 		 }
-
 
 		 if(newPickedObject != pickedObject)
 		 {
-			 mode.objectUnpicked( pickedObject );
+			 currControlMode.objectUnpicked( pickedObject );
 			 pickedObject = newPickedObject;
-		 }
+		 }		
+		 
+		pointerChanged = true;
+	}
 
 
-
-
-		 timeController.update( delta );
-	 }
-
-	 public void draw( final IRenderer renderer )
+	public void draw( final IRenderer renderer )
 	 {
 
 		 final SpriteBatch batch = renderer.getSpriteBatch();
 		 final ShapeRenderer shape = renderer.getShapeRenderer();
-
+		 
+		 if( debugPick )
+		 {
+			 shape.setColor(0, 0, 1, 0.5f);
+			 shape.begin(ShapeType.Line);
+			 shape.rect(pointerPosition2.x-pickRadius, pointerPosition2.y-pickRadius, 2*pickRadius, 2*pickRadius);
+			 shape.end();
+			 
+/*			 if(pickedObject != null)
+			 {
+				 shape.begin(ShapeType.Line);
+				 shape.rect(pickedObject.getArea().getMinX(), pickedObject.getArea().getMinX(),
+						 pickedObject.getArea().getHalfWidth()*2, 2*pickedObject.getArea().getHalfHeight());
+				 shape.end();
+			 }*/
+		 }
+		 
+		 
+		 
 /*		 batch.begin();
 		 TextureRegion crossHairregion = crosshair.getKeyFrame( lifeTime, true );
 		 batch.draw( crossHairregion,
@@ -293,10 +353,7 @@ public class GameInputProcessor implements InputProcessor
 				 pointerPosition2.x, pointerPosition2.y );
 		 shape.end();*/
 
-		 IControlMode mode = controlModes[controlModeIdx];
-
-		 mode.render( renderer );
-
+		 currControlMode.render( renderer );
 	 }
 
 	 /**
@@ -313,6 +370,8 @@ public class GameInputProcessor implements InputProcessor
 	 {
 		 return pointerPosition2;
 	 }
+	 
+	 public UIInputProcessor getInputRegistry() { return uiProcessor; }
 
 	public float getTimeModifier() { return timeController.getModifier() ; }
 

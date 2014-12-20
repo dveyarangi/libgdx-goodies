@@ -2,6 +2,7 @@ package eir.input;
 
 public interface IPickable {
 
-	void setIsHovered(boolean b);
+
+	public void setIsHovered(float atx, float aty );
 
 }

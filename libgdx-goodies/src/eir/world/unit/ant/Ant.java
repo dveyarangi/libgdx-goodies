@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
-import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.Route;
@@ -52,9 +51,9 @@ public class Ant extends TaskedUnit implements IDamager
 	}
 
 	@Override
-	protected void reset( final ResourceFactory gameFactory, final Level level )
+	protected void reset( final Level level )
 	{
-		super.reset( gameFactory, level );
+		super.reset( level );
 
 		this.mesh = faction.getEnvironment().getGroundMesh();
 

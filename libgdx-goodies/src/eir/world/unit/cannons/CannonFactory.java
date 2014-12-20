@@ -1,5 +1,7 @@
 package eir.world.unit.cannons;
 
+import eir.resources.ResourceFactory;
+import eir.resources.levels.LevelDef;
 import eir.resources.levels.UnitDef;
 import eir.world.unit.UnitsFactory.UnitFactory;
 
@@ -23,4 +25,9 @@ public class CannonFactory extends UnitFactory <Cannon>
 
 	@Override
 	protected Class <? extends UnitDef> getDefClass() {	return CannonDef.class;	}
+
+	@Override
+	protected void init(LevelDef def, ResourceFactory factory)
+	{
+	}
 }

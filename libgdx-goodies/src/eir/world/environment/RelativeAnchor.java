@@ -27,6 +27,6 @@ public class RelativeAnchor implements Anchor
 	}
 
 	@Override
-	public Object getParent() { return unit; }
+	public Unit getParent() { return unit; }
 
 }

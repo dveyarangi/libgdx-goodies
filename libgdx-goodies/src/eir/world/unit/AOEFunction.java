@@ -24,6 +24,16 @@ public interface AOEFunction
 		}
 
 	};
+	public static AOEFunction EQUIDAMAGE = new AOEFunction()
+	{
+
+		@Override
+		public float getDamageReduction( final Vector2 damager, final Vector2 target )
+		{
+			return 1;
+		}
+
+	};
 
 
 	public float getDamageReduction(Vector2 damager, Vector2 target);

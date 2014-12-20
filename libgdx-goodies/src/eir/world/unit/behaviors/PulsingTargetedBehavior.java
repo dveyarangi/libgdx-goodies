@@ -40,8 +40,6 @@ public class PulsingTargetedBehavior <U extends Unit> implements UnitBehavior <U
 			unit.target = task.getOrder().getTarget();
 
 			ISpatialObject targetObject = unit.getTarget();
-			if( targetObject == null)
-				return;
 
 			Vector2 target = targetObject.getArea().getAnchor();
 

@@ -4,6 +4,7 @@
 package eir.world.unit;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.Pool;
 import eir.debug.Debug;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.IUnitDef;
+import eir.resources.levels.LevelDef;
 import eir.resources.levels.UnitDef;
 import eir.world.Level;
 import eir.world.environment.Anchor;
@@ -28,15 +30,32 @@ public class UnitsFactory
 {
 
 	private IdentityMap <String, UnitFactory<? extends Unit>> factories = new IdentityMap <String, UnitFactory <? extends Unit>> ();
+	Set <UnitFactory> factoriesSet = new HashSet <UnitFactory> ();
 
-	public UnitsFactory(final ResourceFactory gameFactory, Set <UnitFactory<? extends Unit>> factoriesSet)
+	
+	LevelDef levelDef;
+	
+	public UnitsFactory(LevelDef levelDef, final ResourceFactory gameFactory, Map <String, UnitFactory<? extends Unit>> factories)
 	{
+		
+		this.levelDef = levelDef;
+
+		for(String unitType : factories.keySet())
+		{
+			UnitFactory factory = factories.get( unitType );
+			
+			factoriesSet.add( factory);
+			
+			this.factories.put(unitType.intern(), factory);
+			
+		}
 
 		for(UnitFactory factory : factoriesSet)
 		{
-			factories.put(factory.getName().intern(), factory);
+			factory.init( levelDef, gameFactory );
 		}
 	}
+	
 
 	/**
 	 * Creates unit of specified type, with position set to the anchor.
@@ -46,12 +65,14 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final ResourceFactory gameFactory, final Level level, final IUnitDef def, final Anchor anchor)
+	public <U extends Unit, F extends Faction> U getUnit(final Level level, final IUnitDef def, final Anchor anchor)
 	{
 		UnitFactory <U> fctory = (UnitFactory <U>) factories.get( def.getType() );
+		if( fctory == null )
+			throw new RuntimeException("Unit factory for " + def.getType() + " is not registered.");
 		U unit = fctory.pool.obtain();
 
-		unit.init(gameFactory, level, def, anchor);
+		unit.init(level, def, anchor);
 
 
 		return unit;
@@ -65,14 +86,14 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final ResourceFactory gameFactory, final Level level, final IUnitDef def, final float x, final float y, final float angle)
+	public <U extends Unit, F extends Faction> U getUnit( final Level level, final IUnitDef def, final float x, final float y, final float angle)
 	{
 		UnitFactory <U> factory = (UnitFactory <U>) factories.get( def.getType() );
 		if( factory == null )
 			throw new RuntimeException("No factory for unit type " + def.getType() );
 		U unit = factory.pool.obtain();
 
-		unit.init(gameFactory, level, def, x, y, angle);
+		unit.init( level, def, x, y, angle );
 
 		unit.angle = angle;
 
@@ -86,11 +107,11 @@ public class UnitsFactory
 	 * @param ant
 	 */
 	@SuppressWarnings("unchecked")
-	public void free(final Unit unit)
+	public void free(final IUnit unit)
 	{
 		unit.dispose();
 
-		UnitFactory <Unit> factory = (UnitFactory <Unit>) factories.get( unit.getType() );
+		UnitFactory <IUnit> factory = (UnitFactory <IUnit>) factories.get( unit.getType() );
 		factory.pool.free( unit );
 	}
 
@@ -101,7 +122,7 @@ public class UnitsFactory
 	 *
 	 * @param <U>
 	 */
-	public static abstract class UnitFactory <U extends Unit>
+	public static abstract class UnitFactory <U extends IUnit>
 	{
 		/**
 		 * Pool of units of this type
@@ -113,6 +134,8 @@ public class UnitsFactory
 		 * TaskStage -> TaskBehavior mapping
 		 */
 		protected Map <TaskStage, UnitBehavior <U>> behaviors = new HashMap <TaskStage, UnitBehavior<U>> ();
+		
+		protected abstract void init( LevelDef levelDef, ResourceFactory factory );
 	
 		protected abstract String getName();
 		

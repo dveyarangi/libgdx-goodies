@@ -1,5 +1,7 @@
 package eir.world.unit.dummy;
 
+import eir.resources.ResourceFactory;
+import eir.resources.levels.LevelDef;
 import eir.world.unit.UnitsFactory.UnitFactory;
 
 public class DummyFactory extends UnitFactory <Dummy>
@@ -12,6 +14,11 @@ public class DummyFactory extends UnitFactory <Dummy>
 	protected Dummy createEmpty()
 	{
 		return new Dummy();
+	}
+
+	@Override
+	protected void init(LevelDef def, ResourceFactory factory)
+	{
 	}
 
 }

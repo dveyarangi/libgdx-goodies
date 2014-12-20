@@ -9,6 +9,7 @@ import eir.world.environment.Asteroid;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Faction;
 import eir.world.unit.IDamager;
+import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.AttackingOrder;
 import eir.world.unit.ai.PolygonGuardingOrder;
@@ -52,7 +53,7 @@ public class WildlifeController implements IController
 	}
 
 	@Override
-	public void unitAdded(final Unit unit)
+	public void unitAdded(final IUnit unit)
 	{
 		if(unit instanceof Spawner)
 		{
@@ -61,7 +62,7 @@ public class WildlifeController implements IController
 	}
 
 	@Override
-	public void yellUnitHit(final Unit unit, final IDamager hitSource)
+	public void yellUnitHit(final Unit unit, float damage, final IDamager hitSource)
 	{
 
 		Unit source = hitSource.getSource();
@@ -158,7 +159,7 @@ public class WildlifeController implements IController
 	private void pickDefenseTargets()
 	{
 		Set <Asteroid> guardTargets = new HashSet <Asteroid> ();
-		for( Unit unit : faction.getUnitsByType( SpawnerFactory.NAME ) )
+		for( IUnit unit : faction.getUnitsByType( SpawnerFactory.NAME ) )
 		{
 			SurfaceNavNode anchor = (SurfaceNavNode)unit.getAnchor();
 			Asteroid asteroid = (Asteroid) anchor.getDescriptor().getObject();

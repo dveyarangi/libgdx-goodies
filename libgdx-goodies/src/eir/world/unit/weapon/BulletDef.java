@@ -1,14 +1,14 @@
 package eir.world.unit.weapon;
 
-import eir.resources.TextureHandle;
+import eir.rendering.IUnitRenderer;
 import eir.resources.levels.UnitDef;
 
 public class BulletDef extends UnitDef
 {
 
-	public BulletDef(final String type, final int factionId, final int size, final TextureHandle spriteTxr, float maxSpeed)
+	public BulletDef( final int factionId, final int size, IUnitRenderer renderer, float maxSpeed)
 	{
-		super( type, factionId, size, spriteTxr, null, false, maxSpeed );
+		super( BulletFactory.NAME, factionId, size, renderer, false, maxSpeed );
 	}
 
 }

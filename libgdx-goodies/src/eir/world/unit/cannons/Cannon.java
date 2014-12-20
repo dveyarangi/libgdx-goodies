@@ -6,9 +6,10 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.input.IPickable;
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
-import eir.resources.ResourceFactory;
+import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.Anchor;
 import eir.world.environment.RelativeAnchor;
@@ -21,7 +22,7 @@ import eir.world.unit.Unit;
 import eir.world.unit.weapon.Weapon;
 import eir.world.unit.weapon.WeaponDef;
 
-public class Cannon extends Unit implements IDamager
+public class Cannon extends Unit implements IDamager, IPickable
 {
 
 	public static final int SENSOR_RADIUS = 100;
@@ -49,9 +50,9 @@ public class Cannon extends Unit implements IDamager
 	}
 
 	@Override
-	protected void reset( final ResourceFactory gameFactory, final Level level )
+	protected void reset( final Level level )
 	{
-		super.reset( gameFactory, level );
+		super.reset( level );
 
 		weaponMount = new RelativeAnchor( this );
 
@@ -60,7 +61,7 @@ public class Cannon extends Unit implements IDamager
 
 		this.hull = new Hull(500f, 0f, new float [] {0f,0f,0f,0f});
 
-		weapon = level.getUnitsFactory().getUnit( gameFactory, level, weaponDef, weaponMount );
+		weapon = level.getUnitsFactory().getUnit( level, weaponDef, weaponMount );
 		weapon.getDirection().setAngle( this.angle+90 );
 		weapon.getTargetOrientation().setAngle( this.angle+90 );
 		wanderAngle = this.angle+90;
@@ -103,7 +104,7 @@ public class Cannon extends Unit implements IDamager
 		{	// no target, some meaningless behavior:
 			if(RandomUtil.oneOf( 200 ))
 			{
-				wanderAngle = RandomUtil.STD( this.getAngle(), 30 );
+				wanderAngle = RandomUtil.getRandomFloat(360 );
 				weapon.getTargetOrientation().setAngle( wanderAngle );
 			}
 		}
@@ -127,7 +128,7 @@ public class Cannon extends Unit implements IDamager
 	@Override
 	public void draw( final IRenderer renderer )
 	{
-		super.draw( renderer );
+//		super.draw( renderer );
 		weapon.draw( renderer );
 	}
 
@@ -161,5 +162,12 @@ public class Cannon extends Unit implements IDamager
 	{
 		super.setDead();
 		weapon.setDead();
+	}
+
+	@Override
+	public Effect createDeathEffect()
+	{
+		return weapon.createDeathEffect();
+		
 	}
 }

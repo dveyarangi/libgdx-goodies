@@ -4,7 +4,6 @@ import yarangi.math.Angles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -19,12 +18,6 @@ import eir.world.unit.weapon.Weapon;
 public class WeaponOverlay implements IOverlay <Unit>
 {
 
-	@Override
-	public void draw( final Unit unit, final SpriteBatch batch )
-	{
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void draw( final Unit unit, final IRenderer renderer )

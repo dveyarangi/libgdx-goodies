@@ -286,10 +286,10 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		float maxy = cy + ry;
 
 
-		int minIdxx = Math.max(toGridIndex(minx), -halfGridWidth);
-		int minIdxy = Math.max(toGridIndex(miny), -halfGridHeight);
-		int maxIdxx = Math.min(toGridIndex(maxx),  halfGridWidth);
-		int maxIdxy = Math.min(toGridIndex(maxy),  halfGridHeight);
+		int minIdxx = Math.max(toLowerGridIndex(minx), -halfGridWidth);
+		int minIdxy = Math.max(toLowerGridIndex(miny), -halfGridHeight);
+		int maxIdxx = Math.min(toHigherGridIndex(maxx),  halfGridWidth);
+		int maxIdxy = Math.min(toHigherGridIndex(maxy),  halfGridHeight);
 
 		int currx, curry;
 		int passId = getNextPassId();

@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,9 +18,8 @@ import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.Asteroid;
 import eir.world.environment.Web;
-
 import eir.world.unit.IOverlay;
-import eir.world.unit.Unit;
+import eir.world.unit.IUnit;
 import eir.world.unit.overlays.IntegrityOverlay;
 import eir.world.unit.overlays.WeaponOverlay;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -41,12 +42,16 @@ public class LevelRenderer implements IRenderer
 	public static final int INTEGRITY_OID = 1;
 	public static final int WEAPON_OID = 2;
 	public static final int HEX_OID = 3;
+	private RayHandler rayHandler;
 
 	public LevelRenderer( final ResourceFactory gameFactory, final GameInputProcessor inputController, final Level level )
 	{
+		
 		this.gameFactory = gameFactory;
 		this.inputController = inputController;
 		this.level = level;
+		
+		rayHandler = new RayHandler(level.getEnvironment().getPhyisics());
 
 		batch = new SpriteBatch();
 
@@ -77,7 +82,14 @@ public class LevelRenderer implements IRenderer
 		shapeRenderer.setProjectionMatrix( inputController.getCamera().projection);
 		shapeRenderer.setTransformMatrix( inputController.getCamera().view );
 
+		
+		rayHandler.setCombinedMatrix( inputController.getCamera().combined );
+		rayHandler.updateAndRender();
+		
 		batch.begin();
+		
+		level.draw( this );
+
 
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
@@ -90,14 +102,16 @@ public class LevelRenderer implements IRenderer
 			web.draw( batch );
 		}
 
-		for(Unit unit : level.getUnits())
+		for(IUnit unit : level.getUnits())
 		{
 			if(unit.isAlive())
 			{
 				unit.draw( this );
 			}
 		}
-
+		
+		
+		
 		for(Effect effect : effects)
 		{
 			effect.draw( batch );
@@ -119,21 +133,12 @@ public class LevelRenderer implements IRenderer
 		}
 
 
+
 		batch.end();
 
-
-
-		for(Unit unit : level.getUnits())
+		for(IUnit unit : level.getUnits())
 		{
 
-			if(!unit.isAlive()) // adding death effect:
-			{
-				Effect hitEffect = unit.getDeathEffect();
-				if(hitEffect != null)
-				{
-					effects.add( hitEffect );
-				}
-			}
 
 			for(int oidx = 0; oidx < unit.getActiveOverlays().size(); oidx ++)
 			{
@@ -150,6 +155,8 @@ public class LevelRenderer implements IRenderer
 			}
 		}
 
+
+
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
 		inputController.draw( this );
@@ -158,11 +165,25 @@ public class LevelRenderer implements IRenderer
 	}
 
 
-	@Override
-	public void addEffect(final Effect effect)
+/*	@Override
+	public void addEffect( final EffectDef effectDef, Vector2 position, Vector2 velocity, float angle)
 	{
+		Animation animation = getAnimation( effectDef.getAnimation() );
+
+		Effect effect =	Effect.getEffect( animation, effectDef.getSize(), position, angle, effectDef.getTimeModifier());
+		
+		effects.add( effect );
+	}*/
+	@Override
+	public void addEffect( final Effect effect)
+	{
+		assert (effect != null);
 		effects.add( effect );
 	}
+
+	@Override
+	public RayHandler getRayHandler() { return rayHandler; }
+	
 
 	public void dispose()
 	{
@@ -171,7 +192,10 @@ public class LevelRenderer implements IRenderer
 		batch.dispose();
 
 		// dispose shape renderer:
-		shapeRenderer.dispose();	}
+		shapeRenderer.dispose();
+		
+		rayHandler.dispose(); 
+	}
 
 	@Override
 	public SpriteBatch getSpriteBatch() { return batch; }

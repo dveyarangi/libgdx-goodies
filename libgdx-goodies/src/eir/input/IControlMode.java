@@ -2,6 +2,8 @@ package eir.input;
 
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector2;
+
 import eir.rendering.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -24,18 +26,15 @@ public interface IControlMode
 	 */
 	PickingSensor getPickingSensor();
 
-	/**
-	 * Game entity mouse hover callback
-	 * @param pickedObject
-	 * @param button 
-	 */
-	void touchUnit( ISpatialObject pickedObject, int button );
+	void touchUnit(float worldX, float worldY, float scale,
+			ISpatialObject pickedObject, int button);
+
 
 	/**
 	 * Game entity mouse hover callback
 	 * @param pickedObjects
 	 */
-	ISpatialObject objectPicked( List<ISpatialObject> pickedObjects );
+	ISpatialObject objectPicked( float x, float y, List<ISpatialObject> pickedObjects );
 	/**
 	 * Game entity mouse unhover callback
 	 * @param pickedObject
@@ -49,5 +48,21 @@ public interface IControlMode
 	void render( IRenderer renderer );
 
 	void keyDown( int keycode );
+
+	void keyUp(int keycode);
+
+	void keyTyped(char keycode);
+
+	void untouch();
+
+//	void dragUnit(int screenX, int screenY, int pointer,
+//			ISpatialObject pickedObject);
+
+	void setWorldPointer(Vector2 pointerPosition2, float scale);
+
+	void dragUnit(float worldX, float worldY, float zoom, int pointer,
+			ISpatialObject pickedObject);
+	
+	public void update( float delta );
 
 }

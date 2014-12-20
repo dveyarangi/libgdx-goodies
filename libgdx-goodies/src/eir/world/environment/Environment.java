@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import eir.debug.Debug;
 import eir.world.Level;
-
 import eir.world.environment.nav.AirNavNode;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavMesh;
@@ -19,6 +18,7 @@ import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.environment.spatial.UnitCollider;
 import eir.world.unit.IDamager;
+import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
 public class Environment 
@@ -102,8 +102,8 @@ public class Environment
 
 
 
-	public void add( final Unit unit ) { index.add( unit ); }
-	public void update( final Unit unit )
+	public void add( final IUnit unit ) { index.add( unit ); }
+	public void update( final IUnit unit )
 	{
 		index.update( unit );
 
@@ -129,7 +129,7 @@ public class Environment
 		collider.clear();
 	}
 
-	public void remove( final Unit unit ) { index.remove( unit ); }
+	public void remove( final IUnit unit ) { index.remove( unit ); }
 
 
 	public AirNavNode getClosestAirNode( final Vector2 anchor )
@@ -167,4 +167,6 @@ public class Environment
 	{
 		return new Sensor( radius, unit, index, world );
 	}
+
+
 }

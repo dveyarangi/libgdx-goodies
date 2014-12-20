@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import eir.rendering.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
+import eir.world.unit.IOverlay;
 
 /**
  * Renders entity index
@@ -19,7 +20,7 @@ import eir.world.environment.spatial.SpatialHashMap;
  * @author dveyarangi
  *
  */
-public class SpatialHashMapLook
+public class SpatialHashMapLook implements IOverlay
 {
 
 	private final SpatialHashMap <ISpatialObject> map;
@@ -94,6 +95,18 @@ public class SpatialHashMapLook
 				}
 			}
 		}
+	}
+
+	@Override
+	public void draw(Object unit, IRenderer renderer)
+	{
+		draw( renderer );
+	}
+
+	@Override
+	public boolean isProjected()
+	{
+		return true;
 	}
 
 }

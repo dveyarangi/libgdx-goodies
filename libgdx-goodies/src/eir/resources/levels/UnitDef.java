@@ -2,8 +2,7 @@ package eir.resources.levels;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.AnimationHandle;
-import eir.resources.TextureHandle;
+import eir.rendering.IUnitRenderer;
 
 
 
@@ -20,9 +19,7 @@ public class UnitDef implements IUnitDef
 
 	private UnitAnchorDef anchor;
 
-	private TextureHandle spriteTexture;
-
-	private AnimationHandle deathAnimation;
+	private IUnitRenderer renderer;
 
 	private boolean isPickable;
 	
@@ -31,8 +28,7 @@ public class UnitDef implements IUnitDef
 	private UnitDef() {}
 
 	public UnitDef(final String type, final int faction, final float size,
-			final TextureHandle unitSprite,
-			final AnimationHandle deathAnimation,
+			final IUnitRenderer renderer,
 			final boolean isPickable,
 			final float maxSpeed)
 	{
@@ -40,8 +36,7 @@ public class UnitDef implements IUnitDef
 		this.size = size;
 		this.faction = faction;
 
-		this.spriteTexture = unitSprite;
-		this.deathAnimation = deathAnimation;
+		this.renderer = renderer;
 
 		this.isPickable = isPickable;
 		
@@ -58,13 +53,11 @@ public class UnitDef implements IUnitDef
 	public float getSize() { return size; }
 
 	@Override
-	public AnimationHandle getDeathAnimation() { return deathAnimation; }
+	public IUnitRenderer getUnitRenderer() { return renderer; }
 
 	@Override
 	public UnitAnchorDef getAnchorDef() { return anchor; }
 
-	@Override
-	public TextureHandle getUnitSprite() { return spriteTexture; }
 
 	@Override
 	public boolean isPickable() { return isPickable; }

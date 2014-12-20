@@ -165,7 +165,7 @@ public class LevelLoader
 				{
 					String textureFile = elem.getAsString();
 
-					return gameFactory.registerTexture( new TextureHandle( textureFile ) );
+					return gameFactory.registerTexture(  TextureHandle.get( textureFile ) );
 				}
 			})
 
@@ -179,7 +179,7 @@ public class LevelLoader
 					String atlasId = object.get( "atlasId" ).getAsString();
 					String regionId = object.get( "regionId" ).getAsString();
 
-					TextureAtlasHandle atlasHandle = new TextureAtlasHandle( atlasId );
+					TextureAtlasHandle atlasHandle = TextureAtlasHandle.get( atlasId );
 
 					return gameFactory.registerAnimation(new AnimationHandle( atlasHandle, regionId ) );
 

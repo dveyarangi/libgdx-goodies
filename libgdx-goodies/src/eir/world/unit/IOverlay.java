@@ -1,7 +1,5 @@
 package eir.world.unit;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import eir.rendering.IRenderer;
 
 /**
@@ -9,11 +7,8 @@ import eir.rendering.IRenderer;
  * @author Fima
  *
  */
-public interface IOverlay <U extends IUnit>
+public interface IOverlay <U>
 {
-
-	public abstract void draw( U unit, final SpriteBatch batch );
-
 
 	public void draw( U unit, final IRenderer renderer );
 

@@ -1,6 +1,5 @@
 package eir.world.unit;
 
-import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.unit.ai.Task;
 
@@ -15,9 +14,9 @@ public abstract class TaskedUnit extends Unit
 	}
 
 	@Override
-	protected void reset( final ResourceFactory factory, final Level level )
+	protected void reset( final Level level )
 	{
-		super.reset( factory, level );
+		super.reset( level );
 		if(task != null)
 			throw new IllegalStateException("Cannot reset tasked unit: task not cleared.");
 	}

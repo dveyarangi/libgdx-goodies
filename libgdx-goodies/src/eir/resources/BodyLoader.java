@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.OrderedMap;
-import com.google.gson.Gson;
 
 /**
  * Loads the collision fixtures defined with the Physics Body Editor
@@ -51,9 +50,10 @@ public class BodyLoader {
 
         public static Model readModel(final String str)
         {
-        	Gson gson = new Gson();
+/*        	Gson gson = new Gson();
         	Model model = gson.fromJson( str, Model.class );
-        	return model;
+        	return model;*/
+        	return null;
         }
 
         // -------------------------------------------------------------------------

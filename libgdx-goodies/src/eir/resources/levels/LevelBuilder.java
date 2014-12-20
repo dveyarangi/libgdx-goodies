@@ -1,8 +1,7 @@
 package eir.resources.levels;
 
-import eir.resources.ResourceFactory;
+import eir.game.LevelSetup;
 import eir.world.Level;
-import eir.world.unit.UnitsFactory;
 
 /**
  * Builds level from level definitions
@@ -11,19 +10,17 @@ import eir.world.unit.UnitsFactory;
  */
 public class LevelBuilder
 {
-	private ResourceFactory gameFactory;
-	private final UnitsFactory unitsFactory;
-	public LevelBuilder(final ResourceFactory gameFactory, final UnitsFactory unitsFactory)
+	private LevelSetup setup;
+	public LevelBuilder( LevelSetup setup)
 	{
-		this.gameFactory = gameFactory;
-		this.unitsFactory = unitsFactory;
+		this.setup = setup;
 	}
 
 	public Level build(final LevelDef levelDef)
 	{
-		Level level = new Level( unitsFactory );
+		Level level = new Level( setup );
 
-		level.init( levelDef, gameFactory );
+		level.init( levelDef );
 
 		return level;
 

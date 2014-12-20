@@ -2,37 +2,38 @@ package eir.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.debug.Debug;
+import eir.game.LevelSetup;
+import eir.rendering.IRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.FactionDef;
 import eir.resources.levels.IUnitDef;
 import eir.resources.levels.LevelDef;
 import eir.resources.levels.LevelInitialSettings;
 import eir.resources.levels.UnitAnchorDef;
+import eir.resources.levels.UnitDef;
+import eir.world.controllers.ControllerFactory;
+import eir.world.controllers.IController;
+import eir.world.environment.Anchor;
 import eir.world.environment.Asteroid;
 import eir.world.environment.Environment;
 import eir.world.environment.Web;
-import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.parallax.Background;
 import eir.world.unit.Faction;
+import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
-import eir.world.unit.ai.AttackingOrder;
-import eir.world.unit.cannons.CannonFactory;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class Level
@@ -43,8 +44,12 @@ public class Level
 	private LevelDef def;
 
 	private ResourceFactory gameFactory;
+	
+	private ControllerFactory controllerFactory;
 
 	private float halfWidth, halfHeight;
+	
+	private Object data;
 
 	/**
 	 * Level spatial and navigational environment
@@ -73,7 +78,7 @@ public class Level
 	 * Set of units in game
 	 * TODO: swap to identity set?
 	 */
-	private final Set <Unit> units;
+	private final LinkedList <IUnit> units;
 
 	/**
 	 * List of webs
@@ -85,17 +90,32 @@ public class Level
 	/**
 	 * Units to add queue
 	 */
-	private final Queue <Unit> unitsToAdd = new LinkedList <Unit> ();
+	private final Queue <IUnit> unitsToAdd = new LinkedList <IUnit> ();
 
-	private final Queue <Unit> unitsToRemove = new LinkedList <Unit> ();
+	private final Queue <IUnit> unitsToRemove = new LinkedList <IUnit> ();
+
+	private int highestUnitZ = Integer.MIN_VALUE;
 
 	private UnitsFactory unitsFactory;
+	
+	private List <Effect> pendingEffects = new ArrayList <Effect>();
+	
 
-	public Level( final UnitsFactory unitsFactory )
+	public Level( LevelSetup setup )
 	{
-		this.unitsFactory = unitsFactory;
+		this.unitsFactory = setup.getUnitsFactory();
+		this.gameFactory = setup.getGameFactory();
+		this.controllerFactory = setup.getControllerFactory();
 		asteroids = new HashMap <String, Asteroid> ();
-		units = new HashSet <Unit> ();
+		Comparator <IUnit> comparator = new Comparator <IUnit> () {
+
+			@Override
+			public int compare(IUnit u1, IUnit u2) { return u1.z() - u2.z(); }
+			
+		};
+		
+		// TODO: (optimization) linked listify
+		units = new LinkedList <IUnit > ();
 		webs = new ArrayList <Web> ();
 		factions = new TIntObjectHashMap<Faction> ();
 	}
@@ -107,7 +127,7 @@ public class Level
 
 	public List <Web> getWebs() { return webs; }
 
-	public Set <Unit> getUnits() { return units; }
+	public List <IUnit> getUnits() { return units; }
 
 	/**
 	 * @return
@@ -126,13 +146,26 @@ public class Level
 	 * @return
 	 */
 	public float getHalfWidth() { return halfWidth; }
+	
+	public IUnit addUnit(Level level, UnitDef def, Anchor anchor)
+	{
+		IUnit unit = unitsFactory.getUnit(level, def, anchor);
+		addUnit( unit );
+		return unit;
+	}
+	public IUnit addUnit(Level level, UnitDef def,float x, float y, float a)
+	{
+		IUnit unit = unitsFactory.getUnit(level, def, x, y, a);
+		addUnit( unit );
+		return unit;
+	}
 
 	/**
 	 * @param startingNode
 	 */
-	public Unit addUnit(final Unit unit)
+	public IUnit addUnit(final IUnit unit)
 	{
-//		debug("Unit added: " + unit);
+		debug("Unit added: " + unit);
 		unitsToAdd.add(unit);
 		unit.getFaction().addUnit( unit );
 
@@ -143,11 +176,9 @@ public class Level
 	 * @param context
 	 * @param factory
 	 */
-	public void init(final LevelDef def, final ResourceFactory gameFactory )
+	public void init(final LevelDef def )
 	{
 		this.def = def;
-
-		this.gameFactory = gameFactory;
 
 		halfWidth = def.getWidth() / 2;
 		halfHeight = def.getHeight() / 2;
@@ -157,18 +188,19 @@ public class Level
 		this.background = def.getBackgroundDef();
 
 		environment.init( this );
-
+		
 		for( FactionDef factionDef : def.getFactionDefs() )
 		{
 			Faction faction = new Faction();
-			faction.init( gameFactory, this, factionDef );
+			faction.init( this, factionDef );
 
 //			faction.getScheduler().addOrder( UnitsFactory.ANT, new RandomTravelingOrder( environment, 0 ) );
 			// TODO: wrong place for this
-			faction.getScheduler().addOrder( CannonFactory.NAME, new AttackingOrder( 0 ) );
-
 			factions.put( factionDef.getOwnerId(), faction );
 		}
+		
+		controllerFactory.init( this );
+
 
 		Vector2 coord = new Vector2();
 
@@ -186,10 +218,10 @@ public class Level
 				Asteroid asteroid = getAsteroid( anchorDef.getAsteroidName() );
 	
 				SurfaceNavNode anchor = asteroid.getNavNode();
-				unit = getUnitsFactory().getUnit( gameFactory, this, unitDef, anchor );
+				unit = getUnitsFactory().getUnit( this, unitDef, anchor );
 			}
 			else
-				unit = getUnitsFactory().getUnit( gameFactory, this, unitDef, unitDef.getPosition().x, unitDef.getPosition().y, 0 );
+				unit = getUnitsFactory().getUnit( this, unitDef, unitDef.getPosition().x, unitDef.getPosition().y, 0 );
 			
 
 			addUnit(unit);
@@ -214,7 +246,7 @@ public class Level
 	 */
 	public void update(final float delta)
 	{
-
+		controllerFactory.update( delta );
 
 		reassesUnits();
 
@@ -224,10 +256,11 @@ public class Level
 			faction.update( delta );
 		}
 
-		Iterator <Unit> unIt = units.iterator();
+		// TODO: (optimize) a-ha!
+		Iterator <IUnit> unIt = units.descendingIterator();
 		while(unIt.hasNext())
 		{
-			Unit unit = unIt.next();
+			IUnit unit = unIt.next();
 
 			if(unit.isAlive()) // unit may already be dead from previous hits
 			{
@@ -239,6 +272,7 @@ public class Level
 			if(!unit.isAlive() ||
 					!inWorldBounds(unit.getArea().getAnchor())) // unit may be dead from the collision
 			{
+				//addEffect(unit.createDeathEffect( ));
 				unitsToRemove.add ( unit );
 			}
 
@@ -246,12 +280,16 @@ public class Level
 
 		environment.update( delta );
 
-
 	}
 
-	public void draw(final SpriteBatch batch)
+	public void draw(IRenderer levelRenderer)
 	{
-
+		for(Effect effect : pendingEffects)
+		{
+			levelRenderer.addEffect( effect );
+		}
+		
+		pendingEffects.clear();
 
 	}
 
@@ -265,7 +303,7 @@ public class Level
 	 * @param sourceNode
 	 * @param targetNode
 	 */
-	public void toggleWeb(final SurfaceNavNode sourceNode, final SurfaceNavNode targetNode)
+/*	public void toggleWeb(final SurfaceNavNode sourceNode, final SurfaceNavNode targetNode)
 	{
 
 		if(sourceNode.getDescriptor().getObject() == targetNode.getDescriptor().getObject())
@@ -309,7 +347,7 @@ public class Level
 		environment.getGroundMesh().update();
 		Debug.stopTiming("navmesh calculation");
 
-	}
+	}*/
 
 
 	public Background getBackground() { return background; }
@@ -325,30 +363,57 @@ public class Level
 	{
 		while(!unitsToAdd.isEmpty())
 		{
-			Unit unit = unitsToAdd.poll();
-			units.add( unit );
+			IUnit unit = unitsToAdd.poll();
+			
+			if(unit.z() >= highestUnitZ )
+			{
+				units.add( unit );
+				highestUnitZ = unit.z();
+			}
+			else
+			{
+				int currZ = highestUnitZ;
+				int idx = units.size()-1;
+				while(currZ > unit.z() && idx >= 0) { 
+					currZ = units.get(idx).z();
+					idx --; 
+				}
+				
+				units.add( idx+1, unit  );
+			}
+			
+			
 			environment.add( unit );
 		}
 
 		while(!unitsToRemove.isEmpty())
 		{
-			Unit unit = unitsToRemove.poll();
+			IUnit unit = unitsToRemove.poll();
 
+			// TODO: (optimize) a-ha!
 			units.remove( unit );
+			
 			environment.remove( unit );
 			// dat questionable construct:
 			unit.getFaction().removeUnit( unit );
 
 			unitsFactory.free( unit );
-//			debug("Unit removed: " + unit);
+			
+			Effect effect = unit.createDeathEffect();
+			if(effect == null)
+				assert debug("Unit " + unit + " has no death effect");
+			else
+				pendingEffects.add( effect );
+			assert debug("Unit removed: " + unit);
 		}
 	}
 
 
 
-	private void debug(final String message)
+	private boolean debug(final String message)
 	{
 		Gdx.app.debug( def.getName(), message);
+		return true;
 	}
 
 	public UnitsFactory getUnitsFactory() {	return unitsFactory; }
@@ -361,6 +426,33 @@ public class Level
 	 * @return
 	 */
 	public LevelInitialSettings getInitialSettings() { return def.getInitialSettings(); }
+
+
+
+	public ResourceFactory getResourceFactory() { return gameFactory; }
+
+
+
+	public void moveToFaction(IUnit unit, int targetFaction)
+	{
+		Faction prevFaction = unit.getFaction();
+		prevFaction.removeUnit( unit );
+		
+		Faction newFaction = getFaction( targetFaction );
+		newFaction.addUnit( unit );
+		unit.setFaction( newFaction );
+	}
+
+	/*
+	 * some generic module to append at level creation
+	 */
+	public <E> E getData() { return (E) data; }
+	public void setData(Object data) { this.data = data;  }
+
+
+
+	public IController getController(int factionId) { return controllerFactory.getController(factionId); }
+
 
 
 

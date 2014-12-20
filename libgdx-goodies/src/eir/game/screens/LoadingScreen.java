@@ -24,13 +24,14 @@ public class LoadingScreen  extends AbstractScreen
 		super(game);
 
 		this.levelSetup = levelSetup;
+		
+		levelSetup.init();
 	}
 
 	@Override
 	public void render(final float delta)
 	{
 		
-		levelSetup.init();
 		
 		super.render( delta );
 //		Debug.log( levelSetup.getState() + " " + levelSetup.getPercentage());

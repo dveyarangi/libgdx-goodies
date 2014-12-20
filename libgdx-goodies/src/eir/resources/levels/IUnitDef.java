@@ -2,15 +2,12 @@ package eir.resources.levels;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.AnimationHandle;
-import eir.resources.TextureHandle;
+import eir.rendering.IUnitRenderer;
 
 public interface IUnitDef
 {
 
-	TextureHandle getUnitSprite();
-
-	AnimationHandle getDeathAnimation();
+	IUnitRenderer getUnitRenderer();
 
 	float getSize();
 

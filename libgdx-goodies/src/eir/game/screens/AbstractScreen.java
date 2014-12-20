@@ -94,8 +94,7 @@ public abstract class AbstractScreen implements Screen
     }
 
     @Override
-    public void render(
-        final float delta )
+    public void render( final float delta )
     {
         // (1) process the game logic
 

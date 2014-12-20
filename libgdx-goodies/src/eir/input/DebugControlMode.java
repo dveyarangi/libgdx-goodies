@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
 import eir.resources.ResourceFactory;
@@ -43,9 +44,9 @@ public class DebugControlMode implements IControlMode
 
 	private int unitIdx;
 
-	DebugControlMode(final ResourceFactory gameFactory, final Level level)
+	DebugControlMode(final Level level)
 	{
-		this.gameFactory = gameFactory;
+		this.gameFactory = level.getResourceFactory();
 
 		this.level = level;
 
@@ -56,42 +57,6 @@ public class DebugControlMode implements IControlMode
 	@Override
 	public PickingSensor getPickingSensor() { return sensor; }
 
-
-	@Override
-	public void touchUnit( final ISpatialObject pickedObject, int button )
-	{
-/*		if(pickedObject instanceof Hex)
-		{
-			Hex hex = (Hex) pickedObject;
-			
-			switch(button)
-			{
-			case Input.Buttons.RIGHT:
-				hex.setFaction(null);
-			
-				break;
-			case Input.Buttons.LEFT:
-				break;
-			}
-		}
-		if(pickedObject instanceof Edge)
-		{
-			Edge edge = (Edge) pickedObject;
-			
-			switch(button)
-			{
-			case Input.Buttons.RIGHT:
-				edge.setFaction(null);
-//				hex.rotate( 1 );
-			
-				break;
-			case Input.Buttons.LEFT:
-				
-				hexController.makeMove( edge ) ;
-				break;
-			}
-		}*/
-	}
 
 	@Override
 	public void render( final IRenderer renderer )
@@ -128,36 +93,13 @@ public class DebugControlMode implements IControlMode
 	}
 
 	@Override
-	public ISpatialObject objectPicked( final List <ISpatialObject> objects )
-	{
-		pickedObject = null;
-		for(ISpatialObject o : objects)
-		{
-			if(o instanceof SurfaceNavNode)
-			{
-				pickedObject = o;
-			}
-			if(o instanceof IPickable)
-			{
-				IPickable pickedUnit = (IPickable) o;
-
-				pickedUnit.setIsHovered( true );
-				pickedObject = o;
-				break;
-			}
-		}
-
-		return pickedObject;
-	}
-
-	@Override
 	public void objectUnpicked( final ISpatialObject pickedObject )
 	{
 //		assert pickedObject == pickedNode;
 		if(pickedObject instanceof IPickable)
 		{
 			IPickable pickedUnit = (IPickable) pickedObject;
-			pickedUnit.setIsHovered( false );
+			pickedUnit.setIsHovered( Float.NaN, Float.NaN );
 		}
 
 		this.pickedObject = null;
@@ -184,6 +126,82 @@ public class DebugControlMode implements IControlMode
 
 			break;
 		}
+	}
+
+	@Override
+	public void keyUp(int keycode)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(char keycode)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void untouch()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void touchUnit(float worldX, float worldY, float scale,
+			ISpatialObject pickedObject, int button)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ISpatialObject objectPicked(float x, float y, List<ISpatialObject> pickedObjects)
+	{
+		pickedObject = null;
+		for(ISpatialObject o : pickedObjects)
+		{
+			if(o instanceof SurfaceNavNode)
+			{
+				pickedObject = o;
+			}
+			if(o instanceof IPickable)
+			{
+				IPickable pickedUnit = (IPickable) o;
+
+				pickedUnit.setIsHovered( x,y );
+				pickedObject = o;
+				break;
+			}
+		}
+
+		return pickedObject;
+	}
+
+	@Override
+	public void setWorldPointer(Vector2 pointerPosition2, float scale)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dragUnit(float worldX, float worldY, float zoom, int pointer,
+			ISpatialObject pickedObject)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float delta)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

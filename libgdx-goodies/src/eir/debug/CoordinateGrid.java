@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import eir.rendering.IRenderer;
+import eir.world.unit.IOverlay;
 
 
 
@@ -23,7 +24,7 @@ import eir.rendering.IRenderer;
  * @author dveyarangi
  *
  */
-public class CoordinateGrid
+public class CoordinateGrid implements IOverlay
 {
 	private final OrthographicCamera camera;
 	private final float halfWidth;
@@ -36,7 +37,8 @@ public class CoordinateGrid
 		this.halfWidth = width/2;
 	}
 
-	public void draw( final IRenderer renderer )
+	@Override
+	public void draw( Object unit, final IRenderer renderer )
 	{
 
 
@@ -89,6 +91,14 @@ public class CoordinateGrid
 
 		shape.end();
 
+	}
+
+
+	@Override
+	public boolean isProjected()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

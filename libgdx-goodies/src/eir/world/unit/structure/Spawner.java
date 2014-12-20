@@ -3,7 +3,6 @@
  */
 package eir.world.unit.structure;
 
-import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
@@ -22,9 +21,9 @@ public class Spawner extends Unit implements IDamager
 
 
 	@Override
-	protected void reset( final ResourceFactory gameFactory, final Level level )
+	protected void reset( final Level level )
 	{
-		super.reset( gameFactory, level );
+		super.reset( level );
 
 		this.hull = new Hull(10000f, 0f, new float [] {0f,0f,0f,0f});
 	}

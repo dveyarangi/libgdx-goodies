@@ -1,10 +1,6 @@
 package eir.game;
 
-import java.util.Set;
-
 import eir.resources.levels.LevelDef;
-import eir.world.unit.Unit;
-import eir.world.unit.UnitsFactory.UnitFactory;
 
 public abstract class JSONLevelSetup extends LevelSetup
 {
@@ -18,16 +14,13 @@ public abstract class JSONLevelSetup extends LevelSetup
 	
 
 	@Override
-	protected LevelDef loadLefelDef()
+	protected LevelDef loadLevelDef()
 	{
 		
 		// loading level definitions from file:
 		// this call also registers resource handles at the factory for future loading
 		LevelDef levelDef = gameFactory.readLevelDefs( levelId, unitsFactory );
-		return null;
+		return levelDef;
 	}
-
-	@Override
-	protected abstract void registerUnitFactories(Set<UnitFactory<? extends Unit>> factories);
 
 }

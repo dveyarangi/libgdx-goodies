@@ -3,12 +3,8 @@
  */
 package eir.world.unit.wildlings;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.rendering.IRenderer;
-import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
@@ -40,32 +36,12 @@ public class Birdy extends TaskedUnit implements IDamager
 	public Vector2 impactImpulse;
 
 	@Override
-	protected void reset( final ResourceFactory gameFactory, final Level level  )
+	protected void reset( final Level level  )
 	{
-		super.reset( gameFactory, level );
+		super.reset( level );
 		this.hull = new Hull(300f, 0f, new float [] {0f,0f,0f,0f});
 	}
 
-	@Override
-	public void draw( final IRenderer renderer)
-	{
-		final SpriteBatch batch = renderer.getSpriteBatch();
-		Vector2 position = getBody().getAnchor();
-		Sprite sprite = getUnitSprite();
-		batch.draw( sprite,
-				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
-				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
-				sprite.getRegionWidth(), sprite.getRegionHeight(),
-				getSize()/sprite.getRegionWidth(),
-				getSize()/sprite.getRegionWidth(), angle);
-/*		TextureRegion region = GameFactory.getAnimation(animationId).getKeyFrame( lifetime, true );
-		batch.draw( region,
-				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
-				region.getRegionWidth()/2,region.getRegionHeight()/2,
-				region.getRegionWidth(), region.getRegionHeight(),
-				size/region.getRegionWidth(),
-				size/region.getRegionWidth(), angle);*/
-	}
 
 	@Override
 	public void update(final float delta)

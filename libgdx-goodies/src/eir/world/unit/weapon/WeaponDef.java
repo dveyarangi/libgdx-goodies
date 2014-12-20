@@ -2,9 +2,9 @@ package eir.world.unit.weapon;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.AnimationHandle;
+import eir.rendering.IRenderer;
+import eir.rendering.IUnitRenderer;
 import eir.resources.ResourceFactory;
-import eir.resources.TextureHandle;
 import eir.resources.levels.UnitDef;
 import eir.world.Effect;
 import eir.world.unit.Damage;
@@ -13,10 +13,10 @@ import eir.world.unit.cannons.TargetProvider;
 
 public abstract class WeaponDef extends UnitDef
 {
-	public WeaponDef(final String type, final int faction, final float size,
-			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final boolean isPickable)
+	public WeaponDef( String type, final int faction, final float size,
+			IUnitRenderer renderer, final boolean isPickable)
 	{
-		super( type, faction, size, unitSprite, deathAnimation, isPickable, 0 );
+		super( type, faction, size, renderer, isPickable, 0 );
 	}
 
 	/**
@@ -78,8 +78,7 @@ public abstract class WeaponDef extends UnitDef
 	 */
 	protected abstract float createAngle( Weapon weapon, Vector2 firingDir);
 
-
-	public abstract Effect createTraceEffect(Bullet bullet);
+	public abstract Effect createTraceEffect( Bullet bullet, IRenderer renderer );
 
 	public abstract Effect createHitEffect( Bullet bullet, boolean b );
 

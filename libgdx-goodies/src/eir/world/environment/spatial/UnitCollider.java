@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eir.world.unit.IDamager;
-import eir.world.unit.Unit;
+import eir.world.unit.IUnit;
 
 /**
  * @author dveyarangi
@@ -16,11 +16,11 @@ import eir.world.unit.Unit;
 public class UnitCollider implements ISpatialSensor<ISpatialObject>
 {
 
-	private Unit collidingAnt;
+	private IUnit collidingAnt;
 
 	private List <IDamager> aoeDamages = new ArrayList <IDamager> ();
 
-	public void setAnt(final Unit collidingAnt)
+	public void setAnt(final IUnit collidingAnt)
 	{
 		this.collidingAnt = collidingAnt;
 	}
@@ -28,11 +28,15 @@ public class UnitCollider implements ISpatialSensor<ISpatialObject>
 	@Override
 	public boolean objectFound(final ISpatialObject object)
 	{
-		if(! (object instanceof Unit))
+		if(object == collidingAnt)
+			return false;
+		
+		if(! (object instanceof IUnit))
 			return false;
 
 
-		Unit ant = (Unit) object;
+		
+		IUnit ant = (IUnit) object;
 		boolean sameFaction = ant.getFaction().getOwnerId() == collidingAnt.getFaction().getOwnerId();
 		boolean damageDealt = false;
 		if(object instanceof IDamager)
@@ -49,7 +53,6 @@ public class UnitCollider implements ISpatialSensor<ISpatialObject>
 				else
 				{
 					collidingAnt.hit( damager.getDamage(), damager, 1 );
-
 					damageDealt = true;
 				}
 			}

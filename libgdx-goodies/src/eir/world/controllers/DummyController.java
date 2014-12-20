@@ -2,6 +2,7 @@ package eir.world.controllers;
 
 import eir.world.unit.Faction;
 import eir.world.unit.IDamager;
+import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
 public class DummyController implements IController
@@ -12,7 +13,7 @@ public class DummyController implements IController
 	}
 
 	@Override
-	public void yellUnitHit(final Unit unit, final IDamager hitSource) {
+	public void yellUnitHit(final Unit unit, float damage,  final IDamager hitSource) {
 	}
 
 	@Override
@@ -20,7 +21,7 @@ public class DummyController implements IController
 	}
 
 	@Override
-	public void unitAdded( final Unit unit )
+	public void unitAdded( final IUnit unit )
 	{
 		// TODO Auto-generated method stub
 

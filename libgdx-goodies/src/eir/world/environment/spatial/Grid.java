@@ -102,6 +102,15 @@ public abstract class Grid <E>
 	{
 		return FastMath.round(value * invCellsize);
 	}
+	
+	protected final int toLowerGridIndex( final float value )
+	{
+		return FastMath.floor(value * invCellsize);
+	}
+	protected final int toHigherGridIndex( final float value )
+	{
+		return FastMath.ceil(value * invCellsize);
+	}
 
 	public final boolean isInvalidIndex( final int x, final int y )
 	{

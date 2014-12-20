@@ -1,5 +1,6 @@
 package eir.world.unit.structure;
 
+import eir.rendering.SpriteRenderer;
 import eir.resources.AnimationHandle;
 import eir.resources.TextureHandle;
 import eir.resources.levels.UnitDef;
@@ -14,7 +15,7 @@ public class SpawnerDef extends UnitDef
 			final AnimationHandle deathAnimation, final boolean isPickable,
 			final UnitDef spawnedUnit, final int maxUnits, final float spawnInterval)
 	{
-		super( type, factionId, size, unitSprite, deathAnimation, isPickable, 0 );
+		super( type, factionId, size, new SpriteRenderer(unitSprite.getPath(), size, deathAnimation, size), isPickable, 0 );
 
 		this.spawnedUnit = spawnedUnit;
 		this.maxUnits = maxUnits;

@@ -1,14 +1,34 @@
 package eir.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.common.base.Preconditions;
+
 public class TextureAtlasHandle
 {
 	private String path;
-
-	TextureAtlasHandle( final String path)
+	
+	private static Map <String, TextureAtlasHandle> handles = new HashMap <String, TextureAtlasHandle> ();
+	public TextureAtlasHandle() {}
+	private TextureAtlasHandle( String path ) 
 	{
-		this.path = path;
+		this.path = Preconditions.checkNotNull( path );
 	}
 
+
+	public static TextureAtlasHandle get( final String path )
+	{
+		TextureAtlasHandle handle = handles.get( path );
+		if( handle == null )
+		{
+			handle = new TextureAtlasHandle( path );
+			handles.put( path, handle );
+		}
+		
+		return handle;
+	}
+	
 	public String getPath() { return path; }
 
 	@Override

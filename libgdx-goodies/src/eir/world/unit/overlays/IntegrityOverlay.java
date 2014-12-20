@@ -1,6 +1,7 @@
 package eir.world.unit.overlays;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -21,12 +22,6 @@ public class IntegrityOverlay <U extends IUnit> implements IOverlay <U>
 {
 
 	@Override
-	public void draw( final U unit, final SpriteBatch batch )
-	{
-		// NOOP TODO: not supported yet
-	}
-
-	@Override
 	public void draw( final U unit, final IRenderer renderer )
 	{
 		Hull hull = unit.getHull();
@@ -42,14 +37,14 @@ public class IntegrityOverlay <U extends IUnit> implements IOverlay <U>
 		AABB area = unit.getArea();
 
 		float barYOffset = 0.1f;
-		float barHeight = 1;
+		float barHeight = unit.size()/10;
 
 		float width = area.rx()*2;
 		float filledWidth = width * percentage;
 
 		ShapeRenderer shape = renderer.getShapeRenderer();
-
-		shape.setColor( 1 - percentage, 0, percentage, 1 );
+		Gdx.gl.glEnable( GL20.GL_BLEND);
+		shape.setColor( 1f - percentage, 0, percentage, 1f - percentage );
 		shape.begin( ShapeType.Line );
 
 		shape.rect( area.getMinX(), area.getMaxY()- barYOffset, width, barHeight-barYOffset );
@@ -59,6 +54,7 @@ public class IntegrityOverlay <U extends IUnit> implements IOverlay <U>
 		shape.begin( ShapeType.Filled );
 		shape.rect( area.getMinX(), area.getMaxY()- barYOffset, filledWidth, barHeight-barYOffset );
 		shape.end();
+		Gdx.gl.glDisable( GL20.GL_BLEND);
 	}
 
 	@Override

@@ -3,6 +3,8 @@
  */
 package eir.world.unit.wildlings;
 
+import eir.resources.ResourceFactory;
+import eir.resources.levels.LevelDef;
 import eir.world.unit.UnitsFactory.UnitFactory;
 import eir.world.unit.ai.TaskStage;
 import eir.world.unit.behaviors.IPulseDef;
@@ -26,5 +28,12 @@ public class BirdyFactory extends UnitFactory <Birdy>
 
 	@Override
 	protected Birdy createEmpty() { return new Birdy(); }
+
+	@Override
+	protected void init(LevelDef def, ResourceFactory factory)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 }

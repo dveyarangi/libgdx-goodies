@@ -4,6 +4,7 @@
 package eir.world.unit.ant;
 
 import eir.resources.ResourceFactory;
+import eir.resources.levels.LevelDef;
 import eir.world.unit.UnitsFactory.UnitFactory;
 import eir.world.unit.ai.TaskStage;
 
@@ -27,6 +28,13 @@ public class AntFactory extends UnitFactory <Ant>
 
 	@Override
 	protected Ant createEmpty() { return new Ant(); }
+
+	@Override
+	protected void init(LevelDef def, ResourceFactory factory)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 
 

@@ -3,6 +3,8 @@
  */
 package eir.world.unit.structure;
 
+import eir.resources.ResourceFactory;
+import eir.resources.levels.LevelDef;
 import eir.resources.levels.UnitDef;
 import eir.world.unit.UnitsFactory.UnitFactory;
 
@@ -23,5 +25,12 @@ public class SpawnerFactory extends UnitFactory <Spawner>
 
 	@Override
 	protected Class <? extends UnitDef> getDefClass() { return SpawnerDef.class; }
+
+	@Override
+	protected void init(LevelDef def, ResourceFactory factory)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 }

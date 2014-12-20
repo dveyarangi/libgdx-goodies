@@ -2,9 +2,9 @@ package eir.world.environment.nav;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.PolygonalModel;
 import eir.world.environment.Anchor;
 import eir.world.environment.Asteroid;
+import eir.world.unit.Unit;
 
 public class SurfaceNavNode extends NavNode implements Anchor
 {
@@ -36,6 +36,6 @@ public class SurfaceNavNode extends NavNode implements Anchor
 	public float getAngle() { return angle; }
 
 	@Override
-	public Object getParent() {	return getDescriptor().getObject();	}
+	public Unit getParent() {	return getDescriptor().getObject();	}
 
 }

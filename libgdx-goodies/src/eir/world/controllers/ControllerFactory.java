@@ -1,10 +1,14 @@
 package eir.world.controllers;
 
+import eir.world.Level;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
-public class ControllerFactory
+
+public abstract class ControllerFactory
 {
-	public static IController createController(final String type)
-	{
+	
+/*	public static IController createController(final String type)
+  {
 		String className = "eir.world.controllers." + type;
 		Class<?> ctrlClass;
 		try {
@@ -27,4 +31,38 @@ public class ControllerFactory
 
 		return ctrl;
 	}
+	*/
+	
+	TIntObjectHashMap <IController> controllers  = new TIntObjectHashMap <IController> ();
+	
+	public ControllerFactory()
+	{
+		appendControllers( controllers );
+	}
+	
+	public IController getController( int faction )
+	{
+		if(! controllers.contains( faction ))
+			throw new RuntimeException("No controller for faction " + faction);
+		return controllers.get( faction );
+	}
+
+	public void init(Level level)
+	{
+		
+		for(int faction : controllers.keys())
+		{
+			IController ctrl = controllers.get( faction );
+			ctrl.init( level.getFaction( faction ) );
+		}
+	}
+	
+	protected abstract void appendControllers( TIntObjectHashMap <IController> controllers);
+
+	public void update(float delta)
+	{
+		for(Object ctrl : controllers.values())
+			((IController)ctrl).update( delta );
+	}
+
 }

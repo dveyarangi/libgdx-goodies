@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
+import eir.rendering.ITextureGenerator;
 import eir.resources.levels.LevelDef;
 import eir.world.environment.Asteroid;
 import eir.world.unit.UnitsFactory;
@@ -49,14 +50,19 @@ public class ResourceFactory
 	 * Loaded textures by name (filename, actually)
 	 */
 	private final Map <AnimationHandle, Animation> animationCache = new HashMap <AnimationHandle, Animation> ();
-
+	
+	private EnhancedTextureLoader textureLoader;
+	
 	public ResourceFactory()
 	{
 		FileHandleResolver resolver = new InternalFileHandleResolver();
 		this.manager = new AssetManager( resolver );
 		manager.setLoader( PolygonShape.class, new PolygonLoader( resolver )  );
-//		manager.setLoader( Texture.class, new EnhancedTextureLoader( resolver )  );
+		
+		textureLoader = new EnhancedTextureLoader( resolver );
+		manager.setLoader( Texture.class, textureLoader  );
 
+		// TODO: redundant
 		registerSharedResources();
 
 	}
@@ -79,31 +85,17 @@ public class ResourceFactory
 		return levelDef;
 	}
 
-	public final static TextureHandle ROCKET_TXR = new TextureHandle( "anima//bullets//rocket01.png" );
-	public final static TextureHandle FIREBALL_TXR = new TextureHandle( "anima//bullets//fireball.png" );
-	public final static TextureHandle STRIPE_TXR = new TextureHandle( "anima//bullets//stripe.png" );
+	public final static TextureHandle ROCKET_TXR = TextureHandle.get( "anima//bullets//rocket01.png" );
+	public final static TextureHandle FIREBALL_TXR = TextureHandle.get( "anima//bullets//fireball.png" );
+	public final static TextureHandle STRIPE_TXR = TextureHandle.get( "anima//bullets//stripe.png" );
 
-	public final static TextureHandle CANNON_HYBRID_TXR = new TextureHandle( "anima//cannons//cannon_hybrid_01.png" );
-	public final static TextureHandle CANNON_FAN_TXR = new TextureHandle( "anima//cannons//fan_canon_01.png" );
+	public final static TextureHandle CANNON_HYBRID_TXR = TextureHandle.get( "anima//cannons//cannon_hybrid_01.png" );
+	public final static TextureHandle CANNON_FAN_TXR = TextureHandle.get( "anima//cannons//fan_canon_01.png" );
 
-	public static final TextureAtlasHandle EXPLOSION_02_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion02.atlas" );
-	public static final AnimationHandle EXPLOSION_02_ANIM = new AnimationHandle(EXPLOSION_02_ATLAS, "explosion02");
-	public static final TextureAtlasHandle EXPLOSION_03_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion03.atlas" );
-	public static final AnimationHandle EXPLOSION_03_ANIM = new AnimationHandle(EXPLOSION_03_ATLAS, "explosion03");
-	public static final TextureAtlasHandle EXPLOSION_04_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion04.atlas" );
-	public static final AnimationHandle EXPLOSION_04_ANIM = new AnimationHandle(EXPLOSION_04_ATLAS, "explosion04");
-	public static final TextureAtlasHandle EXPLOSION_05_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion05.atlas" );
-	public static final AnimationHandle EXPLOSION_05_ANIM = new AnimationHandle(EXPLOSION_05_ATLAS, "explosion05");
+	public final static TextureHandle SPAWNER_TXR = TextureHandle.get( "anima//structures//spawner01.png" );
+	public final static TextureHandle BIRDY_TXR = TextureHandle.get( "anima//gears//birdy_02.png" );
 
-	public static final TextureAtlasHandle CROSSHAIR_ATLAS = new TextureAtlasHandle( "anima//ui//crosshair01.atlas" );
-	public static final AnimationHandle CROSSHAIR_ANIM = new AnimationHandle(CROSSHAIR_ATLAS, "crosshair");
-	public static final TextureAtlasHandle SMOKE_ATLAS = new TextureAtlasHandle( "anima//effects//smoke//smoke.atlas" );
-	public static final AnimationHandle SMOKE_ANIM = new AnimationHandle(SMOKE_ATLAS, "smoke");
-
-	public final static TextureHandle SPAWNER_TXR = new TextureHandle( "anima//structures//spawner01.png" );
-	public final static TextureHandle BIRDY_TXR = new TextureHandle( "anima//gears//birdy_02.png" );
-
-	public static final TextureHandle CROSSHAIR_TXR = new TextureHandle( "ui//crosshair.png" );
+	public static final TextureHandle CROSSHAIR_TXR = TextureHandle.get( "ui//crosshair.png" );
 
 
 	private void registerSharedResources()
@@ -128,7 +120,6 @@ public class ResourceFactory
 
 	}
 
-
 	public float loadResources()
 	{
 		if(manager.update())
@@ -140,6 +131,14 @@ public class ResourceFactory
 
 		return manager.getProgress();
 	}
+	
+	public TextureHandle registerTextureGenerator( final String name, ITextureGenerator generator )
+	{
+		textureLoader.registerGenerator(name, generator);
+		manager.load( name, Texture.class );
+		
+		return TextureHandle.get( name );
+	}
 
 
 	public PolygonalModelHandle registerModelHandle( final PolygonalModelHandle model )
@@ -149,8 +148,7 @@ public class ResourceFactory
 		return model;
 	}
 
-	public PolygonalModel getPolygonalModel( final Asteroid asteroid,
-			final PolygonalModelHandle model )
+	public PolygonalModel getPolygonalModel( final Asteroid asteroid, final PolygonalModelHandle model )
 	{
 		PolygonShape shape = manager.get( model.getPath(), PolygonShape.class );
 
@@ -235,7 +233,6 @@ public class ResourceFactory
 		//		float realOY = sprite.getHeight()/2;
 		//		sprite.setOrigin(realOX, realOY);
 
-
 		return sprite;
 	}
 
@@ -265,13 +262,11 @@ public class ResourceFactory
 			throw new RuntimeException("Texture not found: " + texturePath );
 		}
 		
-		return registerTexture (new TextureHandle(texturePath));
+		return registerTexture ( TextureHandle.get(texturePath));
 		
 	}
-	
 
 	static NumberFormat ANIMA_NUMBERING = new DecimalFormat( "0000" );
-
 
 	public AnimationHandle registerAnimation(  final AnimationHandle animationHandle )
 	{

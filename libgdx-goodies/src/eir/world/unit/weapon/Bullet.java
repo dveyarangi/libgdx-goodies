@@ -3,12 +3,9 @@
  */
 package eir.world.unit.weapon;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
-import eir.resources.ResourceFactory;
 import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
@@ -29,22 +26,26 @@ public class Bullet extends Unit implements IDamager
 	Weapon weapon;
 
 
-//	public IWeapon weapon;
 
-	public float angle;
 
 	public boolean leaveTrace = false;
 	public boolean decaying = false;
+	
+	public Vector2 lastTargetPosition;
+	
+	
 
 	Bullet()
 	{
 		super();
+		
+		this.lastTargetPosition = new Vector2();
 	}
 
 	@Override
-	protected void reset( final ResourceFactory gameFactory, final Level level )
+	protected void reset( final Level level )
 	{
-		super.reset( gameFactory, level );
+		super.reset( level );
 		//this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
 		this.leaveTrace = false;
 
@@ -60,8 +61,9 @@ public class Bullet extends Unit implements IDamager
 	{
 		super.update( delta );
 
-		if(this.target == null || ! this.target.isAlive() )
+		if(target != null && ! this.target.isAlive() )
 		{
+			this.lastTargetPosition.set( target.getArea().getAnchor() );
 			this.setDecaying( true );
 			this.target = null;
 		}
@@ -82,43 +84,13 @@ public class Bullet extends Unit implements IDamager
 	@Override
 	public void draw( final IRenderer renderer )
 	{
-		final SpriteBatch batch = renderer.getSpriteBatch();
-
-		Vector2 position = getBody().getAnchor();
-/*		TextureRegion region = weapon.getBulletAnimation().getKeyFrame( getLifetime(), true );
-		batch.draw( region,
-				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
-				region.getRegionWidth()/2,region.getRegionHeight()/2,
-				region.getRegionWidth(), region.getRegionHeight(),
-				size/region.getRegionWidth(),
-				size/region.getRegionWidth(), angle);
-*/
-		Sprite sprite = getUnitSprite();
-		batch.draw( sprite,
-				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
-				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
-				sprite.getRegionWidth(), sprite.getRegionHeight(),
-				getSize()/sprite.getRegionWidth(),
-				getSize()/sprite.getRegionHeight(), angle);
-
-/*		Animation crossHair = renderer.getAnimation( GameFactory.CROSSHAIR_ANIM );
-
-		if(weapon.getDef().getBulletBehavior().requiresTarget() && getTarget() != null)
-		{
-			TextureRegion crossHairregion = crossHair.getKeyFrame( getLifetime(), true );
-			batch.draw( crossHairregion,
-					getTarget().getArea().getAnchor().x-crossHairregion.getRegionWidth()/2, getTarget().getArea().getAnchor().y-crossHairregion.getRegionHeight()/2,
-					crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
-					crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
-					5f/crossHairregion.getRegionWidth(),
-					5f/crossHairregion.getRegionWidth(), angle);
-		}*/
+		super.draw( renderer );
 
 		if(leaveTrace)
 		{
 //			if(RandomUtil.oneOf( 3 ))
 			{
-				Effect effect = weapon.getDef().createTraceEffect(this);
+				Effect effect = weapon.getDef().createTraceEffect(this, renderer);
 				if(effect != null)
 				{
 					renderer.addEffect( effect );
@@ -134,12 +106,6 @@ public class Bullet extends Unit implements IDamager
 
 	@Override
 	public Weapon getWeapon() {	return weapon; }
-
-	@Override
-	public Effect getDeathEffect(  )
-	{
-		return weapon.getDef().createHitEffect( this, true );
-	}
 
 	@Override
 	public Damage getDamage()
@@ -158,4 +124,21 @@ public class Bullet extends Unit implements IDamager
 	public void setDecaying( final boolean decaying ) { this.decaying = decaying; }
 
 	public boolean isDecaying() { return decaying; }
+
+	@Override
+	public Effect createDeathEffect( )
+	{
+/*		if( decaying )
+			return null;
+		else*/
+		return weapon.getDef().createHitEffect( this, true );
+	}
+	
+	@Override
+	protected float damage( final Damage source, final float damageCoef )
+	{
+		
+		setDead();
+		return 0;
+	}
 }
