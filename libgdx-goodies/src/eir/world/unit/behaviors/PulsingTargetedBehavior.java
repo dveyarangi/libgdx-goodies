@@ -37,7 +37,7 @@ public class PulsingTargetedBehavior <U extends Unit> implements UnitBehavior <U
 		{
 
 			unit.timeToPulse = pulseDef.getPulseDuration();
-			unit.target = task.getOrder().getTarget();
+			unit.target = task.getTarget();
 
 			ISpatialObject targetObject = unit.getTarget();
 

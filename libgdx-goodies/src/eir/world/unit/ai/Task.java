@@ -2,6 +2,7 @@ package eir.world.unit.ai;
 
 import com.badlogic.gdx.utils.Pool;
 
+import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitBehavior;
 
@@ -17,6 +18,12 @@ public class Task
 	protected Scheduler scheduler;
 	protected Order order;
 	protected TaskStage stage;
+	
+	/**
+	 * When task is given according to an order, 
+	 * order source and target can change.
+	 */
+	protected ISpatialObject source, target;
 
 	public static enum Status { ONGOING, COMPLETED, CANCELED };
 
@@ -59,6 +66,9 @@ public class Task
 
 		this.scheduler = scheduler;
 		this.order = order;
+		
+		this.source = order.getSource();
+		this.target = order.getTarget();
 
 		this.stageIdx = 0;
 		this.stage = order.getStages()[stageIdx ++];
@@ -103,11 +113,13 @@ public class Task
 	public void setCanceled()
 	{
 		status = Status.CANCELED;
+		this.target = this.source = null;
 	}
 
 	public void setCompleted()
 	{
 		status = Status.COMPLETED;
+		this.source = this.target = null;
 	}
 
 	public boolean isFinished()
@@ -122,6 +134,17 @@ public class Task
 	public <U extends Unit> UnitBehavior <U> getBehavior(final Unit unit)
 	{
 		return scheduler.getUnitFactory().<U>getBehavior( unit.getType(), stage );
+	}
+
+	public ISpatialObject getSource() {
+		if(!source.isAlive())
+			source = null;
+		return source; }
+	public ISpatialObject getTarget() {
+		if(!source.isAlive())
+			source = null;
+
+		return target; 
 	}
 
 }

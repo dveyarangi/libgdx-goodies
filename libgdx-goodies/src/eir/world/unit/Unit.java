@@ -179,7 +179,13 @@ public abstract class Unit implements ISpatialObject, IUnit
 		{
 			this.renderer = def.getUnitRenderer();
 			
-			this.renderer.init( factory );
+			try {
+				this.renderer.init( factory );
+			}
+			catch(Exception e)
+			{
+				throw new RuntimeException( "Failed to initiate unit type " + this.getType(), e );
+			}
 		}
 
 		this.velocity.set( 0,0 );
@@ -414,6 +420,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	@Override public int hashCode() {	return hashcode; }
 
+	@Override
 	public <E extends IUnitDef> E getDef() { return (E)def; }
 	@Override
 	public <E extends IUnitRenderer> E getRenderer() { return (E)renderer; }

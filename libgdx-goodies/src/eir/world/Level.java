@@ -100,6 +100,10 @@ public class Level
 	
 	private List <Effect> pendingEffects = new ArrayList <Effect>();
 	
+	private int PROFILE_INTERVAL = 2;
+	private float timeSinceProfiling = 0;
+	
+	
 
 	public Level( LevelSetup setup )
 	{
@@ -246,6 +250,15 @@ public class Level
 	 */
 	public void update(final float delta)
 	{
+		
+		if(timeSinceProfiling > PROFILE_INTERVAL)
+		{
+			assert log("Level update: active units: " + units.size());
+			
+			timeSinceProfiling = 0;
+		}
+		timeSinceProfiling += delta;
+		
 		controllerFactory.update( delta );
 
 		reassesUnits();
@@ -409,10 +422,15 @@ public class Level
 	}
 
 
-
+	private static final String TAG = "level";
 	private boolean debug(final String message)
 	{
-		Gdx.app.debug( def.getName(), message);
+		Gdx.app.debug( TAG, message);
+		return true;
+	}
+	private boolean log(final String message)
+	{
+		Gdx.app.log( TAG, message ) ;
 		return true;
 	}
 

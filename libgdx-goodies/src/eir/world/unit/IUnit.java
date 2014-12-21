@@ -2,6 +2,7 @@ package eir.world.unit;
 
 import eir.rendering.IRenderer;
 import eir.rendering.IUnitRenderer;
+import eir.resources.levels.IUnitDef;
 import eir.world.Effect;
 import eir.world.environment.Anchor;
 import eir.world.environment.spatial.AABB;
@@ -66,5 +67,7 @@ public interface IUnit extends ISpatialObject
 	public void setDead();
 
 	public int z();
+
+	public <E extends IUnitDef> E getDef();
 
 }

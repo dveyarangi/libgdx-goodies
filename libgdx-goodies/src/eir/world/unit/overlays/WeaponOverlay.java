@@ -38,7 +38,7 @@ public class WeaponOverlay implements IOverlay <Unit>
 		GL20 gl = Gdx.gl;
 		gl.glEnable(GL20.GL_BLEND);
 
-		shape.setColor( 0,1,0,0.5f );
+		shape.setColor( 0,0.5f,0.8f,0.3f );
 
 		// weapon sensor range
 		shape.begin(ShapeType.Line);
@@ -54,7 +54,7 @@ public class WeaponOverlay implements IOverlay <Unit>
 				(float)(unit.cx() + sensorRadius * Math.cos( angle * Angles.TO_RAD )),
 				(float)(unit.cy() + sensorRadius * Math.sin( angle * Angles.TO_RAD )));
 			shape.end();
-			shape.setColor( 0,1,0,0.1f );
+			shape.setColor( 0,0.5f,0.8f,0.1f );
 			shape.begin(ShapeType.Filled);
 			for(float a = 0; a < weapon.getDef().getMaxFireAngle(); a += 1)
 			{
