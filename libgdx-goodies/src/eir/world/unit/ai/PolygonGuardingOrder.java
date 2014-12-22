@@ -40,5 +40,7 @@ public class PolygonGuardingOrder extends Order
 		return model.getNavNode( nodeIdx );
 
 	}
+	@Override
+	protected Task createEmptyTask() { return new Task(); }
 
 }

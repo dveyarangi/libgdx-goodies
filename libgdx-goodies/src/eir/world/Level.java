@@ -49,7 +49,7 @@ public class Level
 
 	private float halfWidth, halfHeight;
 	
-	private Object data;
+	private ILevelData data;
 
 	/**
 	 * Level spatial and navigational environment
@@ -257,11 +257,14 @@ public class Level
 			
 			timeSinceProfiling = 0;
 		}
+		
 		timeSinceProfiling += delta;
 		
 		controllerFactory.update( delta );
 
 		reassesUnits();
+		
+		data.beforeUpdate(delta);
 
 		for(int fid : factions.keys())
 		{
@@ -292,6 +295,8 @@ public class Level
 		}
 
 		environment.update( delta );
+		
+		data.afterUpdate(delta);
 
 	}
 
@@ -465,7 +470,7 @@ public class Level
 	 * some generic module to append at level creation
 	 */
 	public <E> E getData() { return (E) data; }
-	public void setData(Object data) { this.data = data;  }
+	public void setData(ILevelData data) { this.data = data;  }
 
 
 

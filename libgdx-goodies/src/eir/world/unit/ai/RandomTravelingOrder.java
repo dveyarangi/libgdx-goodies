@@ -34,5 +34,7 @@ public class RandomTravelingOrder extends Order
 	{
 		return mesh.getNode(RandomUtil.N( mesh.getNodesNum()) );
 	}
+	@Override
+	protected Task createEmptyTask() { return new Task(); }
 
 }

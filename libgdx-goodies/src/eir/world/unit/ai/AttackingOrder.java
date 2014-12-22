@@ -28,4 +28,10 @@ public class AttackingOrder extends Order
 		super( new TaskStage [] { TaskStage.ATTACK }, false, priority, null, target );
 	}
 
+	@Override
+	protected Task createEmptyTask()
+	{
+		return new Task();
+	}
+
 }

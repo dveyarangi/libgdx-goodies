@@ -1,14 +1,30 @@
 package eir.world.unit.ai;
 
+import com.badlogic.gdx.utils.Pool;
+
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.unit.Unit;
 
 /**
  * general order given by user or ai controller
  * @author Ni
  *
  */
-public abstract class Order
+public abstract class Order <T extends Task>
 {
+	/**
+	 * Pool of AABB objects
+	 */
+	private final Pool<T> pool =
+			new Pool<T>()
+			{
+				@Override
+				protected T newObject()
+				{
+					return createEmptyTask();
+				}
+			};
+
 	private boolean isActive = true;
 
 	private String unitType;
@@ -33,11 +49,22 @@ public abstract class Order
 		this.target = target;
 
 	}
+	protected abstract T createEmptyTask();
 
-	public Task createTask(final Scheduler scheduler)
+	public T createTask(Unit unit, final Scheduler scheduler)
 	{
-		return Task.create( scheduler, this );
+		T task = pool.obtain();
+		
+		task.update(scheduler, this);
+		
+		return task;
 	}
+
+	public void free(final T task)
+	{
+		pool.free( task );
+	}
+
 
 	/**
 	 * @return

@@ -12,9 +12,8 @@ public enum TaskStage
 	IDLE,
 	TRAVEL_TO_SOURCE,
 	TRAVEL_TO_TARGET,
-	MINING,
+	LOAD,
 	UNLOAD,
-	FARM,
 	GUARD,
 	ATTACK
 }

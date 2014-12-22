@@ -22,7 +22,6 @@ public class AntFactory extends UnitFactory <Ant>
 	{
 		behaviors.put( TaskStage.TRAVEL_TO_SOURCE, new TravelingBehavior.TravelToSourceBehavior() );
 		behaviors.put( TaskStage.TRAVEL_TO_TARGET, new TravelingBehavior.TravelToTargetBehavior() );
-		behaviors.put( TaskStage.MINING, new MiningBehavior() );
 
 	}
 

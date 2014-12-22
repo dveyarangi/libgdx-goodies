@@ -23,4 +23,7 @@ public class ObjectGuardingOrder extends Order
 		super( new TaskStage [] { TaskStage.GUARD }, false, priority, null, target );
 	}
 
+	@Override
+	protected Task createEmptyTask() { return new Task(); }
+
 }

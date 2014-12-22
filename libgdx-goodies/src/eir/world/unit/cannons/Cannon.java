@@ -65,6 +65,7 @@ public class Cannon extends Unit implements IDamager, IPickable
 		weapon.getDirection().setAngle( this.angle+90 );
 		weapon.getTargetOrientation().setAngle( this.angle+90 );
 		wanderAngle = this.angle+90;
+		
 
 		this.sensor = level.getEnvironment().createSensor( this, weaponDef.getSensorRadius() );
 

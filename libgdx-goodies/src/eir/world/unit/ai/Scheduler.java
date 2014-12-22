@@ -82,7 +82,7 @@ public class Scheduler
 
 		if(order != null)
 		{
-			task = order.createTask( this );
+			task = order.createTask( unit, this );
 		}
 
 		if(task != null)
