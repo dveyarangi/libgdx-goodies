@@ -114,9 +114,9 @@ public class Debug
 			) );
 		
 		// navigation mesh
-		addOverlay( uiProcessor, Keys.K, new OverlayBinding( 
+/*		addOverlay( uiProcessor, Keys.K, new OverlayBinding( 
 				new NavMeshOverlay( level.getEnvironment().getGroundMesh()) 
-			));
+			));*/
 		
 		// spatial hashmap debug
 		addOverlay( uiProcessor, Keys.L, new OverlayBinding(

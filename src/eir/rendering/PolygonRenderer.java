@@ -1,9 +1,8 @@
 package eir.rendering;
 
-import yarangi.math.Angles;
-
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 
 public class PolygonRenderer
 {
@@ -15,10 +14,10 @@ public class PolygonRenderer
 		float cosp, cosn, sinp, sinn;
 		for(float a = -widthAngle/2+da; a <= widthAngle/2-da; a += 2*da)
 		{
-			cosn = Angles.COS( a+angle-da );
-			cosp = Angles.COS( a+angle+da );
-			sinp = Angles.SIN( a+angle+da );
-			sinn = Angles.SIN( a+angle-da );
+			cosn = MathUtils.cos( a+angle-da );
+			cosp = MathUtils.cos( a+angle+da );
+			sinp = MathUtils.sin( a+angle+da );
+			sinn = MathUtils.sin( a+angle-da );
 			if(minradius == 0)
 			{
 				shape.triangle( cx, cy,
