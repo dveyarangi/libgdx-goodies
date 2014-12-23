@@ -1,5 +1,7 @@
 package eir.world.resource;
 
+import eir.world.unit.ai.GatheringTask;
+
 /**
  * Represents a game resource. Resource supplying and consumption should be 
  * performed through either {@link Port} or {@link GatheringTask} interfaces.
@@ -33,7 +35,7 @@ public class Resource
 	 * @param consumeOnFailure either we should still consume when to enough resource available
 	 * @return
 	 */
-	Resource consume(float consumedAmount, boolean consumeOnFailure)
+	public Resource consume(float consumedAmount, boolean consumeOnFailure)
 	{
 		float consumed;
 		if(this.amount >= consumedAmount)

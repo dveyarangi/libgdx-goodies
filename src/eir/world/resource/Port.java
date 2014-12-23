@@ -26,7 +26,6 @@ public class Port
 		{
 			port.capacity.put( type, Float.MAX_VALUE );
 			port.stock.put(type, new Resource(type, Float.MAX_VALUE));
-			port.pendingProvision.put( type, 0f );
 		}
 		
 		return port;
@@ -39,7 +38,6 @@ public class Port
 		{
 			port.capacity.put( type, 0f );
 			port.stock.put(type, new Resource(type, 0));
-			port.pendingProvision.put( type, 0f );
 		}
 		
 		return port;
@@ -50,6 +48,12 @@ public class Port
 	private final Map <Resource.Type, Resource> stock = new HashMap <Resource.Type, Resource> ();
 	
 	private float transferRate = 1;
+	
+	public Port()
+	{
+		for(Resource.Type type : Resource.Type.values())
+			pendingProvision.put( type, 0f );
+	}
 	
 	public void setTransferRate(float rate) { this.transferRate = rate; }
 	

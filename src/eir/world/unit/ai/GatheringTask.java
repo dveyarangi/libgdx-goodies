@@ -1,8 +1,9 @@
-package eir.world.resource;
+package eir.world.unit.ai;
 
-import eir.world.unit.ai.Order;
-import eir.world.unit.ai.Scheduler;
-import eir.world.unit.ai.Task;
+import eir.world.resource.IServiceable;
+import eir.world.resource.Port;
+import eir.world.resource.Resource;
+import eir.world.resource.Resource.Type;
 
 
 /**
@@ -42,7 +43,7 @@ public class GatheringTask extends Task
 
 	}
 
-	protected Task update(final Scheduler scheduler, final Order order, Resource.Type type, float amount)
+	Task update(final Scheduler scheduler, final Order order, Resource.Type type, float amount)
 	{
 		
 		this.provider = (IServiceable)order.getSource();

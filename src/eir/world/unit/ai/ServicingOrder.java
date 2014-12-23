@@ -1,10 +1,11 @@
-package eir.world.resource;
+package eir.world.unit.ai;
 
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.resource.CarrierDef;
+import eir.world.resource.IServiceable;
+import eir.world.resource.Resource;
+import eir.world.resource.Resource.Type;
 import eir.world.unit.Unit;
-import eir.world.unit.ai.Order;
-import eir.world.unit.ai.Scheduler;
-import eir.world.unit.ai.TaskStage;
 
 public class ServicingOrder extends Order <GatheringTask>
 {
