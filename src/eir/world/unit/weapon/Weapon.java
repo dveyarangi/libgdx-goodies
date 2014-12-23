@@ -40,6 +40,8 @@ public class Weapon extends Unit
 	protected Vector2 relativePosition;
 
 	private static final float PLANK_CONST = 0.0001f;
+	
+	private static final float MAX_ENERGY = 1000;
 
 	private boolean isOriented = false;
 
@@ -48,6 +50,9 @@ public class Weapon extends Unit
 	WeaponDef weaponDef;
 	
 	private Port port;
+	
+	private float requestedResource;
+	private float pendingResourceSupply;
 	/**
 	 *
 	 */
@@ -70,7 +75,7 @@ public class Weapon extends Unit
 		this.level = level;
 		
 		this.port = new Port();
-		port.setCapacity(Type.ENERGY, 0, 1000);
+		port.setCapacity(Type.ENERGY, MAX_ENERGY, MAX_ENERGY);
 		weaponDef = (WeaponDef)def;
 
 		weaponDef.init( level.getResourceFactory() );
@@ -91,6 +96,8 @@ public class Weapon extends Unit
 		if(bullet != null)
 		{
 			level.addUnit( bullet );
+			port.use(Resource.Type.ENERGY, def.getShotEnergyConsumption());
+
 		}
 		return null;
 	}
@@ -132,8 +139,13 @@ public class Weapon extends Unit
 	@Override
 	public void update(final float delta)
 	{
+		WeaponDef def = getDef();
+		
 		timeToReload -= delta;
-
+		
+		Resource energyStock = port.get(Resource.Type.ENERGY);
+		float requestedResource = (float)(port.getCapacity(Resource.Type.ENERGY) - energyStock.getAmount());
+		
 		float diffAngle =
 				(float)( Math.acos( targetOrientation.dot( weaponDir ) )* Angles.TO_DEG);
 		if(Math.abs( diffAngle ) < Math.abs( delta * weaponDef.getAngularSpeed() ))
@@ -192,6 +204,22 @@ public class Weapon extends Unit
 	public float getMaxSpeed() { return 0; }
 
 	public Port getPort() { return port; }
+
+	public float getRequiredResource(Type type) {
+		float delta = requestedResource - pendingResourceSupply;
+		if(delta < 0)
+			return 0;
+		return delta;
+	}
+
+	public void pendResourceProvision(Type type, float amount) {
+		pendingResourceSupply += amount;
+	}
+	public void provisionResource(Type type, float amount) {
+		pendingResourceSupply -= amount;
+		if(pendingResourceSupply < 0)
+			pendingResourceSupply = 0;
+	}
 
 
 }

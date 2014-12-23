@@ -13,9 +13,9 @@ public class Resource
 	
 	public Type type;
 	
-	public double amount;
+	public float amount;
 	
-	Resource(Type type, double amount)
+	Resource(Type type, float amount)
 	{
 		if(amount < 0)
 			throw new IllegalArgumentException("Cannot create negative resource.");
@@ -24,7 +24,7 @@ public class Resource
 	}
 	
 	public Type getType() { return type; }
-	public double getAmount() { return amount; }
+	public float getAmount() { return amount; }
 
 	/**
 	 * If nothing was consumed, null is returned
@@ -33,9 +33,9 @@ public class Resource
 	 * @param consumeOnFailure either we should still consume when to enough resource available
 	 * @return
 	 */
-	Resource consume(double consumedAmount, boolean consumeOnFailure)
+	Resource consume(float consumedAmount, boolean consumeOnFailure)
 	{
-		double consumed;
+		float consumed;
 		if(this.amount >= consumedAmount)
 			consumed = consumedAmount;
 		else if(consumeOnFailure)
@@ -54,7 +54,7 @@ public class Resource
 	 * Creation of resources is by {@link GatheringTask} only.
 	 * @param suppliedAmount
 	 */
-	void supply(double suppliedAmount)
+	void supply(float suppliedAmount)
 	{
 		if(amount < 0)
 			throw new IllegalArgumentException("Cannot supply negative resource.");

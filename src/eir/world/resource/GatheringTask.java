@@ -16,7 +16,7 @@ public class GatheringTask extends Task
 	/**
 	 * Amount of resource to be moved according to this order.
 	 */
-	private double orderedAmount;
+	private float orderedAmount;
 	
 	/**
 	 * Type of resource to be moved according to this order.
@@ -27,13 +27,13 @@ public class GatheringTask extends Task
 	 * Amount of resource exported from provider by this order at current order state.
 	 * Increases during export procedure
 	 */
-	public double exportedAmount;
+	public float exportedAmount;
 	
 	/**
 	 * Amount of resource imported to requester by this order at current order state.
 	 * Increases during import procedure
 	 */
-	public double importedAmount;
+	public float importedAmount;
 	
 	public IServiceable provider, requester;
 
@@ -42,7 +42,7 @@ public class GatheringTask extends Task
 
 	}
 
-	protected Task update(final Scheduler scheduler, final Order order, Resource.Type type, double amount)
+	protected Task update(final Scheduler scheduler, final Order order, Resource.Type type, float amount)
 	{
 		
 		this.provider = (IServiceable)order.getSource();
@@ -54,18 +54,18 @@ public class GatheringTask extends Task
 		return this;
 	}
 
-	public boolean sealExport(IServiceable carrier, double time)
+	public boolean sealExport(IServiceable carrier, float time)
 	{
 		Port exPort = provider.getPort();
 		Port imPort = carrier.getPort();
 		
-		double importerCapacity = imPort.getCapacity( orderedType );
+		float importerCapacity = imPort.getCapacity( orderedType );
 		Resource importStock = imPort.get( orderedType );
-		double importerSpace = importerCapacity - importStock.getAmount();
+		float importerSpace = importerCapacity - importStock.getAmount();
 		
 		Resource exportStock = exPort.get( orderedType );
 		
-		double transferedAmount = Math.min( // keep in mind that transfere rate is from importer
+		float transferedAmount = Math.min( // keep in mind that transfere rate is from importer
 										Math.min( time*imPort.getTransferRate(), orderedAmount),
 										Math.min( importerSpace, exportStock.getAmount() ));
 		
@@ -73,7 +73,8 @@ public class GatheringTask extends Task
 		if(exportedResource == null)
 			return false;
 		
-		importStock.supply( transferedAmount );
+//		importStock.supply( transferedAmount );
+		imPort.provisionResource( exportedResource );
 
 		exportedAmount += transferedAmount; 
 		if(exportedAmount+0.0000001 < orderedAmount)
@@ -87,17 +88,17 @@ public class GatheringTask extends Task
 		return orderedAmount;
 	}
 
-	public boolean sealImport(IServiceable carrier, double time)
+	public boolean sealImport(IServiceable carrier, float time)
 	{
 		Port exPort = carrier.getPort();
 		Port imPort = requester.getPort();
 		
-		double importerCapacity = imPort.getCapacity( orderedType );
+		float importerCapacity = imPort.getCapacity( orderedType );
 		Resource importStock = imPort.get( orderedType );
-		double importerSpace = importerCapacity - importStock.getAmount();
+		float importerSpace = importerCapacity - importStock.getAmount();
 		
 		Resource exportStock = exPort.get( orderedType );
-		double transferedAmount = Math.min( // keep in mind that transfer rate is from exporter
+		float transferedAmount = Math.min( // keep in mind that transfer rate is from exporter
 										Math.min( time*exPort.getTransferRate(), orderedAmount),
 										Math.min( importerSpace, exportStock.getAmount() ));
 
@@ -106,7 +107,7 @@ public class GatheringTask extends Task
 		if(exportedResource == null)
 			return false;
 		
-		importStock.supply( transferedAmount );
+		imPort.provisionResource( exportedResource );
 		
 		importedAmount += transferedAmount; 
 		if(importedAmount+0.0000001 < orderedAmount)

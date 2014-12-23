@@ -45,14 +45,14 @@ public class ServicingOrder extends Order <GatheringTask>
 		
 		IServiceable requester = (IServiceable)this.getTarget();
 		
-		float requiredResource = requester.getRequiredResource( type );
+		float requiredResource = requester.getPort().getRequiredResource( type );
 		
 		if(requiredResource <= 0)
 			return null; // idling!
 		
 		float amountToGather = Math.min(Math.min(gathererDef.getResourceCapacity(), requiredResource),capacity);
 		
-		requester.pendResourceProvision( type, amountToGather);
+		requester.getPort().pendResourceProvision( type, amountToGather);
 		
 		task.update(scheduler, this, type, amountToGather);
 		
