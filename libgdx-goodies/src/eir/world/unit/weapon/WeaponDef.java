@@ -87,4 +87,6 @@ public abstract class WeaponDef extends UnitDef
 	public abstract float getSensorRadius();
 
 	public abstract void init( ResourceFactory gameFactory );
+
+	public abstract float getShotEnergyConsumption();
 }

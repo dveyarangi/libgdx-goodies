@@ -9,6 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.resource.Port;
+import eir.world.resource.Resource;
+import eir.world.resource.Resource.Type;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 
@@ -43,6 +46,8 @@ public class Weapon extends Unit
 	private Level level;
 
 	WeaponDef weaponDef;
+	
+	private Port port;
 	/**
 	 *
 	 */
@@ -63,6 +68,9 @@ public class Weapon extends Unit
 		super.reset( level );
 
 		this.level = level;
+		
+		this.port = new Port();
+		port.setCapacity(Type.ENERGY, 0, 1000);
 		weaponDef = (WeaponDef)def;
 
 		weaponDef.init( level.getResourceFactory() );
@@ -72,6 +80,12 @@ public class Weapon extends Unit
 
 	public Bullet fire( final ISpatialObject target )
 	{
+
+		WeaponDef def = getDef();
+		
+		Resource energyStock = port.get(Resource.Type.ENERGY);
+		if(energyStock.getAmount() < def.getShotEnergyConsumption())
+			return null;
 
 		Bullet bullet = createBullet( target, getArea().getAnchor(), weaponDir, level.getUnitsFactory() );
 		if(bullet != null)
@@ -160,7 +174,6 @@ public class Weapon extends Unit
 
 	public Level getLevel() { return level; }
 
-
 	public Vector2 getDirection() { return weaponDir; }
 
 	public boolean isOriented() { return isOriented; }
@@ -177,6 +190,8 @@ public class Weapon extends Unit
 
 	@Override
 	public float getMaxSpeed() { return 0; }
+
+	public Port getPort() { return port; }
 
 
 }

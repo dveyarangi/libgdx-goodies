@@ -15,6 +15,9 @@ import eir.world.environment.Anchor;
 import eir.world.environment.RelativeAnchor;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.resource.IServiceable;
+import eir.world.resource.Port;
+import eir.world.resource.Resource.Type;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
@@ -22,7 +25,7 @@ import eir.world.unit.Unit;
 import eir.world.unit.weapon.Weapon;
 import eir.world.unit.weapon.WeaponDef;
 
-public class Cannon extends Unit implements IDamager, IPickable
+public class Cannon extends Unit implements IDamager, IPickable, IServiceable
 {
 
 	public static final int SENSOR_RADIUS = 100;
@@ -41,6 +44,8 @@ public class Cannon extends Unit implements IDamager, IPickable
 	private Anchor weaponMount;
 
 	private float wanderAngle;
+	
+	private Port port;
 
 
 	public Cannon( )
@@ -72,6 +77,8 @@ public class Cannon extends Unit implements IDamager, IPickable
 		this.targetProvider = weaponDef.createTargetProvider( this );
 
 		this.targetingModule = new LinearTargetingModule();
+		
+		this.port = weapon.getPort();
 	}
 
 	@Override
@@ -171,4 +178,14 @@ public class Cannon extends Unit implements IDamager, IPickable
 		return weapon.createDeathEffect();
 		
 	}
+	
+	@Override
+	public Port getPort() { return port; }
+
+	@Override
+	public float getRequiredResource(Type type) { return 0; }
+
+	@Override
+	public void pendResourceProvision(Type type, float amountToGather) { }
+
 }

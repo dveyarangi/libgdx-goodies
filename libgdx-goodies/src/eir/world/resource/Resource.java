@@ -1,136 +1,63 @@
 package eir.world.resource;
 
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pool.Poolable;
-
 /**
- * a resource instance
+ * Represents a game resource. Resource supplying and consumption should be 
+ * performed through either {@link Port} or {@link GatheringTask} interfaces.
+ * 
+ * @author dveyarangi
+ *
  */
-public class Resource implements Poolable
+public class Resource
 {
-	static Pool<Resource> pool = new Pool<Resource> ()
+	public static enum Type { MATTER, ENERGY }
+	
+	public Type type;
+	
+	public double amount;
+	
+	Resource(Type type, double amount)
 	{
-		@Override
-		protected Resource newObject()
-		{
-			return new Resource();
-		}
-	};
-	
-	public enum Type 
-	{ 
-		OOZE, 
-		BOOZE
-	};
-	
-	
-	public static Resource createResource( Type type, int amount )
-	{
-		if( amount<0 )
-			throw new IllegalArgumentException("resource amount cannot be negative");
-		
-		Resource r = pool.obtain();
-		r.amount = amount;
-		r.type = type;
-		return r;
+		if(amount < 0)
+			throw new IllegalArgumentException("Cannot create negative resource.");
+		this.type = type;
+		this.amount = amount;
 	}
 	
-	
-	
-	/////////////////////////////////////////////////////
-	// members 
-	
-	private Type type;
-	private int amount;
-	
-	/////////////////////////////////////////////////////
-	// methods 
-	
-	@Override
-	public void reset()
-	{
-		amount = 0;
-		type = null;
-	}
-	
+	public Type getType() { return type; }
+	public double getAmount() { return amount; }
+
 	/**
-	 * recycle this instance
+	 * If nothing was consumed, null is returned
+	 * 
+	 * @param amount amount to consume
+	 * @param consumeOnFailure either we should still consume when to enough resource available
+	 * @return
 	 */
-	public void recycle()
+	Resource consume(double consumedAmount, boolean consumeOnFailure)
 	{
-		pool.free(this);
-	}
-	
-	
-	/**
-	 * split this resource in two <br>
-	 * will transfer as much as possible to the new object ( minimum between <b>amount</b> and <b>this.amount</b> )
-	 * @param amount how much will the new instance hold?
-	 * @return a resource object containing <b>amount</b>. the called object will decrease in the same amount.
-	 */
-	public Resource split( int amount )
-	{
-		Resource r = pool.obtain();
-		this.transter(r, amount);
+		double consumed;
+		if(this.amount >= consumedAmount)
+			consumed = consumedAmount;
+		else if(consumeOnFailure)
+			consumed = this.amount;
+		else
+			consumed = 0;
 		
-		return r;
-	}
-	
-	/**
-	 * transfer <b>amount</b> of this resource to Resource <b>r</b> <br>
-	 * <b>this</b> and <b>r</b> must be of the same type. <br>
-	 * will transfer as much as possible ( minimum between <b>amount</b> and <b>this.amount</b> )
-	 * @param r Resource instance to transfer to
-	 * @param amount how much of this resource to transfer
-	 */
-	public void transter( Resource r, int amount )
-	{
-		if( amount<0 )
-			throw new IllegalArgumentException("cannot transfer negative amount");
+		this.amount -= consumed;
+		if(amount < 0) 
+			amount = 0;
 		
-		if( r.type != this.type )
-			throw new IllegalArgumentException("two resources must be of the same type to transfer");
-		
-		if( this.amount < amount )
-			amount = this.amount;
-		
-		r.amount = amount;
-		this.amount -= amount;
-	}
-	
-	/**
-	 * merge <b>r</b> with <b>this</b>. <br>
-	 * <b>r</b> will be recycled.
-	 * @param r
-	 */
-	public void merge( Resource r )
-	{
-		r.transter(this, r.amount);
-		r.recycle();
-	}
-	
-	/////////////////////////////////////////////////////
-	// getters, setters
-	public Type getType()
-	{
-		return type;
+		return consumed > 0 ? new Resource(getType(), consumed) : null;
 	}
 
-//	public void setType(Type type)
-//	{
-//		this.type = type;
-//	}
-
-	public int getAmount()
+	/**
+	 * Creation of resources is by {@link GatheringTask} only.
+	 * @param suppliedAmount
+	 */
+	void supply(double suppliedAmount)
 	{
-		return amount;
+		if(amount < 0)
+			throw new IllegalArgumentException("Cannot supply negative resource.");
+		this.amount += suppliedAmount;
 	}
-
-//	public void setAmount(int amount)
-//	{
-//		if( amount<0 )
-//			throw new IllegalArgumentException("resource amount cannot be negative");
-//		
-//		this.amount = amount;
-//	}
 }

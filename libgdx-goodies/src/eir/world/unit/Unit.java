@@ -115,6 +115,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * Unit physical velocity, actual for freely moving units
 	 */
 	private final Vector2 velocity;
+	
+	private final Vector2 force;
 
 	/**
 	 * List of overlays that are toggled on for this unit.
@@ -138,6 +140,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 	{
 
 		velocity = new Vector2();
+		
+		force = new Vector2();
 
 		this.body = AABB.createPoint( 0, 0 );
 
@@ -189,6 +193,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 		}
 
 		this.velocity.set( 0,0 );
+		this.force.set( 0,0 );
 		
 		this.hoverVector.set(Float.NaN, Float.NaN);
 
@@ -379,6 +384,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public  float getMaxSpeed() { return def.getMaxSpeed(); }
 	public float getLifetime() { return lifetime; }
 	public Vector2 getVelocity() { return velocity; }
+	public Vector2 getForce() { return force; }
 
 	@Override
 	public void toggleOverlay(final int oid)
