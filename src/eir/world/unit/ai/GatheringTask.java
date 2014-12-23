@@ -3,7 +3,6 @@ package eir.world.unit.ai;
 import eir.world.resource.IServiceable;
 import eir.world.resource.Port;
 import eir.world.resource.Resource;
-import eir.world.resource.Resource.Type;
 
 
 /**
@@ -48,6 +47,8 @@ public class GatheringTask extends Task
 		
 		this.provider = (IServiceable)order.getSource();
 		this.requester = (IServiceable)order.getTarget();
+		exportedAmount = 0;
+		importedAmount = 0;
 		
 		orderedAmount = amount;
 		orderedType = type;
@@ -71,6 +72,8 @@ public class GatheringTask extends Task
 										Math.min( importerSpace, exportStock.getAmount() ));
 		
 		Resource exportedResource = exportStock.consume( transferedAmount, true );
+		if(transferedAmount == 0)
+			return true; // TODO: this may cause half /loaded/unloaded gatherers to leave loading/unloading
 		if(exportedResource == null)
 			return false;
 		
@@ -102,16 +105,17 @@ public class GatheringTask extends Task
 		float transferedAmount = Math.min( // keep in mind that transfer rate is from exporter
 										Math.min( time*exPort.getTransferRate(), orderedAmount),
 										Math.min( importerSpace, exportStock.getAmount() ));
-
 		
 		Resource exportedResource = exportStock.consume( transferedAmount, true );
+		if(transferedAmount == 0)
+			return true; // TODO: this may cause half /loaded/unloaded gatherers to leave loading/unloading
 		if(exportedResource == null)
 			return false;
 		
 		imPort.provisionResource( exportedResource );
 		
 		importedAmount += transferedAmount; 
-		if(importedAmount+0.0000001 < orderedAmount)
+		if(importedAmount+0.001 < orderedAmount)
 			return false;
 
 		return true;

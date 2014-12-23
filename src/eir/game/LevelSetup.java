@@ -24,7 +24,7 @@ public abstract class LevelSetup
 
 	protected UnitsFactory unitsFactory;
 
-	private LevelDef levelDef;
+	protected LevelDef levelDef;
 
 	final ExecutorService pool = Executors.newFixedThreadPool(1);
 	private float progress;

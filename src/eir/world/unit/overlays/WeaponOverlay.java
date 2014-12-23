@@ -41,9 +41,9 @@ public class WeaponOverlay implements IOverlay <Unit>
 		shape.setColor( 0,0.5f,0.8f,0.3f );
 
 		// weapon sensor range
-		shape.begin(ShapeType.Line);
+/*		shape.begin(ShapeType.Line);
 		shape.circle(unit.cx(), unit.cy(), sensorRadius, 100);
-		shape.end();
+		shape.end();*/
 
 		Vector2 direction = weapon.getDirection();
 		float angle = direction.angle();

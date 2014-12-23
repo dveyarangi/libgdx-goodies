@@ -231,6 +231,10 @@ public abstract class Unit implements ISpatialObject, IUnit
 		anchoredUnits.add( unit );
 	}
 
+	protected void removeAnchoredUnit(Unit unit)
+	{
+		this.anchoredUnits.remove( unit );
+	}
 	/**
 	 * Initializes this unit using the provided defs and position and assigning it to the faction.
 	 * @param factory
@@ -326,10 +330,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	}
 
 
-	protected void removeAnchoredUnit(Unit unit)
-	{
-		this.anchoredUnits.remove( unit );
-	}
 
 	/**
 	 * @param damageReduction

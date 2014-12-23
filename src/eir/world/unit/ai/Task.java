@@ -37,7 +37,7 @@ public class Task
 		this.order = order;
 
 		this.stageIdx = 0;
-		this.stage = order.getStages()[stageIdx ++];
+		this.stage = order.getStages()[stageIdx];
 
 		this.status = Status.ONGOING;
 
@@ -51,6 +51,7 @@ public class Task
 
 	public TaskStage nextStage()
 	{
+		stageIdx ++;
 		if(stageIdx >= order.getStages().length)
 		{
 			if(!order.cycleTask())
@@ -61,8 +62,9 @@ public class Task
 
 			stageIdx = 0;
 		}
+		this.stage = order.getStages()[stageIdx];
 
-		return order.getStages() [stageIdx ++];
+		return stage;
 	}
 
 	public void cancel()

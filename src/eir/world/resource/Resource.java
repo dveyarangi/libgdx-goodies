@@ -49,7 +49,7 @@ public class Resource
 		if(amount < 0) 
 			amount = 0;
 		
-		return consumed > 0 ? new Resource(getType(), consumed) : null;
+		return consumed >= 0 ? new Resource(getType(), consumed) : null;
 	}
 
 	/**

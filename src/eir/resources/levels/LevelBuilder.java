@@ -20,8 +20,6 @@ public class LevelBuilder
 	{
 		Level level = new Level( setup );
 
-		level.init( levelDef );
-
 		return level;
 
 	}

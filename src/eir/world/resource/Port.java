@@ -47,7 +47,7 @@ public class Port
 	private final Map <Resource.Type, Float> capacity = new HashMap <Resource.Type, Float> ();
 	private final Map <Resource.Type, Resource> stock = new HashMap <Resource.Type, Resource> ();
 	
-	private float transferRate = 1;
+	private float transferRate = 1000;
 	
 	public Port()
 	{
@@ -80,13 +80,19 @@ public class Port
 
 	
 	public float getSaturation(Resource.Type type) {
-		return (float)(get( type ).getAmount() / getCapacity( type ));
+		return get( type ).getAmount() / getCapacity( type );
 	}
 	
 
 	public float getRequiredResource(Type type)
 	{
-		return pendingProvision.get( type );
+		float requestedResource = capacity.get(type) - stock.get(type).getAmount()
+			- pendingProvision.get( type );
+		
+		if(requestedResource <= 0)
+			return 0;
+		
+		return requestedResource;
 
 	}
 

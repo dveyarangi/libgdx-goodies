@@ -4,7 +4,6 @@ import eir.world.environment.spatial.ISpatialObject;
 import eir.world.resource.CarrierDef;
 import eir.world.resource.IServiceable;
 import eir.world.resource.Resource;
-import eir.world.resource.Resource.Type;
 import eir.world.unit.Unit;
 
 public class ServicingOrder extends Order <GatheringTask>
@@ -40,7 +39,7 @@ public class ServicingOrder extends Order <GatheringTask>
 		
 		IServiceable gatherer = (IServiceable) unit;
 		
-		float capacity = (float)gatherer.getPort().getCapacity(type);
+		float capacity = gatherer.getPort().getCapacity(type);
 		if(capacity == 0)
 			return null; // TODO: idling task?
 		
@@ -50,6 +49,9 @@ public class ServicingOrder extends Order <GatheringTask>
 		
 		if(requiredResource <= 0)
 			return null; // idling!
+		
+		if(requiredResource < gathererDef.getResourceCapacity())
+			return null;
 		
 		float amountToGather = Math.min(Math.min(gathererDef.getResourceCapacity(), requiredResource),capacity);
 		
