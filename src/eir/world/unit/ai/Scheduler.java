@@ -8,6 +8,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
 import eir.world.unit.Unit;
+import eir.world.unit.UnitBehavior;
 import eir.world.unit.UnitsFactory;
 
 /**
@@ -127,9 +128,8 @@ public class Scheduler
 		orders.remove(unitType, order);
 	}
 
-	public UnitsFactory getUnitFactory()
-	{
-		return unitsFactory;
+	public <U extends Unit> UnitBehavior<U> getBehavior(String type, TaskStage stage) {
+		return unitsFactory.<U>getBehavior( type, stage );
 	}
 
 }

@@ -97,7 +97,7 @@ public class Task
 	@SuppressWarnings("unchecked")
 	public <U extends Unit> UnitBehavior <U> getBehavior(final Unit unit)
 	{
-		return scheduler.getUnitFactory().<U>getBehavior( unit.getType(), stage );
+		return scheduler.getBehavior( unit.getType(), stage );
 	}
 
 	public ISpatialObject getSource() { return getOrder().getSource(); }
