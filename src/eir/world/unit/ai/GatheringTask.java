@@ -120,5 +120,11 @@ public class GatheringTask extends Task
 
 		return true;
 	}
+	
+	@Override
+	public boolean isFinished()
+	{
+		return super.isFinished() || !getSource().isAlive() || !getTarget().isAlive();
+	}
 
 }
