@@ -42,8 +42,9 @@ public class GatheringTask extends Task
 
 	}
 
-	Task update(final Scheduler scheduler, final Order order, Resource.Type type, float amount)
+	public Task update(final Scheduler scheduler, final Order order, Resource.Type type, float amount)
 	{
+		super.update(scheduler, order);
 		
 		this.provider = (IServiceable)order.getSource();
 		this.requester = (IServiceable)order.getTarget();
@@ -75,7 +76,7 @@ public class GatheringTask extends Task
 		if(transferedAmount == 0)
 			return true; // TODO: this may cause half /loaded/unloaded gatherers to leave loading/unloading
 		if(exportedResource == null)
-			return false;
+			return true;
 		
 //		importStock.supply( transferedAmount );
 		imPort.provisionResource( exportedResource );
@@ -110,7 +111,7 @@ public class GatheringTask extends Task
 		if(transferedAmount == 0)
 			return true; // TODO: this may cause half /loaded/unloaded gatherers to leave loading/unloading
 		if(exportedResource == null)
-			return false;
+			return true;
 		
 		imPort.provisionResource( exportedResource );
 		

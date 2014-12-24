@@ -53,7 +53,7 @@ public class ServicingOrder extends Order <GatheringTask>
 		if(requiredResource < gathererDef.getResourceCapacity())
 			return null;
 		
-		float amountToGather = Math.min(Math.min(gathererDef.getResourceCapacity(), requiredResource),capacity);
+		float amountToGather = Math.min(gathererDef.getResourceCapacity(), requiredResource);
 		
 		requester.getPort().pendResourceProvision( type, amountToGather);
 		

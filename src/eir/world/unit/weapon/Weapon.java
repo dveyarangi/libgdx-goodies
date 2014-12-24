@@ -76,6 +76,8 @@ public class Weapon extends Unit
 		
 		this.port = new Port();
 		port.setCapacity(Type.ENERGY, MAX_ENERGY, MAX_ENERGY);
+		
+		
 		weaponDef = (WeaponDef)def;
 
 		weaponDef.init( level.getResourceFactory() );
@@ -144,7 +146,7 @@ public class Weapon extends Unit
 		timeToReload -= delta;
 		
 		Resource energyStock = port.get(Resource.Type.ENERGY);
-		float requestedResource = (float)(port.getCapacity(Resource.Type.ENERGY) - energyStock.getAmount());
+		float requestedResource = port.getCapacity(Resource.Type.ENERGY) - energyStock.getAmount();
 		
 		float diffAngle =
 				(float)( Math.acos( targetOrientation.dot( weaponDir ) )* Angles.TO_DEG);

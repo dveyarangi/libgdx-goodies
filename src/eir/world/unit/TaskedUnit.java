@@ -30,12 +30,14 @@ public abstract class TaskedUnit extends Unit
 		{
 			// requesting a new task:
 			task = faction.getScheduler().gettaTask( this, task );
-			if(task == null)
-				return;
 		}
 
 		// performing task:
+		if(task == null)
+			return;
+		
 		UnitBehavior behavior = task.getBehavior( this );
+		
 		if( behavior == null)
 			return;
 

@@ -62,4 +62,12 @@ public class Resource
 			throw new IllegalArgumentException("Cannot supply negative resource.");
 		this.amount += suppliedAmount;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return new StringBuilder()
+			.append("type:").append(type).append(" amount:").append(amount)
+			.toString();
+	}
 }
