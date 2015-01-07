@@ -47,7 +47,7 @@ public class GameScreen extends AbstractScreen
 		
 		Gdx.input.setInputProcessor( stage );
 
-		level.getBackground().init( gameFactory, inputController );
+//		level.getBackground().init( gameFactory, inputController );
 
 		Debug.init( level, inputController );
 

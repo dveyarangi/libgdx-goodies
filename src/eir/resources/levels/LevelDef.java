@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import eir.resources.AnimationHandle;
-import eir.world.environment.parallax.Background;
+import eir.world.environment.IBackground;
 
 public class LevelDef
 {
@@ -16,7 +16,7 @@ public class LevelDef
 
 	private LevelInitialSettings initialSettings;
 
-	private Background background;
+	private IBackground background;
 
 	private List <AsteroidDef> asteroids;
 
@@ -31,8 +31,8 @@ public class LevelDef
 	public float getHeight() { return height; }
 	public void setHeight( final int height ) { this.height = height; }
 
-	public Background getBackgroundDef() { return background; }
-	public void setBackgroundDef( final Background background ) { this.background = background; }
+	public IBackground getBackgroundDef() { return background; }
+	public void setBackgroundDef( final IBackground background ) { this.background = background; }
 	public List <FactionDef> getFactionDefs() { return factions; }
 	public void setFactionDefs( final List<FactionDef> factions ) { this.factions = factions; }
 

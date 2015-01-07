@@ -105,13 +105,11 @@ public class Environment
 	public void add( final IUnit unit ) { index.add( unit ); }
 	public void update( final IUnit unit )
 	{
-		index.update( unit );
-
-		// colliding:
-		collider.setAnt( unit );
-		index.queryAABB(collider, unit.getArea() );
-
-
+			index.update( unit );
+	
+			// colliding:
+			collider.setAnt( unit );
+			index.queryAABB(collider, unit.getArea() );
 	}
 	public void update( final float delta )
 	{
@@ -131,11 +129,11 @@ public class Environment
 
 	public void remove( final IUnit unit ) { index.remove( unit ); }
 
-
 	public AirNavNode getClosestAirNode( final Vector2 anchor )
 	{
 		return (AirNavNode) index.findClosest( new AirNavNodeFilter(), anchor.x, anchor.y );
 	}
+	
 	public SurfaceNavNode getClosestSurfaceNode( final Vector2 anchor )
 	{
 		return (SurfaceNavNode) index.findClosest( new SurfaceNavNodeFilter(), anchor.x, anchor.y );
@@ -165,7 +163,11 @@ public class Environment
 
 	public ISensor createSensor( final Unit unit, final float radius )
 	{
-		return new Sensor( radius, unit, index, world );
+		return new Sensor( radius, unit.getArea().getAnchor(), unit, index, world );
+	}
+	public ISensor createSensor( Vector2 location, final float radius )
+	{
+		return new Sensor( radius,location, null, index, world );
 	}
 
 
