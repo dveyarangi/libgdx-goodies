@@ -70,8 +70,6 @@ public class LevelRenderer implements IRenderer
 
 	public void render(final float delta)
 	{
-		level.getBackground().draw( batch );
-
 
 		// setting renderers to camera view:
 		// TODO: those are copying matrix arrays, maybe there is a lighter way to do this
@@ -81,10 +79,15 @@ public class LevelRenderer implements IRenderer
 
 		shapeRenderer.setProjectionMatrix( inputController.getCamera().projection);
 		shapeRenderer.setTransformMatrix( inputController.getCamera().view );
-
+		
+		
+		level.getBackground().draw( this );
 		
 		rayHandler.setCombinedMatrix( inputController.getCamera().combined );
 		rayHandler.updateAndRender();
+		
+
+		
 		
 		batch.begin();
 		

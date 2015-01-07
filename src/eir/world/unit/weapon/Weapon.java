@@ -53,6 +53,10 @@ public class Weapon extends Unit
 	
 	private float requestedResource;
 	private float pendingResourceSupply;
+
+	
+	
+
 	/**
 	 *
 	 */

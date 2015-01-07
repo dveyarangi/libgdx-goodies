@@ -365,11 +365,11 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 			{
 				cell = map[index(tx, ty)];
 
-				float distanceSquare = FastMath.powOf2(x - tx*cellSize) + FastMath.powOf2(y - ty*cellSize);
+				float distanceSquare ;/*= FastMath.powOf2(x - tx*cellSize) + FastMath.powOf2(y - ty*cellSize);
 				if(radiusSquare < distanceSquare)
 				{
 					continue;
-				}
+				}*/
 
 //				System.out.println(aabb.r+radius + " : " + Math.sqrt(distanceSquare));
 

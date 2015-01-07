@@ -12,14 +12,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.input.GameInputProcessor;
+import eir.rendering.IRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.TextureHandle;
+import eir.world.Level;
+import eir.world.environment.IBackground;
 
 /**
  * @author dveyarangi
  *
  */
-public class Background
+public class Background implements IBackground
 {
 	public static class Layer implements Comparable <Layer>
 	{
@@ -69,20 +72,24 @@ public class Background
 
 	}
 
+	@Override
 	public void resize(final int width, final int height)
 	{
 		camera.setToOrtho( false, width, height );
 	}
 
 
+	@Override
 	public void update(final float delta)
 	{
 		time += delta;
 	}
 
 
-	public void draw(final SpriteBatch batch)
+	@Override
+	public void draw(final IRenderer renderer)
 	{
+		SpriteBatch batch = renderer.getSpriteBatch();
 		batch.begin();
 		for(Layer layer : layers)
 		{
@@ -130,5 +137,17 @@ public class Background
 		}
 
 		batch.end();
+	}
+	@Override
+	public void init(Level level)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void destroy()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

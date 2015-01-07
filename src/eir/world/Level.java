@@ -27,9 +27,9 @@ import eir.world.controllers.IController;
 import eir.world.environment.Anchor;
 import eir.world.environment.Asteroid;
 import eir.world.environment.Environment;
+import eir.world.environment.IBackground;
 import eir.world.environment.Web;
 import eir.world.environment.nav.SurfaceNavNode;
-import eir.world.environment.parallax.Background;
 import eir.world.unit.Faction;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
@@ -61,7 +61,7 @@ public class Level
 	/**
 	 * Level background images
 	 */
-	private Background background;
+	private IBackground background;
 	////////////////////////////////////////////////////////////////
 
 	/**
@@ -122,6 +122,8 @@ public class Level
 		units = new LinkedList <IUnit > ();
 		webs = new ArrayList <Web> ();
 		factions = new TIntObjectHashMap<Faction> ();
+		
+		this.background = setup.getLevelDef().getBackgroundDef();
 	}
 
 
@@ -230,6 +232,8 @@ public class Level
 
 			addUnit(unit);
 		}
+		
+		background.init( this );
 
 //		this.playerUnit = new Spider( unitsFactory );
 
@@ -250,7 +254,7 @@ public class Level
 	 */
 	public void update(final float delta)
 	{
-		
+		////////////////////////////////////////////////////////
 		if(timeSinceProfiling > PROFILE_INTERVAL)
 		{
 			assert log("Level update: active units: " + units.size());
@@ -259,19 +263,24 @@ public class Level
 		}
 		
 		timeSinceProfiling += delta;
+		////////////////////////////////////////////////////////
 		
 		controllerFactory.update( delta );
 
+		////////////////////////////////////////////////////////
 		reassesUnits();
 		
+		////////////////////////////////////////////////////////
 		data.beforeUpdate(delta);
 
+		////////////////////////////////////////////////////////
 		for(int fid : factions.keys())
 		{
 			Faction faction = factions.get( fid );
 			faction.update( delta );
 		}
 
+		////////////////////////////////////////////////////////
 		// TODO: (optimize) a-ha!
 		Iterator <IUnit> unIt = units.descendingIterator();
 		while(unIt.hasNext())
@@ -294,8 +303,12 @@ public class Level
 
 		}
 
+		////////////////////////////////////////////////////////
 		environment.update( delta );
 		
+		background.update( delta );
+		
+		////////////////////////////////////////////////////////
 		data.afterUpdate(delta);
 
 	}
@@ -368,7 +381,7 @@ public class Level
 	}*/
 
 
-	public Background getBackground() { return background; }
+	public IBackground getBackground() { return background; }
 
 	public String getName() { return null; }
 

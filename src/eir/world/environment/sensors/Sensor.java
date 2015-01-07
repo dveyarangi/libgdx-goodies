@@ -12,7 +12,6 @@ import eir.world.environment.MazeType;
 import eir.world.environment.spatial.ISpatialIndex;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.ISpatialSensor;
-import eir.world.unit.Unit;
 
 public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>, ISensor
 {
@@ -22,7 +21,7 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 
 	private final float radius;
 
-	private Unit baseUnit;
+	private Vector2 location;
 
 
 	private List <ISpatialObject> units;
@@ -30,8 +29,9 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 	private boolean isOccluded = false;
 
 	private ISensingFilter filter;
+	private Object self;
 
-	public Sensor(final float radius, final Unit baseUnit, final ISpatialIndex <ISpatialObject> index, final World world )
+	public Sensor(final float radius, Vector2 location, Object self, final ISpatialIndex <ISpatialObject> index, final World world )
 	{
 
 		this.units = new ArrayList <ISpatialObject> ();
@@ -40,7 +40,8 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 		this.world = world;
 
 		this.radius = radius;
-		this.baseUnit = baseUnit;
+		this.location = location;
+		this.self = self;
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 
 		this.filter = filter;
 
-		index.queryRadius( this, baseUnit.getArea().getAnchor().x, baseUnit.getArea().getAnchor().y, radius);
+		index.queryRadius( this, location.x, location.y, radius);
 
 		return units;
 	}
@@ -75,17 +76,17 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 		if( filter != null && ! filter.accept( object ) )
 			return false;
 
-		if(object == this.baseUnit) // TODO: self
+		if(object == this.self) // TODO: self
 			return false;
 
 		isOccluded = false;
 
 
-		float distanceSquare = object.getArea().getAnchor().dst2( baseUnit.getArea().getAnchor() );
+		float distanceSquare = object.getArea().getAnchor().dst2( location );
 
 		if(distanceSquare < 0.1f)
 			return false;
-		world.rayCast( this, baseUnit.getArea().getAnchor(), object.getArea().getAnchor() );
+		world.rayCast( this, location, object.getArea().getAnchor() );
 
 		if(isOccluded)
 			return true;

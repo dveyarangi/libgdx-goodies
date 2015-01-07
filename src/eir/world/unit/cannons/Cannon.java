@@ -6,7 +6,6 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.input.IPickable;
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
 import eir.world.Effect;
@@ -15,16 +14,15 @@ import eir.world.environment.Anchor;
 import eir.world.environment.RelativeAnchor;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.resource.IServiceable;
 import eir.world.resource.Port;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
-import eir.world.unit.IDamager;
+import eir.world.unit.IBuilding;
 import eir.world.unit.Unit;
 import eir.world.unit.weapon.Weapon;
 import eir.world.unit.weapon.WeaponDef;
 
-public class Cannon extends Unit implements IDamager, IPickable, IServiceable
+public class Cannon extends Unit implements IBuilding
 {
 
 	public static final int SENSOR_RADIUS = 100;
