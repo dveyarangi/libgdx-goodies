@@ -39,11 +39,14 @@ public class GameScreen extends AbstractScreen
 		// creating level from level definitions:
 		level = levelSetup.createLevel();
 
+		
+		level.init( levelSetup.getLevelDef() );
 
 	    ui = levelSetup.getUI( stage ); 
 	    
 	    inputController = levelSetup.getInputController( level, ui );
 		
+		level.setInputController(inputController);	
 		
 		Gdx.input.setInputProcessor( stage );
 
@@ -55,6 +58,8 @@ public class GameScreen extends AbstractScreen
 		
 		if( ui != null)
 			ui.init();
+		
+
 	}
 
 	@Override
@@ -80,7 +85,7 @@ public class GameScreen extends AbstractScreen
 //		Gdx.gl.glClearColor( 0.8f, 0.8f, 1f, 1 );
 //		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 
-		level.getBackground().update( modifiedTime );
+//		level.getBackground().update( modifiedTime );
 
 		renderer.render( delta );
 		

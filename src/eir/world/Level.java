@@ -14,6 +14,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.game.LevelSetup;
+import eir.input.GameInputProcessor;
 import eir.rendering.IRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.FactionDef;
@@ -179,10 +180,11 @@ public class Level
 	}
 
 	/**
+	 * @param inputController 
 	 * @param context
 	 * @param factory
 	 */
-	public void init(final LevelDef def )
+	public void init( final LevelDef def )
 	{
 		this.def = def;
 
@@ -233,8 +235,6 @@ public class Level
 			addUnit(unit);
 		}
 		
-		background.init( this );
-
 //		this.playerUnit = new Spider( unitsFactory );
 
 		//		addUnit(playerUnit);
@@ -246,6 +246,11 @@ public class Level
 
 	}
 
+	public void setInputController(GameInputProcessor inputController)
+	{
+		background.init( this, inputController );
+
+	}
 
 
 

@@ -1,5 +1,6 @@
 package eir.world.environment;
 
+import eir.input.GameInputProcessor;
 import eir.rendering.IRenderer;
 import eir.world.Level;
 
@@ -10,7 +11,7 @@ public interface IBackground
 
 	void update(float delta);
 	
-	void init(Level level);
+	void init( Level level, GameInputProcessor inputController );
 	
 	void destroy();
 

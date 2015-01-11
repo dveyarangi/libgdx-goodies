@@ -3,18 +3,21 @@
  */
 package eir.world.environment.parallax;
 
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import box2dLight.RayHandler;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.input.GameInputProcessor;
 import eir.rendering.IRenderer;
-import eir.resources.ResourceFactory;
-import eir.resources.TextureHandle;
+import eir.resources.AnimationHandle;
+import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.IBackground;
 
@@ -22,20 +25,22 @@ import eir.world.environment.IBackground;
  * @author dveyarangi
  *
  */
-public class Background implements IBackground
+public class ParallaxBackground implements IBackground
 {
 	public static class Layer implements Comparable <Layer>
 	{
+		float width, height;
 		private float depth;
-		private TextureHandle texture;
-		private Texture txr;
+		IBackground back;
 		private Vector2 scroll;
 		private boolean tiling;
 
-		public Layer(final float depth, final TextureHandle handle, final Vector2 scroll, final boolean tiling)
+		public Layer(float width, float height,final float depth, IBackground back, final Vector2 scroll, final boolean tiling)
 		{
+			this.width = width;
+			this.height = height;
 			this.depth = depth;
-			this.texture = handle;
+			this.back = back;
 			this.scroll = scroll;
 			this.tiling = tiling;
 		}
@@ -45,14 +50,18 @@ public class Background implements IBackground
 		{
 			return Float.compare( o.depth, depth);
 		}
+
 	}
-	public Background() {}
-	public Background(final NavigableSet <Layer> layers)
+	
+	private IRenderer renderer;
+	
+	public ParallaxBackground() {}
+	public ParallaxBackground(final ArrayList <Layer> layers)
 	{
 		this.layers = layers;
 	}
 
-	private NavigableSet<Layer> layers = new TreeSet <Layer> ();
+	private List<Layer> layers = new ArrayList <Layer> ();
 	private GameInputProcessor processor;
 	/**
 	 * Camera for layers of background.
@@ -61,14 +70,36 @@ public class Background implements IBackground
 
 	private float time = 0;
 
-	public void init( final ResourceFactory gameFactory, final GameInputProcessor processor)
+	@Override
+	public void init(Level level, GameInputProcessor inputController )
 	{
-		this.processor = processor;
+		// TODO Auto-generated method stub
 
-		for(Layer layer : layers)
+		this.processor = inputController;
+
+		this.renderer = new IRenderer()
 		{
-			layer.txr = gameFactory.getTexture( layer.texture );
-		}
+			SpriteBatch batch = new SpriteBatch();
+			ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+			@Override
+			public ShapeRenderer getShapeRenderer() { return shapeRenderer; }
+
+			@Override
+			public SpriteBatch getSpriteBatch() { return batch; }
+
+			@Override
+			public Animation getAnimation(AnimationHandle handle) { return null;}
+
+			@Override
+			public void addEffect(Effect effect) { }
+
+			@Override
+			public RayHandler getRayHandler() { return null; }
+			
+		};
+		for(int lidx = 0; lidx < layers.size(); lidx ++)
+			layers.get(lidx).back.init( level, processor );
 
 	}
 
@@ -83,17 +114,18 @@ public class Background implements IBackground
 	public void update(final float delta)
 	{
 		time += delta;
+		for(int lidx = 0; lidx < layers.size(); lidx ++)
+			layers.get(lidx).back.update( delta );
 	}
 
 
 	@Override
-	public void draw(final IRenderer renderer)
+	public void draw(final IRenderer _renderer)
 	{
-		SpriteBatch batch = renderer.getSpriteBatch();
-		batch.begin();
-		for(Layer layer : layers)
+		SpriteBatch batch = this.renderer.getSpriteBatch();
+		for(int lidx = 0; lidx < layers.size(); lidx ++)
 		{
-
+			Layer layer = layers.get(lidx);
 			camera.position.x = processor.getCamera().position.x / layer.depth;
 			camera.position.y = processor.getCamera().position.y / layer.depth;
 //			camera.zoom = processor.getCamera().zoom / layer.depth;
@@ -102,8 +134,8 @@ public class Background implements IBackground
 			batch.setProjectionMatrix( camera.projection );
 			batch.setTransformMatrix( camera.view );
 
-			int width = layer.txr.getWidth();
-			int height = layer.txr.getHeight();
+			float width = layer.width;
+			float height = layer.height;
 
 			float xOffset = -width/2, yOffset = -height/2;
 			if(layer.scroll != null)
@@ -131,23 +163,17 @@ public class Background implements IBackground
 			{
 				for(int yIdx = minYIdx; yIdx < maxYIdx; yIdx ++)
 				{
-					batch.draw( layer.txr, xIdx*width + xOffset, yIdx*height + yOffset  );
+					layer.back.draw( renderer );
+//					batch.draw( layer.txr, xIdx*width + xOffset, yIdx*height + yOffset  );
 				}
 			}
 		}
-
-		batch.end();
 	}
-	@Override
-	public void init(Level level)
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	
 	@Override
 	public void destroy()
 	{
-		// TODO Auto-generated method stub
-		
+		for(int lidx = 0; lidx < layers.size(); lidx ++)
+			layers.get(lidx).back.destroy();
 	}
 }
