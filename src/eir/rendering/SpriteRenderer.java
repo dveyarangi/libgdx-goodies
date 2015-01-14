@@ -113,7 +113,7 @@ public class SpriteRenderer implements IUnitRenderer
 					sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
 					sprite.getRegionWidth(), sprite.getRegionHeight(),
 					size/sprite.getRegionWidth(),
-					size/sprite.getRegionHeight(), unit.getAngle());
+					size/sprite.getRegionWidth(), unit.getAngle());
 		}
 
 	}
@@ -127,7 +127,7 @@ public class SpriteRenderer implements IUnitRenderer
 		return Effect.getEffect( deathAnimation, deathSize, 
 				unit.getArea().getAnchor(),
 				new Vector2(), 
-				RandomUtil.getRandomFloat((float)Angles.TAU), 1
+				RandomUtil.getRandomFloat(Angles.TAU), 1
 				);
 
 	}
