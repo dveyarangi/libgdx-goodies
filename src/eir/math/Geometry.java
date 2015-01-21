@@ -123,9 +123,10 @@ public class Geometry
 	public static boolean calcIntersection(float p0_x, float p0_y, float s1_x, float s1_y, float p2_x, float p2_y, float s2_x, float s2_y, Vector2 result)
 	{
 
+		float prop = -s2_x * s1_y + s1_x * s2_y;
 	    float s, t;
-	    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-	    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+	    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / prop;
+	    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / prop;
 
 	    if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
 	    {
