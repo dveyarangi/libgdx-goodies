@@ -70,4 +70,7 @@ public interface IUnit extends ISpatialObject
 
 	public <E extends IUnitDef> E getDef();
 
+	public boolean needsSpatialUpdate();
+	public boolean isCollidable();
+
 }

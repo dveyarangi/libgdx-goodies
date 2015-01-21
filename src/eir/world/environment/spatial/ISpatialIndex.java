@@ -18,6 +18,8 @@ public interface ISpatialIndex<T extends ISpatialObject>
 	public ISpatialSensor <T> queryAABB(ISpatialSensor <T> sensor, float cx, float cy, float rx, float ry);
 
 	public ISpatialSensor <T> queryRadius(ISpatialSensor <T> sensor, float x, float y, float radius);
+	
+	public ISpatialSensor <T> queryLine(final ISpatialSensor <T> sensor, final float ox, final float oy, final float dx, final float dy);
 
 	public T findClosest( ISpatialFilter <ISpatialObject> filter, float x, float y );
 

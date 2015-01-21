@@ -248,7 +248,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		this.faction = level.getFaction( def.getFactionId() );
 
-		this.body.update( x, y,size()/2, size()/2);
+		this.body.update( x, y,size()/2, size()/2, false);
 
 		this.angle = angle;
 
@@ -451,4 +451,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 	
 	@Override
 	public int z() { return 0; }
+	@Override
+	public boolean needsSpatialUpdate() { return false; }
+	@Override
+	public boolean isCollidable() { return false; }
 }

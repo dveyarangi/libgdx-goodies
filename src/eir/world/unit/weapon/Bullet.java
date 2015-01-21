@@ -141,4 +141,10 @@ public class Bullet extends Unit implements IDamager
 		setDead();
 		return 0;
 	}
+	
+	@Override
+	public boolean needsSpatialUpdate() { return true; }
+	@Override
+	public boolean isCollidable() { return true; }
+
 }

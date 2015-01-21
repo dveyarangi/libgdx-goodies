@@ -2,14 +2,13 @@ package eir.debug;
 
 import java.util.List;
 
-import yarangi.math.FastMath;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import eir.rendering.IRenderer;
+import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.IOverlay;
@@ -61,16 +60,13 @@ public class SpatialHashMapLook implements IOverlay
 		List <ISpatialObject> bucket = null;
 		for(float y = miny; y <= maxy; y += map.getCellSize())
 		{
-			cellY = FastMath.round(y / map.getCellSize());
+			cellY = map.toGridIndex( y );
 			for(float x = minx; x < maxx; x += map.getCellSize())
 			{
-				cellX = FastMath.round(x / map.getCellSize());
-				try {
-					bucket = map.getBucket(cellX, cellY);
-				}
-				catch(ArrayIndexOutOfBoundsException e) {
-					e.printStackTrace();
-				}
+
+				cellX = map.toGridIndex( x );
+				
+				bucket = map.getBucket(cellX, cellY);
 
 				if(bucket != null && bucket.size() != 0)
 				{
@@ -79,7 +75,7 @@ public class SpatialHashMapLook implements IOverlay
 					for(int idx = 0; idx < bucket.size(); idx ++)
 					{
 						o = bucket.get(idx);
-						if(o.getArea().overlaps( x, y, x+cellsize, y+cellsize ))
+						if(o.getArea().overlaps( AABB.createFromEdges(x, y, x+cellsize, y+cellsize) ))
 						{
 							isReal = true;
 							break;
@@ -88,6 +84,13 @@ public class SpatialHashMapLook implements IOverlay
 					if(isReal)
 					{
 						renderer.setColor(0.8f, 0.6f, 0.8f, 0.2f);
+						renderer.begin( ShapeType.Filled );
+						renderer.rect( x, y, cellsize, cellsize);
+						renderer.end();
+					}
+					else
+					{
+						renderer.setColor(0.1f, 0.5f, 0.1f, 0.2f);
 						renderer.begin( ShapeType.Filled );
 						renderer.rect( x, y, cellsize, cellsize);
 						renderer.end();

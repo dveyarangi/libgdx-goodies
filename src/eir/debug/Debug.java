@@ -97,6 +97,7 @@ public class Debug
 
 	public static void init( final Level level, final GameInputProcessor inputController )
 	{
+		
 		debug = new Debug(  level, inputController  );
 		
 		debug.setup(level, inputController);
@@ -104,6 +105,8 @@ public class Debug
 	
 	public void setup( final Level level, final GameInputProcessor inputController )
 	{
+		this.level = level;
+		
 		UIInputProcessor uiProcessor = inputController.getInputRegistry();
 		
 		// coordinate grid:
@@ -119,7 +122,7 @@ public class Debug
 			));*/
 		
 		// spatial hashmap debug
-		addOverlay( uiProcessor, Keys.L, new OverlayBinding(
+		addOverlay( uiProcessor, Keys.K, new OverlayBinding(
 				new SpatialHashMapLook( (SpatialHashMap) level.getEnvironment().getIndex() )
 			));
 		
@@ -135,7 +138,7 @@ public class Debug
 		
 		debugRenderer.render( level.getEnvironment().getPhyisics(), camera.combined );
 				
-		addOverlay( uiProcessor, Keys.L, new OverlayBinding(new IOverlay() {
+		addOverlay( uiProcessor, Keys.H, new OverlayBinding(new IOverlay() {
 
 				@Override
 				public void draw(Object unit, IRenderer renderer)

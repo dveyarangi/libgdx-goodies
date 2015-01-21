@@ -31,6 +31,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 	public SpatialHashMap(final String name, final float cellSize, final float width, final float height)
 	{
 		this(name, (int)(width*height/(cellSize*cellSize)), cellSize, width, height);
+
 	}
 	/**
 	 *
@@ -45,11 +46,9 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		super(name, size, cellSize, width, height);
 	}
 
-
 	@Override
 	public List<O> [] createGrid()
 	{
-
 		List [] map = new List[size];
 		for(int idx = 0; idx < size; idx ++)
 		{
@@ -87,6 +86,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 	protected final int index(final int x, final int y)
 	{
 		return ((x+halfGridWidth)*6184547 + (y+halfGridHeight)* 2221069) % size;
+		//return idx;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 
 		transition = AABB.copy( object.getArea() );
 
-		iterateOverAABB( transition, false, object );
+		iterateOverShape(transition, false, object);
 
 		aabbs.put( object.getId(), transition );
 	}
@@ -120,7 +120,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		if(transition == null)
 			throw new IllegalArgumentException("Object " + object + " is not registered.");
 
-		iterateOverAABB( transition, true, object );
+		iterateOverShape( transition, true, object );
 
 		aabbs.remove( object.getId() );
 
@@ -129,8 +129,12 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		return object;
 	}
 
-/*	public void addLine(float ox, float oy, float dx, float dy)
+	private void iterateOverLine( AABB transition, boolean remove, O object)
 	{
+		float ox = transition.getMinX();
+		float oy = transition.getMinY();
+		float dx = transition.getMaxX() - transition.getMinX();
+		float dy = transition.getMaxY() - transition.getMinY();
 		int currGridx = toGridIndex(ox);
 		int currGridy = toGridIndex(oy);
 		float tMaxX, tMaxY;
@@ -166,9 +170,16 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		}
 		else { tMaxY = Float.MAX_VALUE; tDeltaY = 0; stepY = 0;}
 
-		// marks entity area to avoid reporting entity multiple times
-		int passId = getNextPassId();
-		Set <O> cell;
+		List <O> cell;
+		int hash = index(currGridx, currGridy);
+		
+		cell = map[hash];
+
+		if(remove)
+			cell.remove( object );
+		else
+			cell.add( object );
+		
 		while(tMaxX <= 1 || tMaxY <= 1)
 		{
 			if(tMaxX < tMaxY)
@@ -181,23 +192,25 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 				tMaxY += tDeltaY;
 				currGridy += stepY;
 			}
-			cell = map[hash(currGridx, currGridy)];
-			for(O object : cell)
-			{
-				if(object.getArea().getPassId() == passId)
-					continue;
-
-				AABB aabb = object.getArea();
-				if(aabb.crosses(ox, oy, dx, dy))
-					if(sensor.objectFound(object))
-						break;
-
-				object.getArea().setPassId( passId );
-			}
+			
+			hash = index(currGridx, currGridy);
+			
+			cell = map[hash];
+			
+			if(remove)
+				cell.remove( object );
+			else
+				cell.add( object );
 		}
-
-		return sensor;
-	}*/
+	}
+	
+	protected void iterateOverShape( AABB transition, boolean remove, O object)
+	{
+		if(transition.isLine())
+			iterateOverLine( transition, remove, object);
+		else
+			iterateOverAABB( transition, remove, object );
+	}
 
 	/**
 	 * TODO: this method must be optimized by all casts.
@@ -209,9 +222,9 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 	{
 
 		AABB transition = aabbs.get( object.getId() );
-		iterateOverAABB( transition, true, object );
+		iterateOverShape( transition, true, object);
 		transition.copyFrom( object.getArea() );
-		iterateOverAABB( transition, false, object );
+		iterateOverShape( transition, false, object );
 	}
 
 	/**
@@ -320,7 +333,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 					{
 						continue;
 					}
-					if(objectArea.overlaps( minx, miny, maxx, maxy ))
+					if(objectArea.overlaps( minx, miny, maxx, maxy, false ))
 						if(sensor.objectFound(obj))
 						{
 							break found;
@@ -485,7 +498,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 							continue;
 						}
 
-						if(!objectArea.overlaps( x, y, x, y ))
+						if(!objectArea.overlaps( x, y, x, y, false ))
 						{
 							continue;
 						}
@@ -578,6 +591,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 	 * @return
 	 */
 
+	@Override
 	public final ISpatialSensor <O> queryLine(final ISpatialSensor <O> sensor, final float ox, final float oy, final float dx, final float dy)
 	{
 		int currGridx = toGridIndex(ox);
@@ -635,8 +649,9 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 			}
 			cell = map[index(currGridx, currGridy)];
 
-			for(int idx = 0; idx < cell.size(); object = cell.get( idx ++ ))
+			for(int idx = 0; idx < cell.size(); idx ++ )
 			{
+				object = cell.get( idx );
 				objectArea = object.getArea();
 				if(objectArea.getPassId() == passId)
 				{
@@ -644,12 +659,15 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 				}
 
 				AABB aabb = object.getArea();
-				if(aabb.crosses(ox, oy, dx, dy))
+				if(aabb.overlaps(ox, oy, ox+dx, oy+dy, true))
+				{
+					if(aabb.isLine())
+					aabb.overlaps(ox, oy, ox+dx, oy+dy, true);
 					if(sensor.objectFound(object))
 					{
 						break;
 					}
-
+				}
 				objectArea.setPassId( passId );
 			}
 		}
@@ -657,12 +675,34 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		return sensor;
 	}
 
-
 	protected final int getNextPassId()
 	{
 		return ++passId;
 	}
 
+	public static class TestObject implements ISpatialObject
+	{
+		AABB aabb;
+		public TestObject(float x, float y, float dx, float dy)
+		{
+			this.aabb = AABB.createLine(x, y, x+dx, y+dy);
+		}
+		@Override
+		public AABB getArea() { return aabb;	}
 
+		@Override
+		public int getId() { return 0; }
+
+		@Override
+		public boolean isAlive() { return true; }
+		
+	}
+	
+	public static void main(String [] args)
+	{
+		SpatialHashMap <TestObject> map = new SpatialHashMap<>("test", 1, 4, 4);
+		
+		map.add( new TestObject(-1, -1, 2, 3));
+	}
 
 }

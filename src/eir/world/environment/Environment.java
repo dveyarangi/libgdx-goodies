@@ -105,11 +105,15 @@ public class Environment
 	public void add( final IUnit unit ) { index.add( unit ); }
 	public void update( final IUnit unit )
 	{
+		if(unit.needsSpatialUpdate())
 			index.update( unit );
 	
+		if( unit.isCollidable())
+		{
 			// colliding:
 			collider.setAnt( unit );
 			index.queryAABB(collider, unit.getArea() );
+		}
 	}
 	public void update( final float delta )
 	{

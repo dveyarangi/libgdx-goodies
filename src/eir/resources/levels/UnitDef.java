@@ -68,4 +68,5 @@ public class UnitDef implements IUnitDef
 	@Override
 	public Vector2 getPosition() { return position; }
 
+
 }

@@ -5,6 +5,8 @@ import yarangi.java.InvokationMapper;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
+import eir.math.Geometry;
+
 /**
  * Represents an axis-aligned bounding box.
  *
@@ -26,6 +28,8 @@ public class AABB
 	 * marker for {@link SpatialHashMap} queries.
 	 */
 	private int passId;
+	
+	private boolean isLine = false;
 
 //	private static InvokationMapper amap = new InvokationMapper();
 
@@ -58,12 +62,12 @@ public class AABB
 	public static AABB createSquare(final float x, final float y, final float r)
 	{
 		AABB aabb = pool.obtain();
-		return aabb.update( x, y, r, r );
+		return aabb.update( x, y, r, r, false );
 	}
 	public static AABB createSquare(final Vector2 center, final float r)
 	{
 		AABB aabb = pool.obtain();
-		return aabb.update(center.x, center.y, r, r);
+		return aabb.update(center.x, center.y, r, r, false);
 	}
 
 	public static AABB createFromEdges(final float x1, final float y1, final float x2, final float y2)
@@ -72,19 +76,31 @@ public class AABB
 		float ry = (y2 - y1) / 2.f;
 
 		AABB aabb = pool.obtain();
-		return aabb.update(x1+rx, y1+ry, rx, ry);
+		return aabb.update(x1+rx, y1+ry, rx, ry, false);
 	}
 
 	public static AABB createFromCenter(final float cx, final float cy, final float rx, final float ry)
 	{
 		AABB aabb = pool.obtain();
-		return aabb.update(cx, cy, rx, ry);
+		return aabb.update(cx, cy, rx, ry, false);
 	}
 
 	public static AABB createPoint(final float x, final float y)
 	{
 		AABB aabb = pool.obtain();
-		return aabb.update(x, y, 0, 0);
+		return aabb.update(x, y, 0, 0, false);
+	}
+	
+	public static AABB createLine(float x1, float y1, float x2, float y2)
+	{
+		AABB aabb = pool.obtain();
+		
+		float cx = (x2-x1)/2+x1;
+		float cy = (y2-y1)/2+y1;
+		float rx = Math.abs(x2-x1)/2;
+		float ry = Math.abs(y2-y1)/2;
+		
+		return aabb.update(cx, cy, rx, ry, true);
 	}
 
 	/**
@@ -108,6 +124,7 @@ public class AABB
 	{
 		this.ref.set( aabb.ref );
 		this.dim.set( aabb.dim );
+		this.isLine = aabb.isLine;
 		return this;
 	}
 
@@ -119,11 +136,12 @@ public class AABB
 	 * @param a box orientation (degrees)
 	 */
 
-	public AABB update(final float x, final float y, final float rx, final float ry)
+	public AABB update(final float x, final float y, final float rx, final float ry, boolean isLine)
 	{
 
 		this.ref.set( x, y );
 		this.dim.set( rx, ry );
+		this.isLine = isLine;
 
 		return this;
 	}
@@ -158,24 +176,80 @@ public class AABB
 		}
 	}
 
-	public final boolean overlaps(final float minx, final float miny, final float maxx, final float maxy)
+	public final boolean overlaps(final float minx, final float miny, final float maxx, final float maxy, boolean isLine)
 	{
-		return ( maxx >= ref.x-dim.x && maxx <= ref.x+dim.x ||
-			     minx >= ref.x-dim.x && minx <= ref.x+dim.x ||
-			     minx >= ref.x-dim.x && maxx <= ref.x+dim.x ||
-			     minx <= ref.x-dim.x && maxx >= ref.x+dim.x
-			  ) && (
-			     maxy >= ref.y-dim.y && maxy <= ref.y+dim.y ||
-			     miny >= ref.y-dim.y && miny <= ref.y+dim.y ||
-			     miny >= ref.y-dim.y && maxy <= ref.y+dim.y ||
-			     miny <= ref.y-dim.y && maxy >= ref.y+dim.y
-			   );
-
+		if(!this.isLine() && !isLine)
+			return ( maxx >= ref.x-dim.x && maxx <= ref.x+dim.x ||
+				     minx >= ref.x-dim.x && minx <= ref.x+dim.x ||
+				     minx >= ref.x-dim.x && maxx <= ref.x+dim.x ||
+				     minx <= ref.x-dim.x && maxx >= ref.x+dim.x
+				  ) && (
+				     maxy >= ref.y-dim.y && maxy <= ref.y+dim.y ||
+				     miny >= ref.y-dim.y && miny <= ref.y+dim.y ||
+				     miny >= ref.y-dim.y && maxy <= ref.y+dim.y ||
+				     miny <= ref.y-dim.y && maxy >= ref.y+dim.y
+				   );
+		else
+		if(this.isLine() && isLine)
+		{
+			return Geometry.calcIntersection( this.getMinX(),  this.getMinY(), 
+											  this.getMaxX() - this.getMinX(),
+											  this.getMaxY() - this.getMinY(),
+											  minx,  miny, 
+											  maxx - minx,
+											  maxy - miny
+											  );
+		}
+		else
+		{
+			float bminx, bminy, bmaxx, bmaxy;
+			float lminx, lminy, lmaxx, lmaxy;
+			if(this.isLine())
+			{
+				bminx = minx;
+				bminy = miny;
+				bmaxx = maxx;
+				bmaxy = maxy;
+				lminx = this.getMinX();
+				lminy = this.getMinY();
+				lmaxx = this.getMaxX();
+				lmaxy = this.getMaxY();
+			}
+			else
+			{
+				lminx = minx;
+				lminy = miny;
+				lmaxx = maxx;
+				lmaxy = maxy;
+				bminx = this.getMinX();
+				bminy = this.getMinY();
+				bmaxx = this.getMaxX();
+				bmaxy = this.getMaxY();
+			}
+			
+			return Geometry.calcIntersection( lminx,  lminy, 
+											  lmaxx - lminx,
+											  lmaxy - lminy,
+											  bminx, bminy, bmaxx-bminx, 0)
+		        || Geometry.calcIntersection( lminx,  lminy, 
+						                      lmaxx - lminx,
+						                      lmaxy - lminy,
+						                      bminx, bmaxy, bmaxx-bminx, 0)
+			    || Geometry.calcIntersection( lminx,  lminy, 
+						                      lmaxx - lminx,
+						                      lmaxy - lminy,
+						                      bminx, bminy, 0, bmaxy-bminy)
+				|| Geometry.calcIntersection( lminx,  lminy, 
+						                      lmaxx - lminx,
+						                      lmaxy - lminy,
+						                      bmaxx, bminy, 0, bmaxy-bminy);
+		}
 	}
 
 	public boolean overlaps(final AABB area)
 	{
-		return overlaps( area.getMinX(), area.getMinY(), area.getMaxX(), area.getMaxY() );
+		return overlaps( area.getMinX(), area.getMinY(), area.getMaxX(), area.getMaxY(), area.isLine );
+
 	}
 
 
@@ -232,4 +306,5 @@ public class AABB
 	}
 
 
+	public boolean isLine() { return isLine; }
 }

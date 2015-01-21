@@ -98,16 +98,16 @@ public abstract class Grid <E>
 	 */
 	public final float getCellSize() { return cellSize; }
 
-	protected final int toGridIndex( final float value )
+	public final int toGridIndex( final float value )
 	{
 		return FastMath.round(value * invCellsize);
 	}
 	
-	protected final int toLowerGridIndex( final float value )
+	public final int toLowerGridIndex( final float value )
 	{
 		return FastMath.floor(value * invCellsize);
 	}
-	protected final int toHigherGridIndex( final float value )
+	public final int toHigherGridIndex( final float value )
 	{
 		return FastMath.ceil(value * invCellsize);
 	}
