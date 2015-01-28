@@ -1,9 +1,11 @@
 package eir.world.unit;
 
+import com.badlogic.gdx.math.Vector2;
+
 import eir.rendering.IRenderer;
 import eir.rendering.IUnitRenderer;
 import eir.resources.levels.IUnitDef;
-import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.environment.Anchor;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
@@ -62,7 +64,7 @@ public interface IUnit extends ISpatialObject
 
 	public void toggleOverlay(int factionOid);
 
-	public Effect createDeathEffect();
+	public IEffect createDeathEffect();
 
 	public void setDead();
 
@@ -72,5 +74,7 @@ public interface IUnit extends ISpatialObject
 
 	public boolean needsSpatialUpdate();
 	public boolean isCollidable();
+
+	public Vector2 getVelocity();
 
 }

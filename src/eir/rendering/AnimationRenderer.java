@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.resources.ResourceFactory;
 import eir.resources.TextureHandle;
 import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
@@ -33,7 +34,7 @@ public class AnimationRenderer implements IUnitRenderer
 		this.sprite = factory.createSprite( TextureHandle.get(textureName) );
 	}
 	@Override
-	public Effect getBirthEffect(IUnit unit, IRenderer renderer)
+	public IEffect getBirthEffect(IUnit unit, IRenderer renderer)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -47,7 +48,7 @@ public class AnimationRenderer implements IUnitRenderer
 		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = unit.getBody().getAnchor();
 
-		TextureRegion region = unit.getFaction().getAntAnimation().getKeyFrame( unit.getLifeTime(), true );
+		TextureRegion region = unit.getFaction().getAntAnimation().getKeyFrame( unit.getLifetime(), true );
 		batch.draw( region,
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
 				region.getRegionWidth()/2,region.getRegionHeight()/2,

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import eir.resources.AnimationHandle;
-import eir.world.Effect;
+import eir.world.IEffect;
 
 public interface IRenderer
 {
@@ -18,7 +18,7 @@ public interface IRenderer
 
 	public Animation getAnimation( final AnimationHandle handle );
 
-	void addEffect(Effect effect/*EffectDef effectDef/*, Vector2 position, Vector2 velocity, float angle*/);
+	void addEffect(IEffect effect/*EffectDef effectDef/*, Vector2 position, Vector2 velocity, float angle*/);
 
 	RayHandler getRayHandler();
 

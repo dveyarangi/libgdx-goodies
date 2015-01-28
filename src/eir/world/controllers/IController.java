@@ -1,5 +1,6 @@
 package eir.world.controllers;
 
+import eir.rendering.IRenderer;
 import eir.world.unit.Faction;
 import eir.world.unit.IDamager;
 import eir.world.unit.IUnit;
@@ -14,4 +15,6 @@ public interface IController {
 	void yellUnitHit(Unit unit, float damage, IDamager hitSource);
 
 	void update( float delta );
+	
+	public void draw(IRenderer renderer);
 }

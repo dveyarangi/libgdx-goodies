@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
-import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.Level;
 import eir.world.environment.Anchor;
 import eir.world.environment.RelativeAnchor;
@@ -166,7 +166,7 @@ public class Cannon extends Unit implements IBuilding
 	}
 
 	@Override
-	public Effect createDeathEffect()
+	public IEffect createDeathEffect()
 	{
 		return weapon.createDeathEffect();
 		

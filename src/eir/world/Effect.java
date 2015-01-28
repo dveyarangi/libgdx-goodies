@@ -11,11 +11,14 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.google.common.base.Preconditions;
 
+import eir.rendering.IRenderer;
+import eir.world.unit.IUnit;
+
 /**
  * @author dveyarangi
  *
  */
-public class Effect implements Poolable
+public class Effect implements Poolable, IEffect
 {
 
 	////////////////////////////////////////////////////
@@ -45,7 +48,7 @@ public class Effect implements Poolable
 		return effect;
 	}
 	
-	public static Effect getEffect( final Animation animation, final float size, final Vector2 position, final float angle, final float timeModifier)
+	public static IEffect getEffect( final Animation animation, final float size, final Vector2 position, final float angle, final float timeModifier)
 	{
 		return getEffect( animation, size, position, Vector2.Zero, angle, timeModifier );
 	}
@@ -77,6 +80,10 @@ public class Effect implements Poolable
 		velocity = new Vector2();
 	}
 
+	/* (non-Javadoc)
+	 * @see eir.world.IEffect#reset()
+	 */
+
 	@Override
 	public void reset()
 	{
@@ -84,6 +91,10 @@ public class Effect implements Poolable
 		isAlive = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see eir.world.IEffect#update(float)
+	 */
+	@Override
 	public void update( final float delta )
 	{
 		stateTime += delta*timeModifier;
@@ -95,10 +106,19 @@ public class Effect implements Poolable
 		position.add( velocity.x*delta, velocity.y*delta );
 	}
 
+	/* (non-Javadoc)
+	 * @see eir.world.IEffect#isAlive()
+	 */
+	@Override
 	public boolean isAlive() { return isAlive; }
 
-	public void draw( final SpriteBatch batch )
+	/* (non-Javadoc)
+	 * @see eir.world.IEffect#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)
+	 */
+	@Override
+	public void draw( IRenderer renderer )
 	{
+		SpriteBatch batch = renderer.getSpriteBatch();
 		TextureRegion region = animation.getKeyFrame( stateTime, true );
 		batch.draw( region,
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
@@ -106,6 +126,18 @@ public class Effect implements Poolable
 				region.getRegionWidth(), region.getRegionHeight(),
 				size/region.getRegionWidth(),
 				size/region.getRegionWidth(), angle);
+	}
+
+	@Override
+	public void free()
+	{
+		pool.free( this );
+	}
+
+	@Override
+	public void reset(IUnit unit)
+	{
+		reset();
 	}
 
 

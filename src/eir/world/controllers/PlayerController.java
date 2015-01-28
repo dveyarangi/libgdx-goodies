@@ -1,5 +1,6 @@
 package eir.world.controllers;
 
+import eir.rendering.IRenderer;
 import eir.world.unit.Faction;
 import eir.world.unit.IDamager;
 import eir.world.unit.IUnit;
@@ -33,6 +34,13 @@ public class PlayerController implements IController {
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void draw(IRenderer renderer)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

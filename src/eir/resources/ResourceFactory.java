@@ -224,6 +224,10 @@ public class ResourceFactory
 		return texture;
 	}
 
+	public Sprite createSprite( final String texture )
+	{
+		return createSprite( TextureHandle.get( texture ) );
+	}
 	public Sprite createSprite( final TextureHandle handle )
 	{
 		TextureRegion region = new TextureRegion( getTexture( handle ) );

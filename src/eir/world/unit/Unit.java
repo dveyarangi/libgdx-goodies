@@ -14,7 +14,7 @@ import eir.rendering.IUnitRenderer;
 import eir.rendering.LevelRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.IUnitDef;
-import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.Level;
 import eir.world.environment.Anchor;
 import eir.world.environment.Environment;
@@ -114,7 +114,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	/**
 	 * Unit physical velocity, actual for freely moving units
 	 */
-	private final Vector2 velocity;
+	protected final Vector2 velocity;
 	
 	private final Vector2 force;
 
@@ -162,7 +162,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * Override this method to reset subclass's custom properties
 	 * @param level
 	 */
-	protected void reset( final Level level)
+	protected void reset( final Level level )
 	{
 		ResourceFactory factory = level.getResourceFactory();
 		this.isAlive = true;
@@ -290,6 +290,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	{
 
 		// this is sad:
+		if(!Float.isNaN(delta))
 		lifetime += delta;
 
 		if( lifetime > lifelen )
@@ -361,8 +362,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		return damage;
 	}
-	
-
 
 	@Override @Deprecated
 	public float getSize() { return this.def.getSize(); }
@@ -383,6 +382,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	public  float getMaxSpeed() { return def.getMaxSpeed(); }
 	public float getLifetime() { return lifetime; }
+	@Override
 	public Vector2 getVelocity() { return velocity; }
 	public Vector2 getForce() { return force; }
 
@@ -431,7 +431,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public <E extends IUnitRenderer> E getRenderer() { return (E)renderer; }
 
-	public float getLifeTime() { return lifetime; }
 	
 	@Override
 	public void setFaction(Faction newFaction)
@@ -440,9 +439,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 	}
 
 	@Override
-	public Effect createDeathEffect()
+	public IEffect createDeathEffect()
 	{
-		Effect effect =  renderer.getDeathEffect( this );
+		IEffect effect =  renderer.getDeathEffect( this );
 		if(effect == null)
 			return null;
 		
@@ -455,4 +454,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public boolean needsSpatialUpdate() { return false; }
 	@Override
 	public boolean isCollidable() { return false; }
+	
+	protected Level getLevel() { return getFaction().getLevel(); }
 }

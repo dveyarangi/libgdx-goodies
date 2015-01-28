@@ -5,10 +5,16 @@ import eir.resources.levels.UnitDef;
 
 public class BulletDef extends UnitDef
 {
+	
+	private boolean dieOnCollision;
 
-	public BulletDef( final int factionId, final int size, IUnitRenderer renderer, float maxSpeed)
+	public BulletDef( final int factionId, final float size, IUnitRenderer renderer, float maxSpeed, boolean dieOnCollision)
 	{
 		super( BulletFactory.NAME, factionId, size, renderer, false, maxSpeed );
+		
+		this.dieOnCollision = dieOnCollision;
 	}
+
+	public boolean shouldDieOnCollision() { return dieOnCollision; }
 
 }

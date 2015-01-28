@@ -11,8 +11,8 @@ public class LevelDef
 {
 	private String name;
 
-	private int width;
-	private int height;
+	private int width, halfWidth;
+	private int height, halfHeight;
 
 	private LevelInitialSettings initialSettings;
 
@@ -27,9 +27,9 @@ public class LevelDef
 	private Map <String, AnimationHandle> animations;
 
 	public float getWidth() { return width;	}
-	public void setWidth( final int width ) { this.width = width; }
+	public void setWidth( final int width ) { this.width = width; halfWidth = width/2;}
 	public float getHeight() { return height; }
-	public void setHeight( final int height ) { this.height = height; }
+	public void setHeight( final int height ) { this.height = height; halfHeight = height/2;}
 
 	public IBackground getBackgroundDef() { return background; }
 	public void setBackgroundDef( final IBackground background ) { this.background = background; }
@@ -48,6 +48,7 @@ public class LevelDef
 	public LevelInitialSettings getInitialSettings() { return initialSettings; }
 
 	public void setInitialSettings(final LevelInitialSettings settings) { this.initialSettings = settings; }
-
+	public float getHalfWidth()  { return halfWidth; }
+	public float getHalfHeight()  { return halfHeight; }
 
 }

@@ -14,7 +14,7 @@ import eir.debug.Debug;
 import eir.input.GameInputProcessor;
 import eir.resources.AnimationHandle;
 import eir.resources.ResourceFactory;
-import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.Level;
 import eir.world.environment.Asteroid;
 import eir.world.environment.Web;
@@ -35,7 +35,7 @@ public class LevelRenderer implements IRenderer
 
 	private final ResourceFactory gameFactory;
 
-	private final List <Effect> effects;
+	private final List <IEffect> effects;
 
 	private TIntObjectHashMap <IOverlay> overlays;
 
@@ -51,13 +51,13 @@ public class LevelRenderer implements IRenderer
 		this.inputController = inputController;
 		this.level = level;
 		
-		rayHandler = new RayHandler(level.getEnvironment().getPhyisics());
+		rayHandler = new RayHandler( level.getEnvironment().getPhyisics() );
 
 		batch = new SpriteBatch();
 
 		shapeRenderer = new ShapeRenderer();
 
-		effects = new LinkedList <Effect> ();
+		effects = new LinkedList <IEffect> ();
 
 		this.overlays = new TIntObjectHashMap <IOverlay> ();
 
@@ -115,22 +115,22 @@ public class LevelRenderer implements IRenderer
 		
 		
 		
-		for(Effect effect : effects)
+		for(IEffect effect : effects)
 		{
-			effect.draw( batch );
+			effect.draw( this );
 		}
 
 
-		Iterator <Effect> effectIt = effects.iterator();
+		Iterator <IEffect> effectIt = effects.iterator();
 		while(effectIt.hasNext())
 		{
-			Effect effect = effectIt.next();
+			IEffect effect = effectIt.next();
 			effect.update( delta );
 			if(!effect.isAlive())
 			{
 
 				effectIt.remove();
-				Effect.free( effect );
+				effect.free();
 			}
 
 		}
@@ -178,7 +178,7 @@ public class LevelRenderer implements IRenderer
 		effects.add( effect );
 	}*/
 	@Override
-	public void addEffect( final Effect effect)
+	public void addEffect( final IEffect effect)
 	{
 		assert (effect != null);
 		effects.add( effect );

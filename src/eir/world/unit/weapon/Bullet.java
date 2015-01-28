@@ -137,8 +137,8 @@ public class Bullet extends Unit implements IDamager
 	@Override
 	protected float damage( final Damage source, final float damageCoef )
 	{
-		
-		setDead();
+		if(((BulletDef)def).shouldDieOnCollision())
+			setDead();
 		return 0;
 	}
 	

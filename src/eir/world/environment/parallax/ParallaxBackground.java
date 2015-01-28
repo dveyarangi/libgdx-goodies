@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.input.GameInputProcessor;
 import eir.rendering.IRenderer;
 import eir.resources.AnimationHandle;
-import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.Level;
 import eir.world.environment.IBackground;
 
@@ -92,7 +92,7 @@ public class ParallaxBackground implements IBackground
 			public Animation getAnimation(AnimationHandle handle) { return null;}
 
 			@Override
-			public void addEffect(Effect effect) { }
+			public void addEffect(IEffect effect) { }
 
 			@Override
 			public RayHandler getRayHandler() { return null; }

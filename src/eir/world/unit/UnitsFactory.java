@@ -107,7 +107,7 @@ public class UnitsFactory
 	 * @param ant
 	 */
 	@SuppressWarnings("unchecked")
-	public void free(final IUnit unit)
+	public void free(Level level, final IUnit unit)
 	{
 		unit.dispose();
 

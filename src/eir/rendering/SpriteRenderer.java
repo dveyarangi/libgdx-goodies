@@ -12,6 +12,7 @@ import eir.resources.AnimationHandle;
 import eir.resources.ResourceFactory;
 import eir.resources.TextureHandle;
 import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
@@ -69,7 +70,7 @@ public class SpriteRenderer implements IUnitRenderer
 		}
 	}
 	@Override
-	public Effect getBirthEffect(IUnit unit, IRenderer renderer)
+	public IEffect getBirthEffect(IUnit unit, IRenderer renderer)
 	{
 //		renderer.createEffect( )
 		// TODO Auto-generated method stub

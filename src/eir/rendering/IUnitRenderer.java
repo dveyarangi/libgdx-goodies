@@ -2,6 +2,7 @@ package eir.rendering;
 
 import eir.resources.ResourceFactory;
 import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
@@ -9,7 +10,7 @@ public interface IUnitRenderer
 {
 	public void init( ResourceFactory factory );
 	
-	public Effect getBirthEffect( IUnit unit, IRenderer renderer );
+	public IEffect getBirthEffect( IUnit unit, IRenderer renderer );
 	/**
 	 * Regular unit rendering procedure
 	 * @param renderer

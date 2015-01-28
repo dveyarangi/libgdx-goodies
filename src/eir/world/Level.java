@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.game.LevelSetup;
 import eir.input.GameInputProcessor;
 import eir.rendering.IRenderer;
+import eir.rendering.LevelRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.FactionDef;
 import eir.resources.levels.IUnitDef;
@@ -94,16 +95,19 @@ public class Level
 	private final Queue <IUnit> unitsToAdd = new LinkedList <IUnit> ();
 
 	private final Queue <IUnit> unitsToRemove = new LinkedList <IUnit> ();
-
+	
+	private Map <IEffect, IUnit> pendingDeathUnits = new HashMap <IEffect, IUnit> ();
+ 
 	private int highestUnitZ = Integer.MIN_VALUE;
 
 	private UnitsFactory unitsFactory;
 	
-	private List <Effect> pendingEffects = new ArrayList <Effect>();
+	private List <IEffect> pendingEffects = new ArrayList <IEffect>();
 	
 	private int PROFILE_INTERVAL = 2;
 	private float timeSinceProfiling = 0;
 	
+	private IRenderer renderer;
 	
 
 	public Level( LevelSetup setup )
@@ -123,8 +127,9 @@ public class Level
 		units = new LinkedList <IUnit > ();
 		webs = new ArrayList <Web> ();
 		factions = new TIntObjectHashMap<Faction> ();
-		
-		this.background = setup.getLevelDef().getBackgroundDef();
+
+		this.environment = new Environment();
+
 	}
 
 
@@ -180,22 +185,26 @@ public class Level
 	}
 
 	/**
+	 * @param renderer 
+	 * @param inputController 
 	 * @param inputController 
 	 * @param context
 	 * @param factory
 	 */
-	public void init( final LevelDef def )
+	public void init( final LevelDef def, LevelRenderer renderer, GameInputProcessor inputController )
 	{
 		this.def = def;
+		
 
 		halfWidth = def.getWidth() / 2;
 		halfHeight = def.getHeight() / 2;
 
-		this.environment = new Environment();
-
 		this.background = def.getBackgroundDef();
+		background.init( this, inputController );
 
 		environment.init( this );
+		
+		this.renderer = renderer;
 		
 		for( FactionDef factionDef : def.getFactionDefs() )
 		{
@@ -243,12 +252,6 @@ public class Level
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
-
-	}
-
-	public void setInputController(GameInputProcessor inputController)
-	{
-		background.init( this, inputController );
 
 	}
 
@@ -320,13 +323,14 @@ public class Level
 
 	public void draw(IRenderer levelRenderer)
 	{
-		for(Effect effect : pendingEffects)
+		for(IEffect effect : pendingEffects)
 		{
 			levelRenderer.addEffect( effect );
 		}
 		
 		pendingEffects.clear();
-
+		
+		controllerFactory.draw( levelRenderer );
 	}
 
 	public boolean inWorldBounds(final Vector2 position)
@@ -426,22 +430,44 @@ public class Level
 		{
 			IUnit unit = unitsToRemove.poll();
 
-			// TODO: (optimize) a-ha!
 			units.remove( unit );
 			
 			environment.remove( unit );
 			// dat questionable construct:
 			unit.getFaction().removeUnit( unit );
-
-			unitsFactory.free( unit );
 			
-			Effect effect = unit.createDeathEffect();
+			IEffect effect = unit.createDeathEffect();
 			if(effect == null)
+			{
 				assert debug("Unit " + unit + " has no death effect");
+				// TODO: (optimize) a-ha!
+
+				unitsFactory.free( this, unit );
+			}
 			else
+			{
 				pendingEffects.add( effect );
+				pendingDeathUnits.put( effect, unit );
+			}
 			assert debug("Unit removed: " + unit);
 		}
+		
+		Queue <IEffect> effectsToRemove = new LinkedList <IEffect> ();
+		for(IEffect effect : pendingDeathUnits.keySet())
+		{
+			if(effect.isAlive())
+				continue;
+			
+			IUnit unit = pendingDeathUnits.get( effect );
+			unitsFactory.free( this, unit );
+			effectsToRemove.add(effect);
+		}
+		
+		while(!effectsToRemove.isEmpty())
+		{
+			pendingDeathUnits.remove( effectsToRemove.poll());
+		}
+		
 	}
 
 
@@ -496,7 +522,7 @@ public class Level
 
 
 
-
+	public IRenderer getRenderer() { return renderer; }
 
 
 }

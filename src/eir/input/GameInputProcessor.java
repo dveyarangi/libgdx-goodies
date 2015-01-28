@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import eir.game.screens.IGameUI;
 import eir.rendering.IRenderer;
+import eir.resources.levels.LevelDef;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -29,10 +30,10 @@ import eir.world.environment.spatial.ISpatialObject;
 public class GameInputProcessor implements InputProcessor
 {
 	private final InputMultiplexer inputMultiplexer;
-	private final FreeCameraController freeController;
+	private FreeCameraController freeController;
 	private ICameraController camController;
 
-	protected final Level level;
+	protected Level level;
 
 	private int prevx, prevy, currx, curry;
 	private final Vector3 pointerPosition3 = new Vector3();
@@ -42,7 +43,7 @@ public class GameInputProcessor implements InputProcessor
 
 	private float lifeTime = 0;
 
-	private final List <IControlMode> controlModes;
+	private List <IControlMode> controlModes;
 	private int controlModeIdx;
 	private IControlMode currControlMode;
 
@@ -64,17 +65,10 @@ public class GameInputProcessor implements InputProcessor
 	private boolean pointerChanged = true;
 
 
-	public GameInputProcessor(final Level level, final IGameUI ui)
+	public GameInputProcessor(final LevelDef level, final IGameUI ui)
 	{
 
 
-		int w = Gdx.graphics.getWidth();
-		int h = Gdx.graphics.getHeight();
-		OrthographicCamera camera = new OrthographicCamera( w, h );
-
-		freeController = new FreeCameraController(camera, level);
-
-		camController = freeController;
 
 		inputMultiplexer = new InputMultiplexer();
 
@@ -99,20 +93,33 @@ public class GameInputProcessor implements InputProcessor
 			}
 		});
 
-		controlModes = new ArrayList <IControlMode> ();
-		createControlModes( controlModes, level );
-		currControlMode = controlModes.get(0);
-
-		controlModeIdx = 0;
 
 		inputMultiplexer.addProcessor( uiProcessor );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
 		inputMultiplexer.addProcessor( this );
 
-		this.level = level;
-
 		prevx = -1;
 		prevy = -1;
+
+	}
+	
+	public void init( Level level )
+	{
+		this.level = level;
+		
+		controlModes = new ArrayList <IControlMode> ();
+		createControlModes( controlModes, level);
+		currControlMode = controlModes.get(0);
+		controlModeIdx = 0;
+
+
+		int w = Gdx.graphics.getWidth();
+		int h = Gdx.graphics.getHeight();
+		
+		OrthographicCamera camera = new OrthographicCamera( w, h );	
+		freeController = new FreeCameraController(camera, level);
+
+		camController = freeController;
 
 	}
 

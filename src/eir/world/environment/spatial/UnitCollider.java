@@ -39,6 +39,7 @@ public class UnitCollider implements ISpatialSensor<ISpatialObject>
 		IUnit ant = (IUnit) object;
 		boolean sameFaction = ant.getFaction().getOwnerId() == collidingAnt.getFaction().getOwnerId();
 		boolean damageDealt = false;
+//		System.out.println("UnitCollider: collision: " + object + " <->" + collidingAnt);
 		if(object instanceof IDamager)
 		{
 			IDamager damager = (IDamager) object;
@@ -79,6 +80,25 @@ public class UnitCollider implements ISpatialSensor<ISpatialObject>
 
 		return damageDealt;
 	}
+	
+/*	private void hit(IDamager source, )
+	{
+		IDamager source = (IDamager)collidingAnt;
+
+		if( !sameFaction || collidingAnt.dealsFriendlyDamage() )
+		{
+			if( source.getDamage().getAOE() != null )
+			{
+				aoeDamages.add( source );
+			}
+			else
+			{
+				ant.hit( source.getDamage(), source, 1 );
+
+				damageDealt = true;
+			}
+		}
+	}*/
 
 	@Override
 	public void clear()

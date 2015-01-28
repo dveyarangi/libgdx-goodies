@@ -63,15 +63,16 @@ public abstract class TaskedUnit extends Unit
 	}
 
 	@Override
-	public void dispose()
-	{
-		super.dispose();
+	public void dispose(  )
+	{	
+
 		if(task != null)
 		{
 			task.cancel();
 		}
 
 		task = null;
+		super.dispose(  );
 
 	}
 }

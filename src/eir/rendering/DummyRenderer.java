@@ -2,6 +2,7 @@ package eir.rendering;
 
 import eir.resources.ResourceFactory;
 import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
@@ -16,7 +17,7 @@ public class DummyRenderer implements IUnitRenderer
 	}
 
 	@Override
-	public Effect getBirthEffect(IUnit unit, IRenderer renderer)
+	public IEffect getBirthEffect(IUnit unit, IRenderer renderer)
 	{
 		// TODO Auto-generated method stub
 		return null;

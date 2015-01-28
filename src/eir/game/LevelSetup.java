@@ -71,7 +71,7 @@ public abstract class LevelSetup
 	public float getProgress() { return progress; }
 	public String getState() { return state; }
 
-	public abstract GameInputProcessor getInputController(Level level, IGameUI ui);
+	public abstract GameInputProcessor getInputController(LevelDef levelDef2, IGameUI ui);
 	
 	public abstract ControllerFactory createControllerFactory();
 

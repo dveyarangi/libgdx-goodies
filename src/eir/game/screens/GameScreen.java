@@ -39,14 +39,16 @@ public class GameScreen extends AbstractScreen
 		// creating level from level definitions:
 		level = levelSetup.createLevel();
 
-		
-		level.init( levelSetup.getLevelDef() );
 
 	    ui = levelSetup.getUI( stage ); 
 	    
-	    inputController = levelSetup.getInputController( level, ui );
+	    inputController = levelSetup.getInputController( levelSetup.getLevelDef(), ui );
+
+		this.renderer = new LevelRenderer( gameFactory, inputController, level );
 		
-		level.setInputController(inputController);	
+		level.init( levelSetup.getLevelDef(), renderer, inputController );
+		
+		inputController.init(level);
 		
 		Gdx.input.setInputProcessor( stage );
 
@@ -54,12 +56,9 @@ public class GameScreen extends AbstractScreen
 
 		Debug.init( level, inputController );
 
-		this.renderer = new LevelRenderer( gameFactory, inputController, level );
 		
 		if( ui != null)
 			ui.init();
-		
-
 	}
 
 	@Override

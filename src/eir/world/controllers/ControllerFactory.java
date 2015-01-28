@@ -1,5 +1,6 @@
 package eir.world.controllers;
 
+import eir.rendering.IRenderer;
 import eir.world.Level;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -63,6 +64,12 @@ public abstract class ControllerFactory
 	{
 		for(Object ctrl : controllers.values())
 			((IController)ctrl).update( delta );
+	}
+
+	public void draw(IRenderer levelRenderer)
+	{
+		for(Object ctrl : controllers.values())
+			((IController)ctrl).draw( levelRenderer );
 	}
 
 }

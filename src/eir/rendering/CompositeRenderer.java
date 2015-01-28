@@ -2,6 +2,7 @@ package eir.rendering;
 
 import eir.resources.ResourceFactory;
 import eir.world.Effect;
+import eir.world.IEffect;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -34,7 +35,7 @@ public class CompositeRenderer implements IUnitRenderer
 			((IUnitRenderer)renderer).init(factory);
 	}
 	@Override
-	public Effect getBirthEffect(IUnit unit, IRenderer renderer)
+	public IEffect getBirthEffect(IUnit unit, IRenderer renderer)
 	{
 		return renderers.get( state ).getBirthEffect(unit, renderer);
 	}

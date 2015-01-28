@@ -109,12 +109,12 @@ public class Ant extends TaskedUnit implements IDamager
 	@Override
 	public void dispose()
 	{
-		super.dispose();
 
 		if( route != null)
 		{
 			route.recycle();
 		}
+		super.dispose();
 	}
 
 	@Override
