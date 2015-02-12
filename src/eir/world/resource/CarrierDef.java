@@ -1,6 +1,5 @@
 package eir.world.resource;
 
-import eir.rendering.IUnitRenderer;
 import eir.resources.levels.UnitDef;
 
 public class CarrierDef extends UnitDef
@@ -9,9 +8,9 @@ public class CarrierDef extends UnitDef
 	
 
 	public CarrierDef(String type, int faction, float size,
-			IUnitRenderer renderer, boolean isPickable, float resourceCapacity, float maxSpeed)
+			boolean isPickable, float resourceCapacity, float maxSpeed)
 	{
-		super(type, faction, size, renderer, isPickable, maxSpeed);
+		super(type, faction, size, isPickable, maxSpeed);
 		
 		this.resourceCapacity = resourceCapacity;
 	}

@@ -9,9 +9,9 @@ import eir.rendering.IRenderer;
 import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.Damage;
-import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
+import eir.world.unit.aspects.IDamager;
+import eir.world.unit.damage.Damage;
 
 /**
  * @author dveyarangi
@@ -35,7 +35,7 @@ public class Bullet extends Unit implements IDamager
 	
 	
 
-	Bullet()
+	public Bullet()
 	{
 		super();
 		
@@ -137,7 +137,7 @@ public class Bullet extends Unit implements IDamager
 	@Override
 	protected float damage( final Damage source, final float damageCoef )
 	{
-		if(((BulletDef)def).shouldDieOnCollision())
+		if(weapon.getDef().shouldDieOnCollision())
 			setDead();
 		return 0;
 	}

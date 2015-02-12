@@ -1,11 +1,12 @@
 /**
  *
  */
-package eir.world.unit.ant;
+package eir.world.unit.dummy;
 
 import eir.resources.ResourceFactory;
 import eir.resources.levels.LevelDef;
-import eir.world.unit.UnitsFactory.UnitFactory;
+import eir.resources.levels.UnitDef;
+import eir.world.unit.UnitFactory;
 import eir.world.unit.ai.TaskStage;
 
 /**
@@ -15,8 +16,6 @@ import eir.world.unit.ai.TaskStage;
 public class AntFactory extends UnitFactory <Ant>
 {
 	public static final String NAME = "ant".intern();
-
-	@Override protected String getName() { return NAME; }
 
 	public AntFactory( final ResourceFactory gameFactory )
 	{
@@ -34,6 +33,10 @@ public class AntFactory extends UnitFactory <Ant>
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected Class<? extends UnitDef> getDefClass( String unitType ) { return UnitDef.class; }
+
 
 
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eir.world.unit.ai.TaskStage;
+import eir.world.unit.behaviors.UnitBehavior;
 
 public class BehaviorFactory <U extends Unit>
 {

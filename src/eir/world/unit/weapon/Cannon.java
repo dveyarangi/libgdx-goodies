@@ -1,4 +1,4 @@
-package eir.world.unit.cannons;
+package eir.world.unit.weapon;
 
 import java.util.List;
 
@@ -15,12 +15,10 @@ import eir.world.environment.RelativeAnchor;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.resource.Port;
-import eir.world.unit.Damage;
-import eir.world.unit.Hull;
-import eir.world.unit.IBuilding;
 import eir.world.unit.Unit;
-import eir.world.unit.weapon.Weapon;
-import eir.world.unit.weapon.WeaponDef;
+import eir.world.unit.aspects.IBuilding;
+import eir.world.unit.damage.Damage;
+import eir.world.unit.damage.Hull;
 
 public class Cannon extends Unit implements IBuilding
 {

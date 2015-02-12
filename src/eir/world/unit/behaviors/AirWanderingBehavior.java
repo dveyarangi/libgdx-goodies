@@ -1,12 +1,11 @@
 /**
  * 
  */
-package eir.world.unit.air;
+package eir.world.unit.behaviors;
 
 import eir.world.environment.Environment;
 import eir.world.environment.nav.NavNode;
 import eir.world.unit.Unit;
-import eir.world.unit.UnitBehavior;
 import eir.world.unit.ai.Task;
 
 /**

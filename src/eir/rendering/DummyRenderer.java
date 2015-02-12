@@ -4,9 +4,8 @@ import eir.resources.ResourceFactory;
 import eir.world.Effect;
 import eir.world.IEffect;
 import eir.world.unit.IUnit;
-import eir.world.unit.Unit;
 
-public class DummyRenderer implements IUnitRenderer
+public class DummyRenderer implements IUnitRenderer <IUnit>
 {
 
 	@Override
@@ -24,7 +23,7 @@ public class DummyRenderer implements IUnitRenderer
 	}
 
 	@Override
-	public void render(Unit unit, IRenderer renderer)
+	public void render(IUnit unit, IRenderer renderer)
 	{
 		// TODO Auto-generated method stub
 		

@@ -1,10 +1,10 @@
-package eir.world.unit.cannons;
+package eir.world.unit.weapon;
 
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.UnitBehavior;
 import eir.world.unit.ai.Task;
+import eir.world.unit.behaviors.UnitBehavior;
 
 public class SimpleTargetingBehavior implements UnitBehavior<Cannon>
 {

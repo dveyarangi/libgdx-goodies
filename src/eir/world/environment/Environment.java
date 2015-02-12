@@ -17,9 +17,9 @@ import eir.world.environment.spatial.ISpatialIndex;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.environment.spatial.UnitCollider;
-import eir.world.unit.IDamager;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
+import eir.world.unit.aspects.IDamager;
 
 public class Environment 
 {

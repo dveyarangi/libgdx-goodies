@@ -2,13 +2,12 @@ package eir.world.unit.dummy;
 
 import eir.resources.ResourceFactory;
 import eir.resources.levels.LevelDef;
-import eir.world.unit.UnitsFactory.UnitFactory;
+import eir.resources.levels.UnitDef;
+import eir.world.unit.UnitFactory;
 
 public class DummyFactory extends UnitFactory <Dummy>
 {
 	public static final String NAME = "dummy".intern();
-
-	@Override protected String getName() { return NAME; }
 
 	@Override
 	protected Dummy createEmpty()
@@ -20,5 +19,6 @@ public class DummyFactory extends UnitFactory <Dummy>
 	protected void init(LevelDef def, ResourceFactory factory)
 	{
 	}
-
+	@Override
+	protected Class<? extends UnitDef> getDefClass( String unitType ) { return UnitDef.class; }
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.world.unit.ant;
+package eir.world.unit.dummy;
 
 import eir.world.unit.BehaviorFactory;
 

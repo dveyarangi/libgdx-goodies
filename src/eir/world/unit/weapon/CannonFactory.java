@@ -1,15 +1,13 @@
-package eir.world.unit.cannons;
+package eir.world.unit.weapon;
 
 import eir.resources.ResourceFactory;
 import eir.resources.levels.LevelDef;
 import eir.resources.levels.UnitDef;
-import eir.world.unit.UnitsFactory.UnitFactory;
+import eir.world.unit.UnitFactory;
 
 public class CannonFactory extends UnitFactory <Cannon>
 {
 	public static final String NAME = "cannon".intern();
-
-	@Override protected String getName() { return NAME; }
 
 	public CannonFactory( )
 	{
@@ -24,10 +22,11 @@ public class CannonFactory extends UnitFactory <Cannon>
 	}
 
 	@Override
-	protected Class <? extends UnitDef> getDefClass() {	return CannonDef.class;	}
+	protected Class <? extends UnitDef> getDefClass( String unitType ) {	return CannonDef.class;	}
 
 	@Override
 	protected void init(LevelDef def, ResourceFactory factory)
 	{
 	}
+
 }

@@ -1,7 +1,10 @@
-package eir.world.unit;
+package eir.world.unit.ai;
 
 import eir.world.Level;
-import eir.world.unit.ai.Task;
+import eir.world.unit.Unit;
+import eir.world.unit.aspects.IDamager;
+import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.damage.Damage;
 
 public abstract class TaskedUnit extends Unit
 {

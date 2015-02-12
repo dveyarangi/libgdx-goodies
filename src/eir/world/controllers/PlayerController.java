@@ -2,11 +2,11 @@ package eir.world.controllers;
 
 import eir.rendering.IRenderer;
 import eir.world.unit.Faction;
-import eir.world.unit.IDamager;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.AttackingOrder;
-import eir.world.unit.cannons.CannonFactory;
+import eir.world.unit.aspects.IDamager;
+import eir.world.unit.weapon.CannonFactory;
 
 public class PlayerController implements IController {
 

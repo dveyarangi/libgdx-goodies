@@ -6,6 +6,7 @@ import java.util.Map;
 
 import eir.resources.AnimationHandle;
 import eir.world.environment.IBackground;
+import eir.world.environment.parallax.DummyBackground;
 
 public class LevelDef
 {
@@ -16,7 +17,7 @@ public class LevelDef
 
 	private LevelInitialSettings initialSettings;
 
-	private IBackground background;
+	private IBackground background = new DummyBackground();
 
 	private List <AsteroidDef> asteroids;
 

@@ -1,8 +1,6 @@
-package eir.world.unit.cannons;
+package eir.world.unit.weapon;
 
-import eir.rendering.DummyRenderer;
 import eir.resources.levels.UnitDef;
-import eir.world.unit.weapon.WeaponDef;
 
 public class CannonDef extends UnitDef
 {
@@ -11,7 +9,7 @@ public class CannonDef extends UnitDef
 	public CannonDef(final int faction, final float size,
 		final WeaponDef weaponDef, final boolean isPickable)
 	{
-		super( CannonFactory.NAME, faction, size, new DummyRenderer(), isPickable, 0 );
+		super( CannonFactory.NAME, faction, size, isPickable, 0 );
 
 		this.weaponDef = weaponDef;
 	}

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import eir.rendering.IRenderer;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.IOverlay;
 import eir.world.unit.IUnit;
 
 /**

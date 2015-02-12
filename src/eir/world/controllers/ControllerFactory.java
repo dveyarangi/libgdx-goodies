@@ -43,8 +43,8 @@ public abstract class ControllerFactory
 	
 	public IController getController( int faction )
 	{
-		if(! controllers.contains( faction ))
-			throw new RuntimeException("No controller for faction " + faction);
+		assert controllers.contains( faction ):"No controller for faction " + faction;;
+			
 		return controllers.get( faction );
 	}
 

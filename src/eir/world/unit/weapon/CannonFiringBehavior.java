@@ -1,4 +1,4 @@
-package eir.world.unit.cannons;
+package eir.world.unit.weapon;
 
 public class CannonFiringBehavior
 {

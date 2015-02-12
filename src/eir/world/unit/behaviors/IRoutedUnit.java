@@ -1,6 +1,7 @@
-package eir.world.unit;
+package eir.world.unit.behaviors;
 
 import eir.world.environment.nav.Route;
+import eir.world.unit.IUnit;
 
 public interface IRoutedUnit extends IUnit
 {

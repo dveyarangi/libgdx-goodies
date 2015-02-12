@@ -24,8 +24,8 @@ import eir.rendering.IRenderer;
 import eir.resources.ResourceFactory;
 import eir.world.Level;
 import eir.world.environment.spatial.SpatialHashMap;
-import eir.world.unit.IOverlay;
 import eir.world.unit.IUnit;
+import eir.world.unit.overlays.IOverlay;
 import eir.world.unit.overlays.UnitSymbolOverlay;
 import gnu.trove.map.hash.TIntObjectHashMap;
 

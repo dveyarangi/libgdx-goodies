@@ -1,13 +1,10 @@
 package eir.world.unit.weapon;
 
-import eir.resources.levels.UnitDef;
-import eir.world.unit.UnitsFactory.UnitFactory;
+import eir.world.unit.MultiplexUnitFactory;
 
-public abstract class WeaponFactory extends UnitFactory <Weapon>
+public abstract class WeaponFactory extends MultiplexUnitFactory <Weapon>
 {
 	public static final String NAME = "weapon".intern();
-
-	@Override protected String getName() { return NAME; }
 
 	public WeaponFactory( )
 	{
@@ -20,8 +17,5 @@ public abstract class WeaponFactory extends UnitFactory <Weapon>
 	{
 		return new Weapon();
 	}
-
-	@Override
-	protected Class <? extends UnitDef> getDefClass() {	return WeaponDef.class;	}
 
 }

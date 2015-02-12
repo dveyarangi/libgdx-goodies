@@ -1,7 +1,7 @@
 package eir.world.environment.spatial;
 
-import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
+import eir.world.unit.aspects.IDamager;
 
 public class AOECollider implements ISpatialSensor<ISpatialObject>
 {

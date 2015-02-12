@@ -9,10 +9,9 @@ import eir.resources.ResourceFactory;
 import eir.resources.TextureHandle;
 import eir.world.Effect;
 import eir.world.IEffect;
-import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
-public class AnimationRenderer implements IUnitRenderer
+public class AnimationRenderer  implements IUnitRenderer <Unit>
 {
 
 	private String textureName;
@@ -34,7 +33,7 @@ public class AnimationRenderer implements IUnitRenderer
 		this.sprite = factory.createSprite( TextureHandle.get(textureName) );
 	}
 	@Override
-	public IEffect getBirthEffect(IUnit unit, IRenderer renderer)
+	public IEffect getBirthEffect(Unit unit, IRenderer renderer)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -59,7 +58,7 @@ public class AnimationRenderer implements IUnitRenderer
 	}
 
 	@Override
-	public Effect getDeathEffect(IUnit unit)
+	public Effect getDeathEffect(Unit unit)
 	{
 		// TODO Auto-generated method stub
 		return null;

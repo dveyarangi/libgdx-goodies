@@ -8,8 +8,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
 import eir.world.unit.Unit;
-import eir.world.unit.UnitBehavior;
 import eir.world.unit.UnitsFactory;
+import eir.world.unit.behaviors.UnitBehavior;
 
 /**
  * schedules tasks for ant <br>

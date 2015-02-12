@@ -3,20 +3,21 @@ package eir.world.unit.weapon;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
-import eir.rendering.IUnitRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.UnitDef;
 import eir.world.Effect;
-import eir.world.unit.Damage;
 import eir.world.unit.Unit;
-import eir.world.unit.cannons.TargetProvider;
+import eir.world.unit.damage.Damage;
 
 public abstract class WeaponDef extends UnitDef
 {
-	public WeaponDef( String type, final int faction, final float size,
-			IUnitRenderer renderer, final boolean isPickable)
+	
+	private BulletDef bulletDef;
+	public WeaponDef( String type, final int faction, BulletDef bulletDef, final float size, final boolean isPickable)
 	{
-		super( type, faction, size, renderer, isPickable, 0 );
+		super( type, faction, size, isPickable, 0 );
+		
+		this.bulletDef = bulletDef;
 	}
 
 	/**
@@ -70,7 +71,7 @@ public abstract class WeaponDef extends UnitDef
 
 	public abstract boolean decayOnNoTarget();
 
-	public abstract UnitDef getBulletDef();
+	public BulletDef getBulletDef() { return bulletDef; }
 
 	/**
 	 * @param firingDir
@@ -89,4 +90,6 @@ public abstract class WeaponDef extends UnitDef
 	public abstract void init( ResourceFactory gameFactory );
 
 	public abstract float getShotEnergyConsumption();
+
+	public abstract boolean shouldDieOnCollision();
 }

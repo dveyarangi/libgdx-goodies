@@ -5,7 +5,6 @@ import yarangi.math.Angles;
 import com.badlogic.gdx.math.MathUtils;
 
 import eir.world.unit.Unit;
-import eir.world.unit.UnitBehavior;
 import eir.world.unit.ai.Task;
 
 public class LinearMovementBehavior <U extends Unit> implements UnitBehavior <U>

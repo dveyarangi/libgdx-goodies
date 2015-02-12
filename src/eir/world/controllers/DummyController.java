@@ -2,9 +2,9 @@ package eir.world.controllers;
 
 import eir.rendering.IRenderer;
 import eir.world.unit.Faction;
-import eir.world.unit.IDamager;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
+import eir.world.unit.aspects.IDamager;
 
 public class DummyController implements IController
 {

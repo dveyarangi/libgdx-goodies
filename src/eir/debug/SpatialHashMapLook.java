@@ -11,7 +11,7 @@ import eir.rendering.IRenderer;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
-import eir.world.unit.IOverlay;
+import eir.world.unit.overlays.IOverlay;
 
 /**
  * Renders entity index

@@ -1,4 +1,4 @@
-package eir.world.unit;
+package eir.world.unit.overlays;
 
 import eir.rendering.IRenderer;
 

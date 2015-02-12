@@ -1,8 +1,9 @@
-package eir.world.unit;
+package eir.world.unit.behaviors;
 
 import eir.debug.Debug;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.Route;
+import eir.world.unit.Unit;
 import eir.world.unit.ai.Task;
 
 public class AirGraphTravellingBehavior implements UnitBehavior <IRoutedUnit>

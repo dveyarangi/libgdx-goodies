@@ -147,7 +147,8 @@ public class Faction
 
 	public boolean isEnemy( final Unit unit )
 	{
-		return this.def.getEnemies().contains( unit.getFaction().getId() );
+		int factionId = unit.getFaction().getId();
+		return this.def.isEnemy( factionId );
 	}
 
 	public ISensingFilter getEnemyFilter() { return enemyFilter; }

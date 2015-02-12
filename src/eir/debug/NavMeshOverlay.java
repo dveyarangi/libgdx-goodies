@@ -12,7 +12,7 @@ import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.SurfaceNavNode;
-import eir.world.unit.IOverlay;
+import eir.world.unit.overlays.IOverlay;
 import gnu.trove.iterator.TIntObjectIterator;
 
 public class NavMeshOverlay implements IOverlay <NavMesh>

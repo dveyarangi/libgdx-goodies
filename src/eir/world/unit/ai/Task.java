@@ -2,7 +2,7 @@ package eir.world.unit.ai;
 
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
-import eir.world.unit.UnitBehavior;
+import eir.world.unit.behaviors.UnitBehavior;
 
 
 

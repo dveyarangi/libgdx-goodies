@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import eir.rendering.IRenderer;
-import eir.world.unit.IOverlay;
+import eir.world.unit.overlays.IOverlay;
 
 
 

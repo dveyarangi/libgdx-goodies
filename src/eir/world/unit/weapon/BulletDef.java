@@ -1,20 +1,14 @@
 package eir.world.unit.weapon;
 
-import eir.rendering.IUnitRenderer;
 import eir.resources.levels.UnitDef;
 
 public class BulletDef extends UnitDef
 {
-	
-	private boolean dieOnCollision;
 
-	public BulletDef( final int factionId, final float size, IUnitRenderer renderer, float maxSpeed, boolean dieOnCollision)
+	public BulletDef( final String type, final int factionId, final float size)
 	{
-		super( BulletFactory.NAME, factionId, size, renderer, false, maxSpeed );
-		
-		this.dieOnCollision = dieOnCollision;
-	}
+		super( type, factionId, size, false, 0 );
 
-	public boolean shouldDieOnCollision() { return dieOnCollision; }
+	}
 
 }

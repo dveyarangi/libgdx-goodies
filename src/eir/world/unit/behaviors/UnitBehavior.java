@@ -1,4 +1,4 @@
-package eir.world.unit;
+package eir.world.unit.behaviors;
 
 import eir.world.unit.ai.Task;
 

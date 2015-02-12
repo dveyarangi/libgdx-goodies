@@ -1,7 +1,7 @@
 /**
  *
  */
-package eir.world.unit.ant;
+package eir.world.unit.dummy;
 
 import yarangi.numbers.RandomUtil;
 
@@ -14,11 +14,11 @@ import eir.world.Level;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.Route;
 import eir.world.environment.nav.SurfaceNavNode;
-import eir.world.unit.Damage;
-import eir.world.unit.Hull;
-import eir.world.unit.IDamager;
-import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
+import eir.world.unit.ai.TaskedUnit;
+import eir.world.unit.aspects.IDamager;
+import eir.world.unit.damage.Damage;
+import eir.world.unit.damage.Hull;
 
 /**
  * @author dveyarangi

@@ -1,4 +1,4 @@
-package eir.world.unit;
+package eir.world.unit.damage;
 
 import com.badlogic.gdx.math.Vector2;
 

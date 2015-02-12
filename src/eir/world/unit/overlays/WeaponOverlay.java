@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import eir.debug.Debug;
 import eir.rendering.IRenderer;
 import eir.world.environment.spatial.AABB;
-import eir.world.unit.IOverlay;
 import eir.world.unit.Unit;
 import eir.world.unit.weapon.Weapon;
 

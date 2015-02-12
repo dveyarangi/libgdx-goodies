@@ -13,52 +13,53 @@ import eir.resources.ResourceFactory;
 import eir.resources.TextureHandle;
 import eir.world.Effect;
 import eir.world.IEffect;
-import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
 
-public class SpriteRenderer implements IUnitRenderer
+public class SpriteRenderer implements IUnitRenderer <Unit>
 {
 	private TextureHandle texture;
-	private float size;
+	private float sizeModifier;
 	private Sprite sprite;
 	
 	private TextureHandle maskingTexture;
 	private Sprite maskingSprite;
 	
 	private AnimationHandle deathEffect;
-	private float deathSize;
+	private float deathSizeModifier;
 	private Animation deathAnimation;
 	
-	public SpriteRenderer(String textureName, float size, String maskingTextureName, AnimationHandle deathEffect, float deathSize)
+	public SpriteRenderer(String textureName, int sizeModifier, String maskingTextureName, AnimationHandle deathEffect, float deathSizeModifier)
 	{
-		this( textureName, size );
+		this( textureName, sizeModifier );
 		
 		this.maskingTexture = TextureHandle.get(maskingTextureName);
 		
 		this.deathEffect = deathEffect;
-		this.deathSize = deathSize;
+		this.deathSizeModifier = deathSizeModifier;
 	}
-	public SpriteRenderer(String textureName, float size, AnimationHandle deathEffect, float deathSize)
+	public SpriteRenderer(String textureName, int sizeModifier, AnimationHandle deathEffect, float deathSizeModifier)
 	{
-		this( textureName, size );
+		this( textureName, sizeModifier );
 		
 		this.deathEffect = deathEffect;
-		this.deathSize = deathSize;
+		this.deathSizeModifier = deathSizeModifier;
 	}
 
-	public SpriteRenderer(String textureName, float size)
+	public SpriteRenderer( String textureName, int sizeModifier )
 	{
+		this.sizeModifier = sizeModifier;
 		this.texture = TextureHandle.get( textureName );
-		
-		this.size = size;
 	}
 
 
 	@Override
 	public void init( ResourceFactory factory )
 	{
-		sprite = factory.createSprite( texture );
+		this.sprite = factory.createSprite( texture );
+		
+		assert sprite != null;
 /*		if(maskingTexture != null)
+ * 
 		{
 			maskingSprite = factory.createSprite( maskingTexture );
 			
@@ -70,7 +71,7 @@ public class SpriteRenderer implements IUnitRenderer
 		}
 	}
 	@Override
-	public IEffect getBirthEffect(IUnit unit, IRenderer renderer)
+	public IEffect getBirthEffect(Unit unit, IRenderer renderer)
 	{
 //		renderer.createEffect( )
 		// TODO Auto-generated method stub
@@ -80,8 +81,7 @@ public class SpriteRenderer implements IUnitRenderer
 	@Override
 	public void render(Unit unit, IRenderer renderer)
 	{
-		if(sprite == null)
-			return;
+
 		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = unit.getBody().getAnchor();
 		
@@ -113,19 +113,19 @@ public class SpriteRenderer implements IUnitRenderer
 					position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
 					sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
 					sprite.getRegionWidth(), sprite.getRegionHeight(),
-					size/sprite.getRegionWidth(),
-					size/sprite.getRegionWidth(), unit.getAngle());
+					unit.getDef().getSize()*sizeModifier/sprite.getRegionWidth(),
+					unit.getDef().getSize()*sizeModifier/sprite.getRegionWidth(), unit.getAngle());
 		}
 
 	}
 
 	@Override
-	public Effect getDeathEffect(IUnit unit)
+	public Effect getDeathEffect(Unit unit)
 	{
 		if(deathAnimation == null)
 			return null;
 		
-		return Effect.getEffect( deathAnimation, deathSize, 
+		return Effect.getEffect( deathAnimation, unit.size() * deathSizeModifier, 
 				unit.getArea().getAnchor(),
 				new Vector2(), 
 				RandomUtil.getRandomFloat(Angles.TAU), 1

@@ -9,6 +9,9 @@ import eir.world.IEffect;
 import eir.world.environment.Anchor;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.unit.aspects.IDamager;
+import eir.world.unit.damage.Damage;
+import eir.world.unit.damage.Hull;
 import gnu.trove.list.array.TIntArrayList;
 
 public interface IUnit extends ISpatialObject

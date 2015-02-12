@@ -6,8 +6,8 @@ package eir.world.environment.spatial;
 import java.util.ArrayList;
 import java.util.List;
 
-import eir.world.unit.IDamager;
 import eir.world.unit.IUnit;
+import eir.world.unit.aspects.IDamager;
 
 /**
  * @author dveyarangi
