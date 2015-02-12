@@ -152,12 +152,8 @@ public class DebugControlMode implements IControlMode
 
 
 	@Override
-	public void touchUnit(float worldX, float worldY, float scale,
-			ISpatialObject pickedObject, int button)
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	public void touch(float worldX, float worldY, float scale,
+			ISpatialObject pickedObject, int button){}
 
 	@Override
 	public ISpatialObject objectPicked(float x, float y, List<ISpatialObject> pickedObjects)

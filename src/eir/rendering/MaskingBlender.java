@@ -1,8 +1,7 @@
 package eir.rendering;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.Array;
 
 public class MaskingBlender implements ITextureGenerator
 {
@@ -17,9 +17,12 @@ public class MaskingBlender implements ITextureGenerator
 	private String maskTxr;
 	private String colorTxr;
 	private Color color;
+
 	
-	private String maskingVertexShader;
-	private String maskingFragShader;
+	public static final String MASKING_SHADER = "masking-shader";
+	
+	private static final Array<AssetDescriptor> dependencies = new Array(new AssetDescriptor[] { 
+			new AssetDescriptor(MASKING_SHADER, ShaderProgram.class) });
 
 	public MaskingBlender(String maskTxr, String colorTxr)
 	{
@@ -36,20 +39,13 @@ public class MaskingBlender implements ITextureGenerator
 	@Override
 	public Texture generate( AssetManager assman )
 	{
-		FileHandle vertexShaderFile = Gdx.files.internal( "shaders/masking_vertex.glsl" );
-		if(!vertexShaderFile.exists())
-			throw new IllegalStateException("cannot find default shader");
-		maskingVertexShader = vertexShaderFile.readString();
-		FileHandle maskingShaderFile = Gdx.files.internal( "shaders/masking_frag.glsl" );
-		if(!maskingShaderFile.exists())
-			throw new IllegalStateException("cannot find masking shader");
-		maskingFragShader = maskingShaderFile.readString();		
+	
 		
 		Texture maskTexture = assman.get( maskTxr, Texture.class);
 		
 //		ShaderProgram.pedantic = false;
 		
-		ShaderProgram maskingShader = new ShaderProgram( maskingVertexShader, maskingFragShader );
+		ShaderProgram maskingShader = assman.get(MASKING_SHADER);
 //		ShaderProgram maskingShader = new ShaderProgram( DefaultShader.getDefaultVertexShader(), maskingShaderStr);
 //		System.out.println("shader log: " + maskingShader.getLog() );
 		if(!maskingShader.isCompiled())
@@ -70,7 +66,7 @@ public class MaskingBlender implements ITextureGenerator
 			
 	        batch.begin();
 		
-		        maskingShader.setUniformf("v_maskingColor", color.r, color.g, color.b);
+		        maskingShader.setUniformf("v_maskingColor", color.r, color.g, color.b, -1);
 		
 				batch.draw( maskTexture, 0, 0 );
 			
@@ -89,5 +85,7 @@ public class MaskingBlender implements ITextureGenerator
 	{
 		return new String [] { /*colorTxr,*/ maskTxr };
 	}
+	@Override
+	public Array<AssetDescriptor> getDependencies() {	return dependencies; }
 
 }

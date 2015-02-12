@@ -15,8 +15,8 @@ import eir.resources.levels.LevelDef;
 import eir.world.Level;
 import eir.world.controllers.ControllerFactory;
 import eir.world.unit.Unit;
+import eir.world.unit.UnitFactory;
 import eir.world.unit.UnitsFactory;
-import eir.world.unit.UnitsFactory.UnitFactory;
 
 public abstract class LevelSetup
 {
@@ -42,10 +42,12 @@ public abstract class LevelSetup
 	public void init()
 	{
 		controllerFactory = createControllerFactory();
-		levelDef = loadLevelDef();
+		
 		Map <String, UnitFactory<? extends Unit>> factories = new HashMap <String, UnitFactory <? extends Unit>> ();
 		registerUnitFactories(factories);
 		unitsFactory = new UnitsFactory( levelDef, gameFactory, factories );
+		
+		levelDef = loadLevelDef();
 	}
 
 	protected abstract LevelDef loadLevelDef();

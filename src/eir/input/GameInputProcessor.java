@@ -201,8 +201,10 @@ public class GameInputProcessor implements InputProcessor
 			{
 				touchedObject = pickedObject;
 			}
-			currControlMode.touchUnit( pointerPosition2.x, pointerPosition2.y, getCamera().zoom, pickedObject, button );
 		}
+		
+		currControlMode.touch( pointerPosition2.x, pointerPosition2.y, getCamera().zoom, pickedObject, button );
+		
 		return true;
 	}
 

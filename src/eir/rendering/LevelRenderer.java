@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import yarangi.numbers.RandomUtil;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,10 +17,8 @@ import eir.resources.AnimationHandle;
 import eir.resources.ResourceFactory;
 import eir.world.IEffect;
 import eir.world.Level;
-import eir.world.environment.Asteroid;
-import eir.world.environment.Web;
-import eir.world.unit.IOverlay;
 import eir.world.unit.IUnit;
+import eir.world.unit.overlays.IOverlay;
 import eir.world.unit.overlays.IntegrityOverlay;
 import eir.world.unit.overlays.WeaponOverlay;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -43,6 +42,8 @@ public class LevelRenderer implements IRenderer
 	public static final int WEAPON_OID = 2;
 	public static final int HEX_OID = 3;
 	private RayHandler rayHandler;
+	
+	private ColorTheme colorTheme;
 
 	public LevelRenderer( final ResourceFactory gameFactory, final GameInputProcessor inputController, final Level level )
 	{
@@ -50,6 +51,10 @@ public class LevelRenderer implements IRenderer
 		this.gameFactory = gameFactory;
 		this.inputController = inputController;
 		this.level = level;
+		
+		this.colorTheme = new ColorTheme();
+		colorTheme.setTheme( RandomUtil.N(360) );
+
 		
 		rayHandler = new RayHandler( level.getEnvironment().getPhyisics() );
 
@@ -93,18 +98,6 @@ public class LevelRenderer implements IRenderer
 		
 		level.draw( this );
 
-
-		// TODO: clipping?
-		for(Asteroid asteroid : level.getAsteroids())
-		{
-			asteroid.draw( this );
-		}
-
-		for( Web web : level.getWebs() )
-		{
-			web.draw( batch );
-		}
-
 		for(IUnit unit : level.getUnits())
 		{
 			if(unit.isAlive())
@@ -112,8 +105,6 @@ public class LevelRenderer implements IRenderer
 				unit.draw( this );
 			}
 		}
-		
-		
 		
 		for(IEffect effect : effects)
 		{
@@ -211,4 +202,7 @@ public class LevelRenderer implements IRenderer
 	{
 		return gameFactory.getAnimation( handle );
 	}
+
+	@Override
+	public ColorTheme getColorTheme() { return colorTheme; }
 }

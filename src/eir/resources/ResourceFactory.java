@@ -3,6 +3,15 @@
  */
 package eir.resources;
 
+import eir.debug.Debug;
+import eir.rendering.ITextureGenerator;
+import eir.rendering.IUnitRenderer;
+import eir.resources.levels.IUnitDef;
+import eir.resources.levels.LevelDef;
+import eir.world.environment.Asteroid;
+import eir.world.unit.UnitsFactory;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -21,13 +30,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-
-import eir.debug.Debug;
-import eir.rendering.ITextureGenerator;
-import eir.resources.levels.LevelDef;
-import eir.world.environment.Asteroid;
-import eir.world.unit.UnitsFactory;
 
 
 /**
@@ -51,12 +55,19 @@ public class ResourceFactory
 	 */
 	private final Map <AnimationHandle, Animation> animationCache = new HashMap <AnimationHandle, Animation> ();
 	
+	
+	TIntObjectHashMap<IUnitRenderer> renderers = new TIntObjectHashMap<IUnitRenderer> ();
+
+	
 	private EnhancedTextureLoader textureLoader;
 	
 	public ResourceFactory()
 	{
 		FileHandleResolver resolver = new InternalFileHandleResolver();
 		this.manager = new AssetManager( resolver );
+		
+		manager.setLoader( ShaderProgram.class, new ShaderLoader( resolver ) );
+		
 		manager.setLoader( PolygonShape.class, new PolygonLoader( resolver )  );
 		
 		textureLoader = new EnhancedTextureLoader( resolver );
@@ -108,7 +119,7 @@ public class ResourceFactory
 		registerAnimation( EXPLOSION_04_ANIM );
 		registerAnimation( EXPLOSION_05_ANIM );*/
 
-		registerTexture( CROSSHAIR_TXR );
+//		registerTexture( CROSSHAIR_TXR );
 /*		registerTexture( FIREBALL_TXR );
 		registerTexture( ROCKET_TXR );
 		registerTexture( CANNON_HYBRID_TXR );
@@ -125,11 +136,20 @@ public class ResourceFactory
 		if(manager.update())
 		{
 			loadAnimations();
+			
+			loadRenderers();
 
 			return 1;
 		}
+		
 
 		return manager.getProgress();
+	}
+	
+	private void loadRenderers()
+	{
+		for(Object renderer : renderers.values())
+			((IUnitRenderer)renderer).init( this );
 	}
 	
 	public TextureHandle registerTextureGenerator( final String name, ITextureGenerator generator )
@@ -146,19 +166,6 @@ public class ResourceFactory
 		manager.load( model.getPath(), PolygonShape.class );
 
 		return model;
-	}
-
-	public PolygonalModel getPolygonalModel( final Asteroid asteroid, final PolygonalModelHandle model )
-	{
-		PolygonShape shape = manager.get( model.getPath(), PolygonShape.class );
-
-		return new PolygonalModel(
-				shape.getVertices(),
-				shape.getOrigin(),
-				asteroid.getPosition(),
-				asteroid.getSize(),
-				asteroid.getAngle()
-				);
 	}
 
 /*	public Body loadBody(final String modelId, final Asteroid asteroid)
@@ -189,6 +196,19 @@ public class ResourceFactory
 
 		return body;
 	}*/
+
+	public PolygonalModel getPolygonalModel( final Asteroid asteroid, final PolygonalModelHandle model )
+	{
+		PolygonShape shape = manager.get( model.getPath(), PolygonShape.class );
+
+		return new PolygonalModel(
+				shape.getVertices(),
+				shape.getOrigin(),
+				asteroid.getPosition(),
+				asteroid.getSize(),
+				asteroid.getAngle()
+				);
+	}
 
 	public Sprite createSprite(final TextureHandle handle, final Vector2 position, final Vector2 origin, final float width, final float height, final float degrees)
 	{
@@ -296,6 +316,11 @@ public class ResourceFactory
 
 		animationHandles.clear();
 	}
+	
+	public void loadShader(String name, String vertexShaderFilename, String fragShaderFilename )
+	{
+		manager.load( name, ShaderProgram.class, new ShaderParameters(vertexShaderFilename, fragShaderFilename) );
+	}
 
 
 	private Animation createAnimation(final AnimationHandle handle)
@@ -348,6 +373,19 @@ public class ResourceFactory
 	{
 		return CROSSHAIR_TXR;
 	}
+	public ShaderProgram getShader( String shaderName )
+	{
+		return manager.get( shaderName );
+	}
+	public void registerRenderer(String unitType, IUnitRenderer unitRend)
+	{
+		assert ! renderers.contains( unitType.hashCode() );
+		renderers.put(unitType.hashCode(), unitRend);
+	}
 
-
+	public IUnitRenderer getRenderer(IUnitDef def)
+	{
+		assert renderers.contains( def.getType().hashCode() ) : "No renderer for unit type " + def.getType();
+		return renderers.get( def.getType().hashCode() );
+	}
 }

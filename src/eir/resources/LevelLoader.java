@@ -140,7 +140,7 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	LevelDef readLevel(final String levelId, final ResourceFactory gameFactory, final UnitsFactory unitsFactory )
+	public LevelDef readLevel(final String levelId, final ResourceFactory gameFactory, final UnitsFactory unitsFactory )
 	{
 		// enhancing the gson reading a bit:
 		final Gson gson = new GsonBuilder()
@@ -157,34 +157,6 @@ public class LevelLoader
 				}
 			})
 
-			// texture references are registered at texture factory
-			.registerTypeAdapter( TextureHandle.class, new JsonDeserializer<TextureHandle>()
-					{
-				@Override
-				public TextureHandle deserialize(final JsonElement elem, final Type type, final JsonDeserializationContext arg2) throws JsonParseException
-				{
-					String textureFile = elem.getAsString();
-
-					return gameFactory.registerTexture(  TextureHandle.get( textureFile ) );
-				}
-			})
-
-			// animation references are registered at texture factory
-			.registerTypeAdapter( AnimationHandle.class, new JsonDeserializer<AnimationHandle>()
-			{
-				@Override
-				public AnimationHandle deserialize(final JsonElement elem, final Type type, final JsonDeserializationContext arg2) throws JsonParseException
-				{
-					JsonObject object = elem.getAsJsonObject();
-					String atlasId = object.get( "atlasId" ).getAsString();
-					String regionId = object.get( "regionId" ).getAsString();
-
-					TextureAtlasHandle atlasHandle = TextureAtlasHandle.get( atlasId );
-
-					return gameFactory.registerAnimation(new AnimationHandle( atlasHandle, regionId ) );
-
-				}
-			})
 
 			// polygon bodies references
 			.registerTypeAdapter( PolygonalModelHandle.class, new JsonDeserializer<PolygonalModelHandle>()

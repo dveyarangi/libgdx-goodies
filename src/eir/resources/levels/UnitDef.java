@@ -2,8 +2,6 @@ package eir.resources.levels;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.rendering.IUnitRenderer;
-
 
 
 public class UnitDef implements IUnitDef
@@ -19,7 +17,6 @@ public class UnitDef implements IUnitDef
 
 	private UnitAnchorDef anchor;
 
-	private IUnitRenderer renderer;
 
 	private boolean isPickable;
 	
@@ -28,7 +25,7 @@ public class UnitDef implements IUnitDef
 	private UnitDef() {}
 
 	public UnitDef(final String type, final int faction, final float size,
-			final IUnitRenderer renderer,
+			
 			final boolean isPickable,
 			final float maxSpeed)
 	{
@@ -36,12 +33,13 @@ public class UnitDef implements IUnitDef
 		this.size = size;
 		this.faction = faction;
 
-		this.renderer = renderer;
+//		this.renderer = renderer;
 
 		this.isPickable = isPickable;
 		
 		this.maxSpeed = maxSpeed;
 	}
+
 
 	@Override
 	public String getType() { return type; }
@@ -51,10 +49,6 @@ public class UnitDef implements IUnitDef
 
 	@Override
 	public float getSize() { return size; }
-
-	@Override
-	public IUnitRenderer getUnitRenderer() { return renderer; }
-
 	@Override
 	public UnitAnchorDef getAnchorDef() { return anchor; }
 
@@ -67,6 +61,5 @@ public class UnitDef implements IUnitDef
 
 	@Override
 	public Vector2 getPosition() { return position; }
-
 
 }

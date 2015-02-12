@@ -58,6 +58,8 @@ public class EnhancedTextureLoader extends TextureLoader
 		{
 			dependencies.add(new AssetDescriptor<>( texture, Texture.class));
 		}
+		
+		dependencies.addAll(generator.getDependencies());
 		// generating texture buffer:
 /*		Mask mandala = Mandala.generateMandala( fileName );
 

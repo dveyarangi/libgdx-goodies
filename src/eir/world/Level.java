@@ -2,7 +2,6 @@ package eir.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,7 +29,6 @@ import eir.world.environment.Anchor;
 import eir.world.environment.Asteroid;
 import eir.world.environment.Environment;
 import eir.world.environment.IBackground;
-import eir.world.environment.Web;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Faction;
 import eir.world.unit.IUnit;
@@ -82,10 +80,6 @@ public class Level
 	 */
 	private final LinkedList <IUnit> units;
 
-	/**
-	 * List of webs
-	 */
-	private List <Web> webs;
 
 	////////////////////////////////////////////////////////////////
 
@@ -116,16 +110,17 @@ public class Level
 		this.gameFactory = setup.getGameFactory();
 		this.controllerFactory = setup.getControllerFactory();
 		asteroids = new HashMap <String, Asteroid> ();
-		Comparator <IUnit> comparator = new Comparator <IUnit> () {
+		
+/*		Comparator <IUnit> comparator = new Comparator <IUnit> () {
 
 			@Override
 			public int compare(IUnit u1, IUnit u2) { return u1.z() - u2.z(); }
 			
-		};
+		};*/
 		
 		// TODO: (optimization) linked listify
 		units = new LinkedList <IUnit > ();
-		webs = new ArrayList <Web> ();
+
 		factions = new TIntObjectHashMap<Faction> ();
 
 		this.environment = new Environment();
@@ -136,8 +131,6 @@ public class Level
 
 	public Collection <Asteroid> getAsteroids() { return asteroids.values(); }
 	public Asteroid getAsteroid( final String name ) { return asteroids.get( name ); }
-
-	public List <Web> getWebs() { return webs; }
 
 	public List <IUnit> getUnits() { return units; }
 
@@ -195,7 +188,6 @@ public class Level
 	{
 		this.def = def;
 		
-
 		halfWidth = def.getWidth() / 2;
 		halfHeight = def.getHeight() / 2;
 
@@ -218,13 +210,6 @@ public class Level
 		
 		controllerFactory.init( this );
 
-
-		Vector2 coord = new Vector2();
-
-		for( Web web : webs )
-		{
-			web.init( gameFactory, this );
-		}
 
 		for(IUnitDef unitDef : def.getUnitDefs())
 		{
@@ -485,7 +470,11 @@ public class Level
 
 	public UnitsFactory getUnitsFactory() {	return unitsFactory; }
 
-	public Faction getFaction( final int factionId) { return factions.get( factionId ); }
+	public Faction getFaction( final int factionId) 
+	{
+		assert factions.contains( factionId ) : "Faction with id " + factionId + " not defined.";
+		return factions.get( factionId ); 
+	}
 	public int getFactionsNum() { return factions.size(); }
 
 	/**

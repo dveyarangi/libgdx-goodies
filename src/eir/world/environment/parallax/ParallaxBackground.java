@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.input.GameInputProcessor;
+import eir.rendering.ColorTheme;
 import eir.rendering.IRenderer;
 import eir.resources.AnimationHandle;
 import eir.world.IEffect;
@@ -96,6 +97,13 @@ public class ParallaxBackground implements IBackground
 
 			@Override
 			public RayHandler getRayHandler() { return null; }
+
+			@Override
+			public ColorTheme getColorTheme()
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
 			
 		};
 		for(int lidx = 0; lidx < layers.size(); lidx ++)

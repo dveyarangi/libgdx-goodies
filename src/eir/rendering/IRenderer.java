@@ -22,4 +22,6 @@ public interface IRenderer
 
 	RayHandler getRayHandler();
 
+	ColorTheme getColorTheme();
+
 }

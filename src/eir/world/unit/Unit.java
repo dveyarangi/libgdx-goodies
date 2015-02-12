@@ -8,11 +8,9 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.debug.Debug;
 import eir.rendering.IRenderer;
 import eir.rendering.IUnitRenderer;
 import eir.rendering.LevelRenderer;
-import eir.resources.ResourceFactory;
 import eir.resources.levels.IUnitDef;
 import eir.world.IEffect;
 import eir.world.Level;
@@ -20,7 +18,9 @@ import eir.world.environment.Anchor;
 import eir.world.environment.Environment;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.UnitsFactory.UnitFactory;
+import eir.world.unit.aspects.IDamager;
+import eir.world.unit.damage.Damage;
+import eir.world.unit.damage.Hull;
 import eir.world.unit.weapon.Weapon;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -127,18 +127,16 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * List of overlays that activate on mouse hovering
 	 */
 	private TIntArrayList hoverOverlays;
-
-	
-	private IUnitRenderer renderer;
 	
 	/**
 	 * States whether this unit is currently has cursor over it
 	 */
 	Vector2 hoverVector;
+	
+	private IUnitRenderer renderer;
 
 	public Unit( )
 	{
-
 		velocity = new Vector2();
 		
 		force = new Vector2();
@@ -155,6 +153,55 @@ public abstract class Unit implements ISpatialObject, IUnit
 		this.anchoredUnits = new ArrayList <IUnit> ();
 	}
 
+
+
+	/**
+	 * Initializes this unit using the provided defs and position and assigning it to the faction.
+	 * @param factory
+	 * @param def
+	 * @param renderer 
+	 * @param anchor
+	 * @param faction
+	 */
+	public void init(final Level level, final IUnitDef def, final float x, final float y, final float angle)
+	{
+		this.def = def;
+
+		//substitute unit faction
+		this.faction = level.getFaction( def.getFactionId() );
+
+		// update unit position
+		this.body.update( x, y,size()/2, size()/2, false);
+
+		this.angle = angle;
+		
+		this.renderer = level.getResourceFactory().getRenderer( def );
+
+		registerOverlays();
+		
+		// reset unit variables:
+		reset( level );
+	}
+
+	/**
+	 * Initializes this unit using the provided defs and anchor and assigning it to the faction.
+	 * @param factory
+	 * @param level
+	 * @param def
+	 * @param renderer 
+	 * @param anchor
+	 * @param faction
+	 */
+	public void init(final Level level, final IUnitDef def, final Anchor anchor )
+	{
+		this.anchor = anchor;
+		
+		// inform parent about anchored unit added:
+		anchor.getParent().addAnchoredUnit( this );
+		
+		init(level, def, anchor.getPoint().x, anchor.getPoint().y, anchor.getAngle());
+	}
+	
 	/**
 	 * Resets unit according to {@link #def} properties.
 	 * Called when unit is created or retrieved from pool.
@@ -164,7 +211,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 */
 	protected void reset( final Level level )
 	{
-		ResourceFactory factory = level.getResourceFactory();
 		this.isAlive = true;
 		this.id = Environment.createObjectId();
 
@@ -175,29 +221,20 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		this.target = null;
 
-		if(def.getUnitRenderer() == null)
-		{
-			Debug.log( "Unit " + this + " has no renderer!" );
-		} 
-		else
-		{
-			this.renderer = def.getUnitRenderer();
-			
-			try {
-				this.renderer.init( factory );
-			}
-			catch(Exception e)
-			{
-				throw new RuntimeException( "Failed to initiate unit type " + this.getType(), e );
-			}
-		}
-
 		this.velocity.set( 0,0 );
 		this.force.set( 0,0 );
 		
 		this.hoverVector.set(Float.NaN, Float.NaN);
+	}
+	
+	protected void addAnchoredUnit(Unit unit)
+	{
+		anchoredUnits.add( unit );
+	}
 
-		registerOverlays();
+	protected void removeAnchoredUnit(Unit unit)
+	{
+		this.anchoredUnits.remove( unit );
 	}
 
 	protected void registerOverlays()
@@ -208,53 +245,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 		addHoverOverlay( LevelRenderer.INTEGRITY_OID);
 		toggleOverlay( LevelRenderer.INTEGRITY_OID);
 	}
-
-	/**
-	 * Initializes this unit using the provided defs and anchor and assigning it to the faction.
-	 * @param factory
-	 * @param level
-	 * @param def
-	 * @param anchor
-	 * @param faction
-	 */
-	public void init(final Level level, final IUnitDef def, final Anchor anchor )
-	{
-		this.anchor = anchor;
-		
-		anchor.getParent().addAnchoredUnit( this );
-		
-		init(level, def, anchor.getPoint().x, anchor.getPoint().y, anchor.getAngle());
-	}
-
-	protected void addAnchoredUnit(Unit unit)
-	{
-		anchoredUnits.add( unit );
-	}
-
-	protected void removeAnchoredUnit(Unit unit)
-	{
-		this.anchoredUnits.remove( unit );
-	}
-	/**
-	 * Initializes this unit using the provided defs and position and assigning it to the faction.
-	 * @param factory
-	 * @param def
-	 * @param anchor
-	 * @param faction
-	 */
-	public void init(final Level level, final IUnitDef def, final float x, final float y, final float angle)
-	{
-		this.def = def;
-
-		this.faction = level.getFaction( def.getFactionId() );
-
-		this.body.update( x, y,size()/2, size()/2, false);
-
-		this.angle = angle;
-
-		reset( level );
-	}
-
+	
 	@Override
 	public void dispose()
 	{
@@ -429,7 +420,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public <E extends IUnitDef> E getDef() { return (E)def; }
 	@Override
-	public <E extends IUnitRenderer> E getRenderer() { return (E)renderer; }
+	public <E extends IUnitRenderer> E getRenderer() { return (E) renderer; }
 
 	
 	@Override
@@ -444,6 +435,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 		IEffect effect =  renderer.getDeathEffect( this );
 		if(effect == null)
 			return null;
+		effect.reset( this );
 		
 		return effect;
 	}

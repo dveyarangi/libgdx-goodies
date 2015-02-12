@@ -26,7 +26,7 @@ public interface IControlMode
 	 */
 	PickingSensor getPickingSensor();
 
-	void touchUnit(float worldX, float worldY, float scale,
+	void touch(float worldX, float worldY, float scale,
 			ISpatialObject pickedObject, int button);
 
 
