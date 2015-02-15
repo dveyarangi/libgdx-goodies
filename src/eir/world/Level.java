@@ -213,6 +213,7 @@ public class Level
 
 		for(IUnitDef unitDef : def.getUnitDefs())
 		{
+			assert unitDef != null : "Unit def is null, looks like redundant comma in units list in config";
 			Unit unit;
 			UnitAnchorDef anchorDef = unitDef.getAnchorDef();
 			if(anchorDef != null)

@@ -227,12 +227,12 @@ public abstract class Unit implements ISpatialObject, IUnit
 		this.hoverVector.set(Float.NaN, Float.NaN);
 	}
 	
-	protected void addAnchoredUnit(Unit unit)
+	public void addAnchoredUnit(IUnit unit)
 	{
 		anchoredUnits.add( unit );
 	}
 
-	protected void removeAnchoredUnit(Unit unit)
+	public void removeAnchoredUnit(IUnit unit)
 	{
 		this.anchoredUnits.remove( unit );
 	}

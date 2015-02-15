@@ -9,7 +9,7 @@ import com.google.common.collect.ListMultimap;
 
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 
 /**
  * schedules tasks for ant <br>
@@ -128,7 +128,7 @@ public class Scheduler
 		orders.remove(unitType, order);
 	}
 
-	public <U extends Unit> UnitBehavior<U> getBehavior(String type, TaskStage stage) {
+	public <U extends Unit> IUnitBehavior<U> getBehavior(String type, TaskStage stage) {
 		return unitsFactory.<U>getBehavior( type, stage );
 	}
 

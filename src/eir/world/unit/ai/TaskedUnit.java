@@ -3,7 +3,7 @@ package eir.world.unit.ai;
 import eir.world.Level;
 import eir.world.unit.Unit;
 import eir.world.unit.aspects.IDamager;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 import eir.world.unit.damage.Damage;
 
 public abstract class TaskedUnit extends Unit
@@ -39,7 +39,7 @@ public abstract class TaskedUnit extends Unit
 		if(task == null)
 			return;
 		
-		UnitBehavior behavior = task.getBehavior( this );
+		IUnitBehavior behavior = task.getBehavior( this );
 		
 		if( behavior == null)
 			return;
@@ -49,7 +49,7 @@ public abstract class TaskedUnit extends Unit
 
 	}
 
-	protected Task getTask() { return task; }
+	public Task getTask() { return task; }
 
 	@Override
 	public float hit(final Damage source, final IDamager damager, final float damageCoef)
@@ -77,5 +77,11 @@ public abstract class TaskedUnit extends Unit
 		task = null;
 		super.dispose(  );
 
+	}
+
+	public void cancelTask()
+	{
+		task.cancel();
+		task = null;
 	}
 }

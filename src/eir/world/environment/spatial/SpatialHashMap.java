@@ -376,7 +376,8 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		{
 			for(int ty = miny; ty <= maxy; ty ++)
 			{
-				cell = map[index(tx, ty)];
+				assert ! isInvalidIndex( tx, ty );
+			cell = map[index(tx, ty)];
 
 				float distanceSquare ;/*= FastMath.powOf2(x - tx*cellSize) + FastMath.powOf2(y - ty*cellSize);
 				if(radiusSquare < distanceSquare)
@@ -647,6 +648,8 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 				tMaxY += tDeltaY;
 				currGridy += stepY;
 			}
+			
+			assert ! isInvalidIndex( currGridx, currGridy );
 			cell = map[index(currGridx, currGridy)];
 
 			for(int idx = 0; idx < cell.size(); idx ++ )

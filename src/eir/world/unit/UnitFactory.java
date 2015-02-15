@@ -9,11 +9,11 @@ import eir.resources.ResourceFactory;
 import eir.resources.levels.LevelDef;
 import eir.resources.levels.UnitDef;
 import eir.world.unit.ai.TaskStage;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 
 /**
  * Implementation of specific unit factory should add {@link TaskStage} behaviors by calling
- * {@link BehaviorFactory#registerBehavior(eir.world.unit.ai.TaskStage, UnitBehavior)}
+ * {@link BehaviorFactory#registerBehavior(eir.world.unit.ai.TaskStage, IUnitBehavior)}
  * @author Fima
  *
  * @param <U>
@@ -29,7 +29,7 @@ public abstract class UnitFactory <U extends IUnit>
 	/**
 	 * TaskStage -> TaskBehavior mapping
 	 */
-	protected Map <TaskStage, UnitBehavior <U>> behaviors = new HashMap <TaskStage, UnitBehavior<U>> ();
+	protected Map <TaskStage, IUnitBehavior <U>> behaviors = new HashMap <TaskStage, IUnitBehavior<U>> ();
 	
 	protected abstract void init( LevelDef levelDef, ResourceFactory factory );
 	

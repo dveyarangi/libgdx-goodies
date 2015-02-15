@@ -3,9 +3,9 @@ package eir.world.unit.dummy;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.ai.Task;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 
-public abstract class TravelingBehavior implements UnitBehavior <Ant>
+public abstract class TravelingBehavior implements IUnitBehavior <Ant>
 {
 
 	public static class TravelToSourceBehavior extends TravelingBehavior

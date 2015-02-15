@@ -6,12 +6,12 @@ import eir.world.environment.nav.Route;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.Task;
 
-public class AirGraphTravellingBehavior implements UnitBehavior <IRoutedUnit>
+public class AirGraphTravellingBehavior implements IUnitBehavior <IRoutedUnit>
 {
-	private UnitBehavior travellingBehavior;
+	private IUnitBehavior travellingBehavior;
 
 	public static final float ARRIVAL_DISTANCE_SQUARE = 50;
-	public AirGraphTravellingBehavior(final UnitBehavior travellingBehavior)
+	public AirGraphTravellingBehavior(final IUnitBehavior travellingBehavior)
 	{
 		this.travellingBehavior = travellingBehavior;
 	}

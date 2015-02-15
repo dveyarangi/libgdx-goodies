@@ -15,7 +15,7 @@ import eir.world.unit.ai.Task;
  * @author dveyarangi
  *
  */
-public class PulsingTargetedBehavior <U extends Unit> implements UnitBehavior <U>
+public class PulsingTargetedBehavior <U extends Unit> implements IUnitBehavior <U>
 {
 
 	private IPulseDef pulseDef;

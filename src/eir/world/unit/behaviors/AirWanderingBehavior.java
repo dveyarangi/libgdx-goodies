@@ -12,7 +12,7 @@ import eir.world.unit.ai.Task;
  * @author dveyarangi
  *
  */
-public class AirWanderingBehavior implements UnitBehavior <Unit>
+public class AirWanderingBehavior implements IUnitBehavior <Unit>
 {
 	
 	public NavNode targetNode;

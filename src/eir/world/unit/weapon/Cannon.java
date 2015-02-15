@@ -1,11 +1,5 @@
 package eir.world.unit.weapon;
 
-import java.util.List;
-
-import yarangi.numbers.RandomUtil;
-
-import com.badlogic.gdx.math.Vector2;
-
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
 import eir.world.IEffect;
@@ -13,14 +7,14 @@ import eir.world.Level;
 import eir.world.environment.Anchor;
 import eir.world.environment.RelativeAnchor;
 import eir.world.environment.sensors.ISensor;
-import eir.world.environment.spatial.ISpatialObject;
 import eir.world.resource.Port;
 import eir.world.unit.Unit;
+import eir.world.unit.ai.TaskedUnit;
 import eir.world.unit.aspects.IBuilding;
 import eir.world.unit.damage.Damage;
 import eir.world.unit.damage.Hull;
 
-public class Cannon extends Unit implements IBuilding
+public class Cannon extends TaskedUnit implements IBuilding
 {
 
 	public static final int SENSOR_RADIUS = 100;
@@ -32,8 +26,6 @@ public class Cannon extends Unit implements IBuilding
 	private Damage impactDamage = new Damage( 10, 1, 0, 0 );
 
 	private TargetProvider targetProvider;
-	private TargetingModule targetingModule;
-
 	private WeaponDef weaponDef;
 
 	private Anchor weaponMount;
@@ -51,6 +43,8 @@ public class Cannon extends Unit implements IBuilding
 	protected void reset( final Level level )
 	{
 		super.reset( level );
+		
+		CannonDef def = getDef();
 
 		weaponMount = new RelativeAnchor( this );
 
@@ -66,62 +60,17 @@ public class Cannon extends Unit implements IBuilding
 		
 
 		this.sensor = level.getEnvironment().createSensor( this, weaponDef.getSensorRadius() );
-
-		this.targetProvider = weaponDef.createTargetProvider( this );
-
-		this.targetingModule = new LinearTargetingModule();
+		
+		targetProvider = def.getWeaponDef().createTargetProvider( weapon );
+		
 	}
-
+	
 	@Override
-	public void update(final float delta)
+	public void update(float delta)
 	{
-
-		super.update( delta );
-
-		List <ISpatialObject> units = sensor.sense( faction.getEnemyFilter() );
-
-
-		if(weapon.getBulletsInMagazine() == 0)
-		{
-			weapon.reload();
-		}
-
-//		if(target == null || !target.isAlive() )
-//		{
-//		}
-
-
-		if(target == null || !target.isAlive())
-			target = targetProvider.pickTarget( units );
-		weapon.target = target;
-		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
-		if(targetDirection != null)
-		{
-			weapon.getTargetOrientation().set( targetDirection ).nor();
-		}
-		else
-		{	// no target, some meaningless behavior:
-			if(RandomUtil.oneOf( 200 ))
-			{
-				wanderAngle = RandomUtil.getRandomFloat(360 );
-				weapon.getTargetOrientation().setAngle( wanderAngle );
-			}
-		}
-
-		weapon.update( delta );
-
-		if(! weapon.isOriented() )
-			return;
-
-		if( target != null)
-		{
-
-			if(weapon.getTimeToReload() > 0)
-				return;
-			weapon.fire( target );
-
-			this.target = null;
-		}
+		super.update(delta);
+		weapon.getArea().getAnchor().x = cx();
+		weapon.getArea().getAnchor().y = cy();
 	}
 
 	@Override
@@ -172,6 +121,10 @@ public class Cannon extends Unit implements IBuilding
 	
 	@Override
 	public Port getPort() { return weapon.getPort(); }
+
+	public ISensor getSensor() { return sensor; }
+
+	public TargetProvider getTargetProvider() { return targetProvider; }
 
 
 }

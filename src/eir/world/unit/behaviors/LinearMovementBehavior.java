@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.Task;
 
-public class LinearMovementBehavior <U extends Unit> implements UnitBehavior <U>
+public class LinearMovementBehavior <U extends Unit> implements IUnitBehavior <U>
 {
-
+	private boolean toTarget;
 	
-	public LinearMovementBehavior()
+	public LinearMovementBehavior(boolean toTarget)
 	{
-
+		this.toTarget = toTarget;
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class LinearMovementBehavior <U extends Unit> implements UnitBehavior <U>
 	{
 //		System.out.println(unit.angle);
 		
-		float unitAngle = (float) (unit.angle*Angles.TO_RAD);
+		float unitAngle = unit.angle*Angles.TO_RAD;
 		
 		float dx = MathUtils.cos( unitAngle ) * unit.getMaxSpeed();
 		float dy = MathUtils.sin( unitAngle ) * unit.getMaxSpeed();
@@ -29,6 +29,8 @@ public class LinearMovementBehavior <U extends Unit> implements UnitBehavior <U>
 		unit.getVelocity().set( dx, dy );
 		
 		unit.getArea().getAnchor().add( dx * delta, dy * delta );
+		
+		
 	}
 
 }

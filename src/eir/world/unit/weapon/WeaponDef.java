@@ -13,11 +13,14 @@ public abstract class WeaponDef extends UnitDef
 {
 	
 	private BulletDef bulletDef;
-	public WeaponDef( String type, final int faction, BulletDef bulletDef, final float size, final boolean isPickable)
+	private TargetingModule targetingModule;
+	public WeaponDef( String type, final int faction, BulletDef bulletDef, final float size, final boolean isPickable, TargetingModule targetingModule)
 	{
 		super( type, faction, size, isPickable, 0 );
 		
 		this.bulletDef = bulletDef;
+		
+		this.targetingModule = targetingModule;
 	}
 
 	/**
@@ -83,8 +86,6 @@ public abstract class WeaponDef extends UnitDef
 
 	public abstract Effect createHitEffect( Bullet bullet, boolean b );
 
-	public abstract TargetProvider createTargetProvider( Unit owner );
-
 	public abstract float getSensorRadius();
 
 	public abstract void init( ResourceFactory gameFactory );
@@ -92,4 +93,8 @@ public abstract class WeaponDef extends UnitDef
 	public abstract float getShotEnergyConsumption();
 
 	public abstract boolean shouldDieOnCollision();
+
+	public abstract TargetProvider createTargetProvider( final Unit owner );
+	
+	public TargetingModule getTargetingModule() { return targetingModule; }
 }

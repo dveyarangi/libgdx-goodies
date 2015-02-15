@@ -4,9 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.ai.Task;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 
-public class SimpleTargetingBehavior implements UnitBehavior<Cannon>
+public class SimpleTargetingBehavior implements IUnitBehavior<Cannon>
 {
 	Vector2 tDir = new Vector2();
 

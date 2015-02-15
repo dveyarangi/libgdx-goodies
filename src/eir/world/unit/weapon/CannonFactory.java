@@ -4,6 +4,8 @@ import eir.resources.ResourceFactory;
 import eir.resources.levels.LevelDef;
 import eir.resources.levels.UnitDef;
 import eir.world.unit.UnitFactory;
+import eir.world.unit.ai.TaskStage;
+import eir.world.unit.behaviors.LinearTargetedMovement;
 
 public class CannonFactory extends UnitFactory <Cannon>
 {
@@ -27,6 +29,10 @@ public class CannonFactory extends UnitFactory <Cannon>
 	@Override
 	protected void init(LevelDef def, ResourceFactory factory)
 	{
+		
+		behaviors.put( TaskStage.ATTACK, new CannonFiringBehavior() );
+		behaviors.put( TaskStage.TRAVEL_TO_TARGET, new LinearTargetedMovement<Cannon>( ) );
+
 	}
 
 }

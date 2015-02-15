@@ -7,7 +7,7 @@ import eir.world.unit.ai.Task;
  * @author Ni
  *
  */
-public interface UnitBehavior <U>
+public interface IUnitBehavior <U>
 {
 	public void update( float delta, Task task, U unit );
 }

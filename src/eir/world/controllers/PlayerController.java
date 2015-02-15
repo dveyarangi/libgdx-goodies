@@ -4,7 +4,9 @@ import eir.rendering.IRenderer;
 import eir.world.unit.Faction;
 import eir.world.unit.IUnit;
 import eir.world.unit.Unit;
-import eir.world.unit.ai.AttackingOrder;
+import eir.world.unit.ai.Order;
+import eir.world.unit.ai.Task;
+import eir.world.unit.ai.TaskStage;
 import eir.world.unit.aspects.IDamager;
 import eir.world.unit.weapon.CannonFactory;
 
@@ -13,7 +15,17 @@ public class PlayerController implements IController {
 	@Override
 	public void init(final Faction faction) 
 	{
-		faction.getScheduler().addOrder( CannonFactory.NAME, new AttackingOrder( 0 ) );
+		faction.getScheduler().addOrder( CannonFactory.NAME, new Order( 
+				new TaskStage[] { TaskStage.ATTACK, TaskStage.TRAVEL_TO_TARGET },  
+				true, 
+				0, 
+				null, 
+				null){
+
+			@Override
+			protected Task createEmptyTask() { return new Task(); }
+			
+		});
 
 	}
 

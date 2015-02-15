@@ -16,7 +16,7 @@ import eir.resources.levels.LevelDef;
 import eir.world.Level;
 import eir.world.environment.Anchor;
 import eir.world.unit.ai.TaskStage;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 
 /**
  * Manages unit instantiation and pooling.
@@ -127,9 +127,9 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit> UnitBehavior<U> getBehavior(final String unitType, final TaskStage stage)
+	public <U extends Unit> IUnitBehavior<U> getBehavior(final String unitType, final TaskStage stage)
 	{
-		UnitBehavior<U> behavior = (UnitBehavior<U>) factories.get( unitType ).behaviors.get(stage);
+		IUnitBehavior<U> behavior = (IUnitBehavior<U>) factories.get( unitType ).behaviors.get(stage);
 		if(behavior == null)
 		{
 			Debug.log( "No behaviour for unit type " + unitType + " stage " + stage );

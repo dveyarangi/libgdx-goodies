@@ -2,7 +2,7 @@ package eir.world.unit.ai;
 
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
-import eir.world.unit.behaviors.UnitBehavior;
+import eir.world.unit.behaviors.IUnitBehavior;
 
 
 
@@ -25,7 +25,7 @@ public class Task
 	protected int stageIdx = 0;
 
 
-	protected Task()
+	public Task()
 	{
 
 	}
@@ -97,7 +97,7 @@ public class Task
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit> UnitBehavior <U> getBehavior(final Unit unit)
+	public <U extends Unit> IUnitBehavior <U> getBehavior(final Unit unit)
 	{
 		return scheduler.getBehavior( unit.getType(), stage );
 	}
