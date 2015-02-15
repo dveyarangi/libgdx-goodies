@@ -119,6 +119,7 @@ public class UnitsFactory
 	 */
 	public Class<?> getUnitDefClass(final String unitType)
 	{
+		assert factories.containsKey( unitType ) : "No unit factory registererd for type " + unitType;
 		return factories.get( unitType ).getDefClass( unitType );
 	}
 

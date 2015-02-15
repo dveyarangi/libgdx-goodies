@@ -5,13 +5,12 @@ import eir.world.IEffect;
 import eir.world.unit.Unit;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-public class CompositeRenderer implements IUnitRenderer <Unit>
+public class FactionRenderer implements IUnitRenderer <Unit>
 {
 	
 	private TIntObjectHashMap<IUnitRenderer> renderers;
-	private int state = 0;
 
-	public CompositeRenderer(Object [] states)
+	public FactionRenderer(Object [] states)
 	{
 		renderers = new TIntObjectHashMap <IUnitRenderer> ();
 		
@@ -19,11 +18,6 @@ public class CompositeRenderer implements IUnitRenderer <Unit>
 		{
 			renderers.put((Integer)states[idx], (IUnitRenderer)states[idx+1]);
 		}
-	}
-
-	public void setState(int state)
-	{
-		this.state = state;
 	}
 
 	@Override
@@ -35,19 +29,21 @@ public class CompositeRenderer implements IUnitRenderer <Unit>
 	@Override
 	public IEffect getBirthEffect(Unit unit, IRenderer renderer)
 	{
-		return renderers.get( state ).getBirthEffect(unit, renderer);
+		assert renderers.contains( unit.getFaction().getOwnerId() ) : "No renderer for unit " + unit + ", state " + unit.getFaction().getOwnerId();
+		return renderers.get( unit.getFaction().getOwnerId() ).getBirthEffect(unit, renderer);
 	}
 
 	@Override
 	public void render(Unit unit, IRenderer renderer)
 	{
-		renderers.get( state ).render( unit, renderer );
+		assert renderers.contains( unit.getFaction().getOwnerId() ) : "No renderer for unit " + unit + ", state " + unit.getFaction().getOwnerId();
+		renderers.get( unit.getFaction().getOwnerId() ).render( unit, renderer );
 	}
 
 	@Override
 	public IEffect getDeathEffect(Unit unit)
 	{
-		return renderers.get( state ).getDeathEffect(unit);
+		return renderers.get( unit.getFaction().getOwnerId() ).getDeathEffect(unit);
 	}
 
 

@@ -40,8 +40,6 @@ public class Weapon extends Unit
 	protected Vector2 relativePosition;
 
 	private static final float PLANK_CONST = 0.0001f;
-	
-	private static final float MAX_ENERGY = 1000;
 
 	private boolean isOriented = false;
 
@@ -78,12 +76,20 @@ public class Weapon extends Unit
 
 		this.level = level;
 		
-		this.port = new Port();
-		port.setCapacity(Type.ENERGY, MAX_ENERGY, MAX_ENERGY);
+		if(port == null)
+		{
+			this.port = new Port();
+		}
 		
 		
 		weaponDef = (WeaponDef)def;
+		
+		float maxEnergy = weaponDef.getMagazinesNum() * 
+							weaponDef.getBulletsInMagazineNum() * 
+								weaponDef.getBulletEnergyConsumption();
 
+		port.setCapacity(Type.ENERGY, 0, maxEnergy);
+		
 		weaponDef.init( level.getResourceFactory() );
 
 		targetOrientation = weaponDir.cpy();
@@ -95,14 +101,14 @@ public class Weapon extends Unit
 		WeaponDef def = getDef();
 		
 		Resource energyStock = port.get(Resource.Type.ENERGY);
-		if(energyStock.getAmount() < def.getShotEnergyConsumption())
+		if(energyStock.getAmount() < def.getBulletEnergyConsumption())
 			return null;
 
 		Bullet bullet = createBullet( target, getArea().getAnchor(), weaponDir, level.getUnitsFactory() );
 		if(bullet != null)
 		{
 			level.addUnit( bullet );
-			port.use(Resource.Type.ENERGY, def.getShotEnergyConsumption());
+			port.use(Resource.Type.ENERGY, def.getBulletEnergyConsumption());
 
 		}
 		return null;
@@ -190,12 +196,13 @@ public class Weapon extends Unit
 	}
 
 
+	@Override
 	public Level getLevel() { return level; }
 
 	public Vector2 getDirection() { return weaponDir; }
 
 	public boolean isOriented() { return isOriented; }
-	public void reload() { bulletsInMagazine = weaponDef.getBurstSize(); }
+	public void reload() { bulletsInMagazine = weaponDef.getBulletsInMagazineNum(); }
 
 	public Vector2 getTargetOrientation() { return targetOrientation; }
 

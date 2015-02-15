@@ -26,13 +26,16 @@ public abstract class WeaponDef extends UnitDef
 	/**
 	 * @return the burstSize
 	 */
-	public abstract int getBurstSize();
+	public abstract int getBulletsInMagazineNum();
+
+	public abstract float getMagazinesNum();
+
+	public abstract float getBulletEnergyConsumption();
 
 	/**
 	 * @return the magazineReloadTime
 	 */
 	public abstract float getMagazineReloadTime();
-
 	/**
 	 * @return the reloadingTime
 	 */
@@ -89,8 +92,6 @@ public abstract class WeaponDef extends UnitDef
 	public abstract float getSensorRadius();
 
 	public abstract void init( ResourceFactory gameFactory );
-
-	public abstract float getShotEnergyConsumption();
 
 	public abstract boolean shouldDieOnCollision();
 
