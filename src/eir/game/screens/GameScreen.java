@@ -86,7 +86,7 @@ public class GameScreen extends AbstractScreen
 
 //		level.getBackground().update( modifiedTime );
 
-		renderer.render( delta );
+		renderer.render( modifiedTime );
 		
 		super.render( delta );
 		

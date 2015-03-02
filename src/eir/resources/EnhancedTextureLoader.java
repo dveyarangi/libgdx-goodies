@@ -44,6 +44,7 @@ public class EnhancedTextureLoader extends TextureLoader
 	@Override
 	public void loadAsync (final AssetManager manager, final String fileName, final FileHandle file, final TextureParameter parameter)
 	{
+		Gdx.app.log("texture", "Loading texture " + fileName);
 		if(file.exists())
 		{
 			super.loadAsync( manager, fileName, file, parameter );

@@ -28,13 +28,17 @@ public class UnitCollider implements ISpatialSensor<ISpatialObject>
 	@Override
 	public boolean objectFound(final ISpatialObject object)
 	{
+		if(!collidingAnt.isAlive())
+			return true;
+		
 		if(object == collidingAnt)
 			return false;
 		
 		if(! (object instanceof IUnit))
 			return false;
 
-
+		if(! object.isAlive())
+			return false;
 		
 		IUnit ant = (IUnit) object;
 		boolean sameFaction = ant.getFaction().getOwnerId() == collidingAnt.getFaction().getOwnerId();

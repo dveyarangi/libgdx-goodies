@@ -158,11 +158,11 @@ public class Level
 		addUnit( unit );
 		return unit;
 	}
-	public IUnit addUnit(Level level, UnitDef def,float x, float y, float a)
+	public <E extends IUnit> E addUnit(Level level, UnitDef def,float x, float y, float a)
 	{
 		IUnit unit = unitsFactory.getUnit(level, def, x, y, a);
 		addUnit( unit );
-		return unit;
+		return (E)unit;
 	}
 
 	/**

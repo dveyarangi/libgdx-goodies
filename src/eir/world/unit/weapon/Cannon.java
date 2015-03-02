@@ -51,7 +51,7 @@ public class Cannon extends TaskedUnit implements IBuilding
 		weaponDef = ((CannonDef)this.def).getWeaponDef();
 
 
-		this.hull = new Hull(500f, 0f, new float [] {0f,0f,0f,0f});
+		this.hull = new Hull(40f, 0f, new float [] {0f,0f,0f,0f});
 
 		weapon = level.getUnitsFactory().getUnit( level, weaponDef, weaponMount );
 		weapon.getDirection().setAngle( this.angle+90 );
@@ -69,6 +69,7 @@ public class Cannon extends TaskedUnit implements IBuilding
 	public void update(float delta)
 	{
 		super.update(delta);
+		// TODO: make anchored anchored already:
 		weapon.getArea().getAnchor().x = cx();
 		weapon.getArea().getAnchor().y = cy();
 	}

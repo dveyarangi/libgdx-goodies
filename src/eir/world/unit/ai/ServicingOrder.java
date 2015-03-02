@@ -18,7 +18,8 @@ public class ServicingOrder extends Order <GatheringTask>
 		super(new TaskStage [] { TaskStage.TRAVEL_TO_SOURCE,
 								 TaskStage.LOAD,
 								 TaskStage.TRAVEL_TO_TARGET,
-								 TaskStage.UNLOAD},
+								 TaskStage.UNLOAD,
+								 TaskStage.IDLE, },
 						false,   // cycling 
 						0,       // TODO: priority
 						source,  // resource provider

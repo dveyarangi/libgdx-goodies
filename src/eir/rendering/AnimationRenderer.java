@@ -1,12 +1,12 @@
 package eir.rendering;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.AnimationHandle;
 import eir.resources.ResourceFactory;
-import eir.resources.TextureHandle;
 import eir.world.Effect;
 import eir.world.IEffect;
 import eir.world.unit.Unit;
@@ -14,15 +14,18 @@ import eir.world.unit.Unit;
 public class AnimationRenderer  implements IUnitRenderer <Unit>
 {
 
-	private String textureName;
-	private Sprite sprite;
+	private AnimationHandle animationHandle;
+	private Animation animation;
 	private int size;
+	private float timeModifier;
 
-	public AnimationRenderer(String textureName, int size)
+	public AnimationRenderer(AnimationHandle animationHandle, int size, float timeModifier)
 	{
-		this.textureName = textureName;
+		this.animationHandle = animationHandle;
 		
 		this.size = size;
+		
+		this.timeModifier = timeModifier;
 	}
 
 
@@ -30,7 +33,7 @@ public class AnimationRenderer  implements IUnitRenderer <Unit>
 	@Override
 	public void init( ResourceFactory factory )
 	{
-		this.sprite = factory.createSprite( TextureHandle.get(textureName) );
+		this.animation = factory.getAnimation( animationHandle );
 	}
 	@Override
 	public IEffect getBirthEffect(Unit unit, IRenderer renderer)
@@ -42,18 +45,20 @@ public class AnimationRenderer  implements IUnitRenderer <Unit>
 	@Override
 	public void render(Unit unit, IRenderer renderer)
 	{
-		if(sprite == null)
+		if(animation == null)
 			return;
 		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = unit.getBody().getAnchor();
 
-		TextureRegion region = unit.getFaction().getAntAnimation().getKeyFrame( unit.getLifetime(), true );
+		TextureRegion region = animation.getKeyFrame( timeModifier * unit.getLifetime(), true );
+
+		
 		batch.draw( region,
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
 				region.getRegionWidth()/2,region.getRegionHeight()/2,
 				region.getRegionWidth(), region.getRegionHeight(),
-				size/region.getRegionWidth(),
-				size/region.getRegionWidth(), unit.getAngle());
+				size*unit.size()/region.getRegionWidth(),
+				size*unit.size()/region.getRegionWidth(), unit.getAngle());
 	
 	}
 
