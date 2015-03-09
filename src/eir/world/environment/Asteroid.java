@@ -6,7 +6,6 @@ package eir.world.environment;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.rendering.EntityRenderer;
 import eir.rendering.IRenderer;
 import eir.resources.ResourceFactory;
 import eir.resources.levels.AsteroidDef;
@@ -25,7 +24,7 @@ public class Asteroid
 	/**
 	 * Asteroid sprite overlay
 	 */
-	private EntityRenderer <Asteroid> renderer;
+//	private EntityRenderer <Asteroid> renderer;
 
 
 	Sprite sprite;

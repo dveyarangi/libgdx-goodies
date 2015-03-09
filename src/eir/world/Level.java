@@ -503,7 +503,7 @@ public class Level
 	/*
 	 * some generic module to append at level creation
 	 */
-	public <E> E getData() { return (E) data; }
+	@SuppressWarnings("unchecked") public <E> E getData() { return (E) data; }
 	public void setData(ILevelData data) { this.data = data;  }
 
 

@@ -3,7 +3,6 @@ package eir.game.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import eir.debug.Debug;
 import eir.game.LevelSetup;
@@ -27,8 +26,6 @@ public class GameScreen extends AbstractScreen
 	private IGameUI ui;
 	private LevelRenderer renderer;
 	private Level level;
-	
-	private Table table;
 
 	public GameScreen(final Game game, final LevelSetup levelSetup)
 	{

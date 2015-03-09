@@ -11,7 +11,6 @@ import eir.resources.ResourceFactory;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
-import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.overlays.IOverlay;
 import gnu.trove.iterator.TIntObjectIterator;
 
@@ -22,7 +21,7 @@ public class NavMeshOverlay implements IOverlay <NavMesh>
 	
 	private NavMesh navMesh;
 	
-	public NavMeshOverlay(NavMesh<SurfaceNavNode> navMesh)
+	public NavMeshOverlay(NavMesh navMesh)
 	{
 
 		font = ResourceFactory.loadFont("skins//fonts//default", 0.05f);

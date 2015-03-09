@@ -77,7 +77,7 @@ public abstract class TravelingBehavior implements IUnitBehavior <Ant>
 				break;
 			}
 
-			ant.anchor = ant.nextNode;
+//			ant.anchor = ant.nextNode;
 
 			if( ant.route == null || !ant.route.hasNext() )
 			{

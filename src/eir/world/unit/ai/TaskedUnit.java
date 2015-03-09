@@ -39,7 +39,7 @@ public abstract class TaskedUnit extends Unit
 		if(task == null)
 			return;
 		
-		IUnitBehavior behavior = task.getBehavior( this );
+		IUnitBehavior <Unit> behavior = task.getBehavior( this );
 		
 		if( behavior == null)
 			return;

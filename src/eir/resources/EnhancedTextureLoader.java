@@ -9,16 +9,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 
 import eir.rendering.ITextureGenerator;
 
+@SuppressWarnings("rawtypes")
 public class EnhancedTextureLoader extends TextureLoader
 {
-	private Pixmap generatedPixels;
-	
 	private Map <String, ITextureGenerator> generators = new HashMap <String, ITextureGenerator> ();
 	
 	private Array <AssetDescriptor> dependencies = new Array <AssetDescriptor> ();

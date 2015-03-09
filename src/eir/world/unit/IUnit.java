@@ -55,6 +55,7 @@ public interface IUnit extends ISpatialObject
 
 	public void draw(IRenderer levelRenderer);
 
+	@SuppressWarnings("rawtypes")
 	public <E extends IUnitRenderer> E getRenderer();
 
 	public TIntArrayList getActiveOverlays();

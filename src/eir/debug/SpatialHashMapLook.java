@@ -19,7 +19,7 @@ import eir.world.unit.overlays.IOverlay;
  * @author dveyarangi
  *
  */
-public class SpatialHashMapLook implements IOverlay
+public class SpatialHashMapLook implements IOverlay <Object>
 {
 
 	private final SpatialHashMap <ISpatialObject> map;

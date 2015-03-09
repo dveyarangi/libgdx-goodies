@@ -21,22 +21,10 @@ public class SpriteRenderer implements IUnitRenderer <Unit>
 	private float sizeModifier;
 	private Sprite sprite;
 	
-	private TextureHandle maskingTexture;
-	private Sprite maskingSprite;
-	
 	private AnimationHandle deathEffect;
 	private float deathSizeModifier;
 	private Animation deathAnimation;
-	
-	public SpriteRenderer(String textureName, int sizeModifier, String maskingTextureName, AnimationHandle deathEffect, float deathSizeModifier)
-	{
-		this( textureName, sizeModifier );
-		
-		this.maskingTexture = TextureHandle.get(maskingTextureName);
-		
-		this.deathEffect = deathEffect;
-		this.deathSizeModifier = deathSizeModifier;
-	}
+
 	public SpriteRenderer(String textureName, int sizeModifier, AnimationHandle deathEffect, float deathSizeModifier)
 	{
 		this( textureName, sizeModifier );
@@ -58,13 +46,6 @@ public class SpriteRenderer implements IUnitRenderer <Unit>
 		this.sprite = factory.createSprite( texture );
 		
 		assert sprite != null;
-/*		if(maskingTexture != null)
- * 
-		{
-			maskingSprite = factory.createSprite( maskingTexture );
-			
-			FrameBuffer frameBuffer
-		}*/
 		if(deathEffect != null)
 		{
 			this.deathAnimation = factory.getAnimation( deathEffect );

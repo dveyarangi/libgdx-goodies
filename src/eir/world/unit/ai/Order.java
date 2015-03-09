@@ -10,16 +10,16 @@ import eir.world.unit.Unit;
  * @author Ni
  *
  */
-public abstract class Order <T extends Task>
+public abstract class Order 
 {
 	/**
 	 * Pool of AABB objects
 	 */
-	private final Pool<T> pool =
-			new Pool<T>()
+	private final Pool<Task> pool =
+			new Pool<Task>()
 			{
 				@Override
-				protected T newObject()
+				protected Task newObject()
 				{
 					return createEmptyTask();
 				}
@@ -49,18 +49,18 @@ public abstract class Order <T extends Task>
 		this.target = target;
 
 	}
-	protected abstract T createEmptyTask();
+	protected abstract Task createEmptyTask();
 
-	public T createTask(Unit unit, final Scheduler scheduler)
+	public Task createTask(Unit unit, final Scheduler scheduler)
 	{
-		T task = pool.obtain();
+		Task task = pool.obtain();
 		
 		task.update(scheduler, this);
 		
 		return task;
 	}
 
-	public void free(final T task)
+	public void free(final Task task)
 	{
 		pool.free( task );
 	}

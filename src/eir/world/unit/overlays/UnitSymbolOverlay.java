@@ -16,11 +16,11 @@ import eir.world.unit.IUnit;
  *
  * @param <U>
  */
-public class UnitSymbolOverlay <U extends IUnit> implements IOverlay <U>
+public class UnitSymbolOverlay implements IOverlay <IUnit>
 {
 
 	@Override
-	public void draw( final U unit, final IRenderer renderer )
+	public void draw( final IUnit unit, final IRenderer renderer )
 	{
 		ShapeRenderer shape = renderer.getShapeRenderer();
 
@@ -31,7 +31,7 @@ public class UnitSymbolOverlay <U extends IUnit> implements IOverlay <U>
 		shape.begin(ShapeType.Filled);
 		Color color = unit.getFaction().getColor();
 		shape.setColor(color.r,color.g,color.b,0.5f);
-		shape.circle(body.getAnchor().x, body.getAnchor().y, unit.getSize() / 2);
+		shape.circle(body.getAnchor().x, body.getAnchor().y, unit.size() / 2);
 		shape.end();
 
 		if( target != null)

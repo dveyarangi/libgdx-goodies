@@ -115,7 +115,7 @@ public class FloydWarshalRoute extends Route
 		int rangesize = range[1]-range[0]+1;
 		mod = mod<0 ? mod + rangesize : mod;
 
-		from = navMesh.getNode(mod%rangesize + range[0]);
+		from = (SurfaceNavNode)navMesh.getNode(mod%rangesize + range[0]);
 
 		return from;
 	}

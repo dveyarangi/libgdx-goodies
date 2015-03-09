@@ -6,18 +6,18 @@ import eir.world.environment.nav.Route;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.Task;
 
-public class AirGraphTravellingBehavior implements IUnitBehavior <IRoutedUnit>
+public class AirGraphTravellingBehavior <U extends IRoutedUnit>implements IUnitBehavior <U>
 {
-	private IUnitBehavior travellingBehavior;
+	private IUnitBehavior <U> travellingBehavior;
 
 	public static final float ARRIVAL_DISTANCE_SQUARE = 50;
-	public AirGraphTravellingBehavior(final IUnitBehavior travellingBehavior)
+	public AirGraphTravellingBehavior(final IUnitBehavior <U> travellingBehavior)
 	{
 		this.travellingBehavior = travellingBehavior;
 	}
 
 	@Override
-	public void update( final float delta, final Task task, final IRoutedUnit entity )
+	public void update( final float delta, final Task task, final U entity )
 	{
 		Unit unit = (Unit)entity;
 
@@ -40,7 +40,7 @@ public class AirGraphTravellingBehavior implements IUnitBehavior <IRoutedUnit>
 			NavNode node = route.next();
 			unit.target = node;
 		}
-		travellingBehavior.update( delta, task, unit );
+		travellingBehavior.update( delta, task, entity );
 	}
 
 

@@ -2,7 +2,7 @@ package eir.world.environment.nav;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class AirNavMesh extends NavMesh  <AirNavNode>
+public class AirNavMesh extends NavMesh
 {
 
 	@Override
@@ -18,12 +18,12 @@ public class AirNavMesh extends NavMesh  <AirNavNode>
 	}
 
 	@Override
-	public Route <AirNavNode> getShortestRoute(final AirNavNode from, final AirNavNode to) {
+	public Route getShortestRoute(final NavNode from, final NavNode to) {
 		return null;
 	}
 
 	@Override
-	protected AirNavNode createNavNode( final NavNodeDescriptor descriptor, final Vector2 point, final int nodeIdx )
+	protected NavNode createNavNode( final NavNodeDescriptor descriptor, final Vector2 point, final int nodeIdx )
 	{
 		return new AirNavNode( descriptor, point, nodeIdx );
 	}

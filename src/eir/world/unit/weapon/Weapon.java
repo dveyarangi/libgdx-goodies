@@ -39,7 +39,7 @@ public class Weapon extends Unit
 
 	protected Vector2 relativePosition;
 
-	private static final float PLANK_CONST = 0.0001f;
+//	private static final float PLANK_CONST = 0.0001f;
 
 	private boolean isOriented = false;
 
@@ -151,13 +151,9 @@ public class Weapon extends Unit
 	@Override
 	public void update(final float delta)
 	{
-		WeaponDef def = getDef();
 		
 		timeToReload -= delta;
-		
-		Resource energyStock = port.get(Resource.Type.ENERGY);
-		float requestedResource = port.getCapacity(Resource.Type.ENERGY) - energyStock.getAmount();
-		
+			
 		float diffAngle =
 				(float)( Math.acos( targetOrientation.dot( weaponDir ) )* Angles.TO_DEG);
 		if(Math.abs( diffAngle ) < Math.abs( delta * weaponDef.getAngularSpeed() ))
@@ -210,6 +206,7 @@ public class Weapon extends Unit
 
 	public int getBulletsInMagazine() {	return bulletsInMagazine; }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public WeaponDef getDef() { return weaponDef; }
 

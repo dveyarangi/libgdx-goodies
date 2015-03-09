@@ -40,12 +40,12 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 	 * @param width covered area width
 	 * @param height covered area height
 	 */
-	@SuppressWarnings("unchecked")
 	public SpatialHashMap(final String name, final int size, final float cellSize, final float width, final float height)
 	{
 		super(name, size, cellSize, width, height);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<O> [] createGrid()
 	{
@@ -435,7 +435,7 @@ public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> im
 		int passId = getNextPassId();
 
 		float closestDistanceSquare = Float.MAX_VALUE;
-		float squareRadius = 0;
+//		float squareRadius = 0;
 		float distanceSquare = 0;
 		List <O> cell;
 

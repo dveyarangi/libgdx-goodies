@@ -96,7 +96,6 @@ public class Task
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public <U extends Unit> IUnitBehavior <U> getBehavior(final Unit unit)
 	{
 		return scheduler.getBehavior( unit.getType(), stage );

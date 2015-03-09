@@ -90,7 +90,6 @@ public class LevelLoader
 	 *
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	private Multimap<String, String> readLevelFiles()
 	{
 		Multimap<String, String> levelTypes = HashMultimap.create();
@@ -314,11 +313,14 @@ public class LevelLoader
 						result.add( entry );
 					}
 				}
+				jar.close();
 				return result.toArray( new String[result.size()] );
 			}
 		}
 		catch ( URISyntaxException e ) { Gdx.app.error( TAG, "Cannot list files for URL " + dirURL,  e ); }
 		catch ( IOException e ) { Gdx.app.error( TAG, "Cannot list files for URL " + dirURL, e ); }
+		finally {
+		}
 
 		throw new UnsupportedOperationException( "Cannot list files for URL " + dirURL );
 	}

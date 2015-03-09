@@ -3,7 +3,6 @@ package eir.world.environment.nav;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.environment.Anchor;
-import eir.world.environment.Asteroid;
 import eir.world.unit.Unit;
 
 public class SurfaceNavNode extends NavNode implements Anchor
@@ -27,8 +26,6 @@ public class SurfaceNavNode extends NavNode implements Anchor
 		this.aIdx = aIdx;
 
 		this.angle = Float.NaN;
-		int navIdx = getDescriptor().getIndex();
-		Asteroid asteroid = (Asteroid)getDescriptor().getObject();
 
 	}
 

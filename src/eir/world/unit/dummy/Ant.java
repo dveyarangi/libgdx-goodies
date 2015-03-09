@@ -12,8 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import eir.rendering.IRenderer;
 import eir.world.Level;
 import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.Route;
-import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.TaskedUnit;
 import eir.world.unit.aspects.IDamager;
@@ -29,8 +29,8 @@ public class Ant extends TaskedUnit implements IDamager
 
 
 
-	NavMesh <SurfaceNavNode> mesh;
-	Route  <SurfaceNavNode> route;
+	NavMesh mesh;
+	Route  route;
 
 	protected float stateTime;
 
@@ -38,10 +38,10 @@ public class Ant extends TaskedUnit implements IDamager
 
 	float speed = 10f;
 
-	private float screamTime;
+//	private float screamTime;
 	float nodeOffset;
 
-	SurfaceNavNode nextNode;
+	NavNode nextNode;
 
 	Damage damage = new Damage(1, 1, 1, 1);
 
@@ -85,8 +85,8 @@ public class Ant extends TaskedUnit implements IDamager
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
 				region.getRegionWidth()/2,region.getRegionHeight()/2,
 				region.getRegionWidth(), region.getRegionHeight(),
-				getSize()/region.getRegionWidth(),
-				getSize()/region.getRegionWidth(), getAngle());
+				size()/region.getRegionWidth(),
+				size()/region.getRegionWidth(), getAngle());
 
 
 	}

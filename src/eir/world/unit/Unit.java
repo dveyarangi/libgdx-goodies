@@ -133,7 +133,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 */
 	Vector2 hoverVector;
 	
-	private IUnitRenderer renderer;
+	private IUnitRenderer <IUnit> renderer;
 
 	public Unit( )
 	{
@@ -163,6 +163,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * @param anchor
 	 * @param faction
 	 */
+	@SuppressWarnings("unchecked")
 	public void init(final Level level, final IUnitDef def, final float x, final float y, final float angle)
 	{
 		this.def = def;
@@ -417,8 +418,11 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	@Override public int hashCode() {	return hashcode; }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends IUnitDef> E getDef() { return (E)def; }
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public <E extends IUnitRenderer> E getRenderer() { return (E) renderer; }
 

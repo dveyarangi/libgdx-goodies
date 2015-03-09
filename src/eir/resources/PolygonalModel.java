@@ -9,6 +9,7 @@ import eir.world.environment.Asteroid;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.NavNodeDescriptor;
 import eir.world.environment.nav.SurfaceNavNode;
 
@@ -57,7 +58,7 @@ public class PolygonalModel
 	/**
 	 * navigation nodes corresponding to polygon vertices
 	 */
-	private final SurfaceNavNode [] nodes;
+	private final NavNode [] nodes;
 
 	private float maxSurfaceIdx;
 
@@ -128,9 +129,9 @@ public class PolygonalModel
 	{
 		FloydWarshal navMesh = (FloydWarshal) mesh;
 		navMesh.beginAsteroid();
-		SurfaceNavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0]  );
+		NavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0]  );
 		int startingIdx = currNode.getIndex();
-		SurfaceNavNode prevNode;
+		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{
 			int nidx = (idx+1)%len;
@@ -160,7 +161,7 @@ public class PolygonalModel
 	 * @param navNodeIdx
 	 * @return
 	 */
-	public SurfaceNavNode getNavNode(final int navNodeIdx)
+	public NavNode getNavNode(final int navNodeIdx)
 	{
 		return nodes[ navNodeIdx >= 0 ? navNodeIdx % getSize() : navNodeIdx+getSize() ];
 	}

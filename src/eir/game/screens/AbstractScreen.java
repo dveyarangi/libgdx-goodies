@@ -31,8 +31,8 @@ public abstract class AbstractScreen implements Screen
     public AbstractScreen( final Game game )
     {
         this.game = game;
-        int width = isGameScreen() ? GAME_VIEWPORT_WIDTH : MENU_VIEWPORT_WIDTH;
-        int height = isGameScreen() ? GAME_VIEWPORT_HEIGHT : MENU_VIEWPORT_HEIGHT;
+ //       int width = isGameScreen() ? GAME_VIEWPORT_WIDTH : MENU_VIEWPORT_WIDTH;
+ //       int height = isGameScreen() ? GAME_VIEWPORT_HEIGHT : MENU_VIEWPORT_HEIGHT;
         this.stage = new Stage();
     }
 

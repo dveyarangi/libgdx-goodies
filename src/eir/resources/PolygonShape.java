@@ -27,7 +27,7 @@ public class PolygonShape
 	public static PolygonShape generateCircleModel(final String paramString)
 	{
 		String [] parts = paramString.split( "-" );
-		float radius = Float.parseFloat( parts[0].split( ":" )[1] );
+//		float radius = Float.parseFloat( parts[0].split( ":" )[1] );
 		int segments = Integer.parseInt( parts[1].split( ":" )[1] );
 
 		return generateCircleModel( segments );

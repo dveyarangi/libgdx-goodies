@@ -6,7 +6,7 @@ import eir.world.resource.IServiceable;
 import eir.world.resource.Resource;
 import eir.world.unit.Unit;
 
-public class ServicingOrder extends Order <GatheringTask>
+public class ServicingOrder extends Order
 {
 	
 	private Resource.Type type;
@@ -36,7 +36,7 @@ public class ServicingOrder extends Order <GatheringTask>
 	{
 		
 		
-		GatheringTask task = super.createTask( unit, scheduler );
+		GatheringTask task = (GatheringTask)super.createTask( unit, scheduler );
 		
 		IServiceable gatherer = (IServiceable) unit;
 		
