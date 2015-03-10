@@ -53,19 +53,19 @@ public class Debug
 	private static class OverlayBinding 
 	{
 		boolean isOn;
-		IOverlay <?> overlay;		
-		public OverlayBinding(IOverlay <?> overlay)
+		IOverlay overlay;		
+		public OverlayBinding(IOverlay overlay)
 		{
 			this(overlay, false);
 		}
-		public OverlayBinding(IOverlay <?> overlay,boolean isOn)
+		public OverlayBinding(IOverlay overlay,boolean isOn)
 		{
 			this.overlay = overlay;
 			this.isOn = isOn;
 		}
 		public void toggle() { isOn = !isOn; }
 		
-//		public boolean isOn() { return isOn; }
+		public boolean isOn() { return isOn; }
 		public void render(IRenderer renderer)
 		{
 			if( overlay != null && isOn)

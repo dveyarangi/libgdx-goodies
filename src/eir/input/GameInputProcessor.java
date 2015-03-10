@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
@@ -34,13 +35,13 @@ public class GameInputProcessor implements InputProcessor
 
 	protected Level level;
 
-	private int /*prevx, prevy,*/ currx, curry;
+	private int prevx, prevy, currx, curry;
 	private final Vector3 pointerPosition3 = new Vector3();
 	private final Vector2 pointerPosition2 = new Vector2();
 
-//	private boolean dragging = false;
+	private boolean dragging = false;
 
-//	private float lifeTime = 0;
+	private float lifeTime = 0;
 
 	private List <IControlMode> controlModes;
 	private int controlModeIdx;
@@ -61,7 +62,7 @@ public class GameInputProcessor implements InputProcessor
 	
 
 	protected IGameUI ui;
-//	private boolean pointerChanged = true;
+	private boolean pointerChanged = true;
 
 
 	public GameInputProcessor(final LevelDef level, final IGameUI ui)
@@ -97,8 +98,8 @@ public class GameInputProcessor implements InputProcessor
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
 		inputMultiplexer.addProcessor( this );
 
-//		prevx = -1;
-//		prevy = -1;
+		prevx = -1;
+		prevy = -1;
 
 	}
 	
@@ -191,7 +192,7 @@ public class GameInputProcessor implements InputProcessor
 		{
 
 			camController.setUnderUserControl(true);
-//			dragging = true;
+			dragging = true;
 
 		}
 		if( pickedObject != null )
@@ -213,7 +214,7 @@ public class GameInputProcessor implements InputProcessor
 		registerPointerChange( screenX, screenY, getCamera().zoom ); 
 //		if(button == Input.Buttons.RIGHT)
 		{
-//			dragging = false;
+			dragging = false;
 			camController.setUnderUserControl(false);
 				touchedObject = null;
 				currControlMode.untouch();
@@ -262,7 +263,7 @@ public class GameInputProcessor implements InputProcessor
 	  */
 	 public void update(final float delta)
 	 {
-//		 lifeTime += delta;
+		 lifeTime += delta;
 		 
 		 camController.update( delta );
 		 
@@ -278,7 +279,7 @@ public class GameInputProcessor implements InputProcessor
 	{
 		if(screenX == currx && screenY == curry)
 		{
-//			pointerChanged  = false;
+			pointerChanged  = false;
 			return;
 		}
 		
@@ -317,12 +318,14 @@ public class GameInputProcessor implements InputProcessor
 			 pickedObject = newPickedObject;
 		 }		
 		 
-//		pointerChanged = true;
+		pointerChanged = true;
 	}
 
 
 	public void draw( final IRenderer renderer )
 	 {
+
+		 final SpriteBatch batch = renderer.getSpriteBatch();
 		 final ShapeRenderer shape = renderer.getShapeRenderer();
 		 
 		 if( debugPick )

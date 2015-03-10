@@ -23,8 +23,8 @@ import eir.world.unit.aspects.IDamager;
 
 public class Environment 
 {
-	private NavMesh groundMesh;
-	private NavMesh airMesh;
+	private NavMesh <SurfaceNavNode> groundMesh;
+	private NavMesh <AirNavNode> airMesh;
 	
 
 	private ISpatialIndex <ISpatialObject> index;
@@ -94,8 +94,8 @@ public class Environment
 
 	public World getPhyisics() { return world; }
 
-	public NavMesh getGroundMesh() { return groundMesh; }
-	public NavMesh getAirMesh() { return airMesh; }
+	public NavMesh <SurfaceNavNode> getGroundMesh() { return groundMesh; }
+	public NavMesh <AirNavNode> getAirMesh() { return airMesh; }
 
 	public ISpatialIndex <ISpatialObject> getIndex() { return index; }
 

@@ -56,7 +56,6 @@ public class ResourceFactory
 	private final Map <AnimationHandle, Animation> animationCache = new HashMap <AnimationHandle, Animation> ();
 	
 	
-	@SuppressWarnings("rawtypes")
 	TIntObjectHashMap<IUnitRenderer> renderers = new TIntObjectHashMap<IUnitRenderer> ();
 
 	
@@ -147,7 +146,6 @@ public class ResourceFactory
 		return manager.getProgress();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	private void loadRenderers()
 	{
 		for(Object renderer : renderers.values())
@@ -379,14 +377,12 @@ public class ResourceFactory
 	{
 		return manager.get( shaderName );
 	}
-	@SuppressWarnings("rawtypes")
 	public void registerRenderer(String unitType, IUnitRenderer unitRend)
 	{
 		assert ! renderers.contains( unitType.hashCode() );
 		renderers.put(unitType.hashCode(), unitRend);
 	}
 
-	@SuppressWarnings("rawtypes")
 	public IUnitRenderer getRenderer(IUnitDef def)
 	{
 		assert renderers.contains( def.getType().hashCode() ) : "No renderer for unit type " + def.getType();

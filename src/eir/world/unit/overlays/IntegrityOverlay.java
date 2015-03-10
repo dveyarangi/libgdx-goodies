@@ -17,11 +17,11 @@ import eir.world.unit.damage.Hull;
  *
  * @param <U>
  */
-public class IntegrityOverlay implements IOverlay <IUnit>
+public class IntegrityOverlay <U extends IUnit> implements IOverlay <U>
 {
 
 	@Override
-	public void draw( final IUnit unit, final IRenderer renderer )
+	public void draw( final U unit, final IRenderer renderer )
 	{
 		Hull hull = unit.getHull();
 		if(hull == null)

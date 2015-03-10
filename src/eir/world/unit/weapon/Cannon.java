@@ -30,7 +30,7 @@ public class Cannon extends TaskedUnit implements IBuilding
 
 	private Anchor weaponMount;
 
-//	private float wanderAngle;
+	private float wanderAngle;
 
 
 	public Cannon( )
@@ -56,7 +56,7 @@ public class Cannon extends TaskedUnit implements IBuilding
 		weapon = level.getUnitsFactory().getUnit( level, weaponDef, weaponMount );
 		weapon.getDirection().setAngle( this.angle+90 );
 		weapon.getTargetOrientation().setAngle( this.angle+90 );
-//		wanderAngle = this.angle+90;
+		wanderAngle = this.angle+90;
 		
 
 		this.sensor = level.getEnvironment().createSensor( this, weaponDef.getSensorRadius() );

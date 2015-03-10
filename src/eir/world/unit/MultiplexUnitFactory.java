@@ -1,5 +1,6 @@
 package eir.world.unit;
 
+import eir.resources.levels.IUnitDef;
 import eir.resources.levels.UnitDef;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -7,10 +8,10 @@ public abstract class MultiplexUnitFactory <U extends IUnit> extends UnitFactory
 {
 
 	
-	TIntObjectHashMap<Class<? extends UnitDef>> types = new TIntObjectHashMap<> ();
+	TIntObjectHashMap<Class> types = new TIntObjectHashMap<> ();
 
 
-	protected void registerDef( String type, Class<? extends UnitDef> clazz )
+	protected void registerDef( String type, Class<? extends IUnitDef> clazz )
 	{
 		assert ! types.containsKey( type.hashCode() );
 		

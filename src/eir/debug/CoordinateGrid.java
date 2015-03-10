@@ -24,7 +24,7 @@ import eir.world.unit.overlays.IOverlay;
  * @author dveyarangi
  *
  */
-public class CoordinateGrid implements IOverlay <Object>
+public class CoordinateGrid implements IOverlay
 {
 	private final OrthographicCamera camera;
 	private final float halfWidth;

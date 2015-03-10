@@ -59,7 +59,7 @@ public class BrokenLine implements ParametricCurve
 			idx ++;
 		}
 
-//		float ft = lengths[idx] / totalLength;
+		float ft = lengths[idx] / totalLength;
 
 		return target.set( points[idx]).add( tangents[idx].cpy().scl( (t - dt)*totalLength ) );
 	}

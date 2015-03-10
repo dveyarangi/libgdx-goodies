@@ -51,7 +51,6 @@ public class PolygonLoader extends AsynchronousAssetLoader<PolygonShape, AssetLo
 	}
 
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public Array<AssetDescriptor> getDependencies( final String fileName,
 			final FileHandle file, final AssetLoaderParameters<PolygonShape> parameter )

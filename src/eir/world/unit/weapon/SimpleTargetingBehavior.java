@@ -21,7 +21,7 @@ public class SimpleTargetingBehavior implements IUnitBehavior<Cannon>
 			return;
 
 		tDir.set( target.getArea().getAnchor() );
-//		Vector2 targetDir = tDir.sub( unit.getArea().getAnchor() ).nor();
+		Vector2 targetDir = tDir.sub( unit.getArea().getAnchor() ).nor();
 
 
 //		unit.getWeapon().angle = target.getArea().getAnchor().tmp().sub( unit.getArea().getAnchor() ).angle();

@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author dveyarangi
  *
  */
-public class NavEdge
+public class NavEdge <N extends NavNode>
 {
 	public enum Type { WEB, LAND, AIR }
 
@@ -18,7 +18,7 @@ public class NavEdge
 	/**
 	 * indexes of navnodes connected by this edge
 	 */
-	private final NavNode node1, node2;
+	private final N node1, node2;
 
 	/**
 	 * normal
@@ -40,7 +40,7 @@ public class NavEdge
 	 */
 	private final float length;
 
-	protected NavEdge(final NavNode node1, final NavNode node2, final Type type)
+	protected NavEdge(final N node1, final N node2, final Type type)
 	{
 		this.type = type;
 		this.node1 = node1;
@@ -65,7 +65,7 @@ public class NavEdge
 	/**
 	 * @return the idx1
 	 */
-	public NavNode getNode1()
+	public N getNode1()
 	{
 		return node1;
 	}
@@ -73,7 +73,7 @@ public class NavEdge
 	/**
 	 * @return the idx2
 	 */
-	public NavNode getNode2()
+	public N getNode2()
 	{
 		return node2;
 	}

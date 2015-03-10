@@ -5,12 +5,6 @@ import eir.world.IEffect;
 import eir.world.unit.Unit;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-/**
- * Composite renderer that contains several other renderer per faction id
- * 
- * @author fimar
- */
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class FactionRenderer implements IUnitRenderer <Unit>
 {
 	

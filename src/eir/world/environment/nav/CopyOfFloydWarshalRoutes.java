@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author Ni
  *
  */
-public class CopyOfFloydWarshalRoutes extends NavMesh 
+public class CopyOfFloydWarshalRoutes extends NavMesh <SurfaceNavNode>
 {
 //	protected NavNode[][] routes;
 
@@ -105,7 +105,7 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 			}
 		}
 
-		for(NavNode node : nodes)
+		for(SurfaceNavNode node : nodes)
 		{
 			for(NavNode neigh : node.getNeighbors())
 			{
@@ -140,7 +140,7 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 	 * @return ordered list starting at a and ending at b using shortest route / null if no route
 	 */
 	@Override
-	public FloydWarshalRoute getShortestRoute( final NavNode from, final NavNode to )
+	public FloydWarshalRoute getShortestRoute( final SurfaceNavNode from, final SurfaceNavNode to )
 	{
 		FloydWarshalRoute r = FloydWarshalRoute.routesPool.obtain();
 //		r.set(this, from, to);

@@ -28,10 +28,10 @@ public class UnitsFactory
 {
 
 	private IdentityMap <String, UnitFactory<? extends Unit>> factories = new IdentityMap <String, UnitFactory <? extends Unit>> ();
-	
-	private Set <UnitFactory<? extends Unit>> factoriesSet = new HashSet <> ();
+	Set <UnitFactory> factoriesSet = new HashSet <UnitFactory> ();
 
-	private LevelDef levelDef;
+	
+	LevelDef levelDef;
 	
 	public UnitsFactory(LevelDef levelDef, final ResourceFactory gameFactory, Map <String, UnitFactory<? extends Unit>> factories)
 	{
@@ -40,7 +40,7 @@ public class UnitsFactory
 
 		for(String unitType : factories.keySet())
 		{
-			UnitFactory <? extends Unit> factory = factories.get( unitType );
+			UnitFactory factory = factories.get( unitType );
 			
 			factoriesSet.add( factory);
 			
@@ -48,7 +48,7 @@ public class UnitsFactory
 			
 		}
 
-		for(UnitFactory <?>factory : factoriesSet)
+		for(UnitFactory factory : factoriesSet)
 		{
 			factory.init( levelDef, gameFactory );
 		}

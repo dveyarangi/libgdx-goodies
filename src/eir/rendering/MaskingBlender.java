@@ -11,23 +11,23 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 
-@SuppressWarnings("rawtypes")
 public class MaskingBlender implements ITextureGenerator
 {
 	
 	private String maskTxr;
+	private String colorTxr;
 	private Color color;
 
 	
 	public static final String MASKING_SHADER = "masking-shader";
 	
-	@SuppressWarnings("unchecked")
-	private static final Array<AssetDescriptor<Texture>> dependencies = new Array<AssetDescriptor<Texture>>(new AssetDescriptor[] { 
+	private static final Array<AssetDescriptor> dependencies = new Array(new AssetDescriptor[] { 
 			new AssetDescriptor(MASKING_SHADER, ShaderProgram.class) });
 
 	public MaskingBlender(String maskTxr, String colorTxr)
 	{
 		this.maskTxr = maskTxr;
+		this.colorTxr = colorTxr;
 	}
 	public MaskingBlender(String maskTxr, Color color)
 	{
@@ -86,6 +86,6 @@ public class MaskingBlender implements ITextureGenerator
 		return new String [] { /*colorTxr,*/ maskTxr };
 	}
 	@Override
-	public Array<AssetDescriptor<Texture>> getDependencies() {	return dependencies; }
+	public Array<AssetDescriptor> getDependencies() {	return dependencies; }
 
 }
